@@ -1,0 +1,258 @@
+2026-04-09 00:09:45.617 +05:30 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-04-09 00:09:45.689 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-04-09 00:09:45.732 +05:30 [INF] Executed DbCommand (16ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-04-09 00:09:45.755 +05:30 [INF] Applying migration '20260408183924_MostlyFinallMigration'.
+2026-04-09 00:09:45.826 +05:30 [INF] Executed DbCommand (27ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DROP TABLE `Categories`;
+2026-04-09 00:09:45.837 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20260408183924_MostlyFinallMigration', '8.0.8');
+2026-04-09 01:07:08.345 +05:30 [INF] Attempting to run database migrations...
+2026-04-09 01:07:09.723 +05:30 [INF] Executed DbCommand (40ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-04-09 01:07:09.754 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-04-09 01:07:09.835 +05:30 [INF] Executed DbCommand (36ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-04-09 01:07:09.868 +05:30 [INF] No migrations were applied. The database is already up to date.
+2026-04-09 01:07:09.872 +05:30 [INF] Database migrations applied successfully.
+2026-04-09 01:07:09.873 +05:30 [INF] Seeding database...
+2026-04-09 01:07:10.215 +05:30 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 1)
+2026-04-09 01:07:10.230 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 2)
+2026-04-09 01:07:10.242 +05:30 [INF] Database seeded successfully.
+2026-04-09 01:07:10.380 +05:30 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-09 01:07:10.955 +05:30 [INF] Now listening on: http://localhost:5275
+2026-04-09 01:07:11.028 +05:30 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2026-04-09 01:07:11.106 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-09 01:07:11.115 +05:30 [INF] Hosting environment: Development
+2026-04-09 01:07:11.127 +05:30 [INF] Content root path: D:\Coding\sem6\dotnet\backend
+2026-04-09 01:07:12.221 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/ - null null
+2026-04-09 01:07:12.781 +05:30 [INF] Request: GET /
+2026-04-09 01:07:13.257 +05:30 [INF] Executing endpoint 'HTTP: GET /'
+2026-04-09 01:07:13.396 +05:30 [INF] Executed endpoint 'HTTP: GET /'
+2026-04-09 01:07:13.497 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/ - 200 null text/plain; charset=utf-8 1289.3595ms
+2026-04-09 01:07:13.586 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/favicon.ico - null null
+2026-04-09 01:07:13.669 +05:30 [INF] Request: GET /favicon.ico
+2026-04-09 01:07:13.785 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/favicon.ico - 404 0 null 199.1294ms
+2026-04-09 01:07:13.810 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5275/favicon.ico, Response status code: 404
+2026-04-09 01:07:20.083 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/index.html - null null
+2026-04-09 01:07:20.279 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/index.html - 200 null text/html;charset=utf-8 196.101ms
+2026-04-09 01:07:20.331 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_vs/browserLink - null null
+2026-04-09 01:07:20.386 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - null null
+2026-04-09 01:07:20.453 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - 200 14919 application/javascript; charset=utf-8 67.6751ms
+2026-04-09 01:07:20.583 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_vs/browserLink - 200 null text/javascript; charset=UTF-8 252.2931ms
+2026-04-09 01:07:22.571 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - null null
+2026-04-09 01:07:22.615 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 44.0303ms
+2026-04-09 01:07:50.362 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/ - null null
+2026-04-09 01:07:50.380 +05:30 [INF] Request: GET /
+2026-04-09 01:07:50.390 +05:30 [INF] Executing endpoint 'HTTP: GET /'
+2026-04-09 01:07:50.397 +05:30 [INF] Executed endpoint 'HTTP: GET /'
+2026-04-09 01:07:50.403 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/ - 200 null text/plain; charset=utf-8 40.8736ms
+2026-04-09 01:08:40.502 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/login - application/json 58
+2026-04-09 01:08:40.518 +05:30 [INF] CORS policy execution successful.
+2026-04-09 01:08:40.558 +05:30 [INF] Request: POST /login
+2026-04-09 01:08:40.561 +05:30 [INF] Executing endpoint 'HTTP: POST /login'
+2026-04-09 01:08:41.045 +05:30 [INF] Executed DbCommand (107ms) [Parameters=[@__loginUser_Email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__loginUser_Email_0
+LIMIT 1
+2026-04-09 01:08:41.273 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:08:41.282 +05:30 [INF] Writing value of type '<>f__AnonymousType0`1' as Json.
+2026-04-09 01:08:41.295 +05:30 [INF] Executed endpoint 'HTTP: POST /login'
+2026-04-09 01:08:41.314 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/login - 200 null application/json; charset=utf-8 812.6166ms
+2026-04-09 01:09:40.826 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/admin/users - null null
+2026-04-09 01:09:40.841 +05:30 [INF] Request: GET /admin/users
+2026-04-09 01:09:40.974 +05:30 [INF] Executing endpoint 'HTTP: GET /admin/users'
+2026-04-09 01:09:41.047 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+2026-04-09 01:09:41.079 +05:30 [INF] Executed endpoint 'HTTP: GET /admin/users'
+2026-04-09 01:09:41.083 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/admin/users - 200 null application/json; charset=utf-8 257.1762ms
+2026-04-09 01:10:02.430 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/admin/issues?page=1&pageSize=10 - null null
+2026-04-09 01:10:02.440 +05:30 [INF] Request: GET /admin/issues
+2026-04-09 01:10:02.449 +05:30 [INF] Executing endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:02.741 +05:30 [INF] Executed DbCommand (77ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`AssignedToId`, `t`.`Block`, `t`.`CreatedAt`, `t`.`Description`, `t`.`ImagePath`, `t`.`IsDeleted`, `t`.`RoomNumber`, `t`.`Status`, `t`.`Title`, `t`.`UserId`, `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM (
+    SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`
+    FROM `Issues` AS `i`
+    WHERE NOT (`i`.`IsDeleted`)
+    ORDER BY `i`.`CreatedAt` DESC
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+INNER JOIN `Users` AS `u` ON `t`.`UserId` = `u`.`Id`
+ORDER BY `t`.`CreatedAt` DESC
+2026-04-09 01:10:02.856 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:10:02.866 +05:30 [INF] Writing value of type 'SelectListIterator`2' as Json.
+2026-04-09 01:10:02.886 +05:30 [INF] Executed endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:02.888 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/admin/issues?page=1&pageSize=10 - 200 null application/json; charset=utf-8 458.8605ms
+2026-04-09 01:10:14.954 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/admin/issues?status=Open&page=1&pageSize=10 - null null
+2026-04-09 01:10:14.967 +05:30 [INF] Request: GET /admin/issues
+2026-04-09 01:10:14.972 +05:30 [INF] Executing endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:15.065 +05:30 [INF] Executed DbCommand (51ms) [Parameters=[@__status_Value_0='?' (Size = 255), @__p_2='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`AssignedToId`, `t`.`Block`, `t`.`CreatedAt`, `t`.`Description`, `t`.`ImagePath`, `t`.`IsDeleted`, `t`.`RoomNumber`, `t`.`Status`, `t`.`Title`, `t`.`UserId`, `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM (
+    SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`
+    FROM `Issues` AS `i`
+    WHERE NOT (`i`.`IsDeleted`) AND (`i`.`Status` = @__status_Value_0)
+    ORDER BY `i`.`CreatedAt` DESC
+    LIMIT @__p_2 OFFSET @__p_1
+) AS `t`
+INNER JOIN `Users` AS `u` ON `t`.`UserId` = `u`.`Id`
+ORDER BY `t`.`CreatedAt` DESC
+2026-04-09 01:10:15.089 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:10:15.091 +05:30 [INF] Writing value of type 'SelectListIterator`2' as Json.
+2026-04-09 01:10:15.094 +05:30 [INF] Executed endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:15.097 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/admin/issues?status=Open&page=1&pageSize=10 - 200 null application/json; charset=utf-8 142.8104ms
+2026-04-09 01:10:30.541 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/admin/issues?status=InProgess&page=1&pageSize=10 - null null
+2026-04-09 01:10:30.551 +05:30 [INF] Request: GET /admin/issues
+2026-04-09 01:10:30.553 +05:30 [INF] Executing endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:30.561 +05:30 [INF] Executed endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:30.671 +05:30 [ERR] An unhandled exception occurred.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Failed to bind parameter "Nullable<IssueStatus> status" from "InProgess".
+   at lambda_method25(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Program.<>c.<<<Main>$>b__0_1>d.MoveNext() in D:\Coding\sem6\dotnet\backend\Program.cs:line 79
+2026-04-09 01:10:30.799 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/admin/issues?status=InProgess&page=1&pageSize=10 - 500 null null 258.0968ms
+2026-04-09 01:10:41.655 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/admin/issues?page=1&pageSize=10 - null null
+2026-04-09 01:10:41.664 +05:30 [INF] Request: GET /admin/issues
+2026-04-09 01:10:41.667 +05:30 [INF] Executing endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:41.676 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:10:41.680 +05:30 [INF] Writing value of type 'JsonElement' as Json.
+2026-04-09 01:10:41.685 +05:30 [INF] Executed endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:41.693 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/admin/issues?page=1&pageSize=10 - 200 null application/json; charset=utf-8 38.3998ms
+2026-04-09 01:10:56.607 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/admin/issues?status=InProgress&page=1&pageSize=10 - null null
+2026-04-09 01:10:56.617 +05:30 [INF] Request: GET /admin/issues
+2026-04-09 01:10:56.621 +05:30 [INF] Executing endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:56.690 +05:30 [INF] Executed DbCommand (45ms) [Parameters=[@__status_Value_0='?' (Size = 255), @__p_2='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`AssignedToId`, `t`.`Block`, `t`.`CreatedAt`, `t`.`Description`, `t`.`ImagePath`, `t`.`IsDeleted`, `t`.`RoomNumber`, `t`.`Status`, `t`.`Title`, `t`.`UserId`, `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM (
+    SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`
+    FROM `Issues` AS `i`
+    WHERE NOT (`i`.`IsDeleted`) AND (`i`.`Status` = @__status_Value_0)
+    ORDER BY `i`.`CreatedAt` DESC
+    LIMIT @__p_2 OFFSET @__p_1
+) AS `t`
+INNER JOIN `Users` AS `u` ON `t`.`UserId` = `u`.`Id`
+ORDER BY `t`.`CreatedAt` DESC
+2026-04-09 01:10:56.705 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:10:56.708 +05:30 [INF] Writing value of type 'SelectListIterator`2' as Json.
+2026-04-09 01:10:56.711 +05:30 [INF] Executed endpoint 'HTTP: GET /admin/issues'
+2026-04-09 01:10:56.715 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/admin/issues?status=InProgress&page=1&pageSize=10 - 200 null application/json; charset=utf-8 107.623ms
+2026-04-09 01:13:16.259 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/staff/issues - null null
+2026-04-09 01:13:16.272 +05:30 [INF] Request: GET /staff/issues
+2026-04-09 01:13:16.280 +05:30 [INF] Executing endpoint 'HTTP: GET /staff/issues'
+2026-04-09 01:13:16.312 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-04-09 01:13:16.378 +05:30 [INF] Executed DbCommand (34ms) [Parameters=[@__userId_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`, `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Issues` AS `i`
+INNER JOIN `Users` AS `u` ON `i`.`UserId` = `u`.`Id`
+WHERE (`i`.`AssignedToId` = @__userId_0) AND NOT (`i`.`IsDeleted`)
+ORDER BY `i`.`CreatedAt` DESC
+2026-04-09 01:13:16.392 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:13:16.414 +05:30 [INF] Writing value of type 'List`1' as Json.
+2026-04-09 01:13:16.419 +05:30 [INF] Executed endpoint 'HTTP: GET /staff/issues'
+2026-04-09 01:13:16.426 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/staff/issues - 200 null application/json; charset=utf-8 166.5492ms
+2026-04-09 01:19:20.409 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/register - application/json 79
+2026-04-09 01:19:20.444 +05:30 [INF] CORS policy execution successful.
+2026-04-09 01:19:20.448 +05:30 [INF] Request: POST /register
+2026-04-09 01:19:20.456 +05:30 [INF] Executing endpoint 'HTTP: POST /register'
+2026-04-09 01:19:20.550 +05:30 [INF] Executed DbCommand (21ms) [Parameters=[@__dto_Email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Email` = @__dto_Email_0)
+2026-04-09 01:19:20.839 +05:30 [INF] Executed DbCommand (7ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (Size = 4000), @p2='?' (Size = 4000), @p3='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Users` (`Email`, `Name`, `PasswordHash`, `Role`)
+VALUES (@p0, @p1, @p2, @p3);
+SELECT `Id`
+FROM `Users`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2026-04-09 01:19:20.911 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:19:20.920 +05:30 [INF] Writing value of type '<>f__AnonymousType1`3' as Json.
+2026-04-09 01:19:20.927 +05:30 [INF] Executed endpoint 'HTTP: POST /register'
+2026-04-09 01:19:20.935 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/register - 200 null application/json; charset=utf-8 535.9043ms
+2026-04-09 01:20:21.952 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/login - application/json 58
+2026-04-09 01:20:21.957 +05:30 [INF] CORS policy execution successful.
+2026-04-09 01:20:21.959 +05:30 [INF] Request: POST /login
+2026-04-09 01:20:21.964 +05:30 [INF] Executing endpoint 'HTTP: POST /login'
+2026-04-09 01:20:21.988 +05:30 [INF] Executed DbCommand (10ms) [Parameters=[@__loginUser_Email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__loginUser_Email_0
+LIMIT 1
+2026-04-09 01:20:22.009 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:20:22.012 +05:30 [INF] Writing value of type '<>f__AnonymousType0`1' as Json.
+2026-04-09 01:20:22.014 +05:30 [INF] Executed endpoint 'HTTP: POST /login'
+2026-04-09 01:20:22.016 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/login - 200 null application/json; charset=utf-8 64.9734ms
+2026-04-09 01:21:45.795 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/issues/report - application/json 126
+2026-04-09 01:21:45.807 +05:30 [INF] CORS policy execution successful.
+2026-04-09 01:21:45.813 +05:30 [INF] Request: POST /issues/report
+2026-04-09 01:21:45.821 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Student)
+2026-04-09 01:21:45.833 +05:30 [INF] AuthenticationScheme: Bearer was forbidden.
+2026-04-09 01:21:45.838 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/issues/report - 403 0 null 42.4612ms
+2026-04-09 01:22:46.523 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/issues/report - application/json 126
+2026-04-09 01:22:46.538 +05:30 [INF] CORS policy execution successful.
+2026-04-09 01:22:46.539 +05:30 [INF] Request: POST /issues/report
+2026-04-09 01:22:46.546 +05:30 [INF] Executing endpoint 'HTTP: POST /issues/report'
+2026-04-09 01:22:46.615 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-04-09 01:22:46.699 +05:30 [INF] Executed DbCommand (20ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (Size = 4000), @p2='?' (DbType = DateTime), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (DbType = Boolean), @p6='?' (Size = 4000), @p7='?' (Size = 255), @p8='?' (Size = 4000), @p9='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Issues` (`AssignedToId`, `Block`, `CreatedAt`, `Description`, `ImagePath`, `IsDeleted`, `RoomNumber`, `Status`, `Title`, `UserId`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+SELECT `Id`
+FROM `Issues`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2026-04-09 01:22:46.722 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:22:46.729 +05:30 [INF] Writing value of type '<>f__AnonymousType4`2' as Json.
+2026-04-09 01:22:46.736 +05:30 [INF] Executed endpoint 'HTTP: POST /issues/report'
+2026-04-09 01:22:46.740 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/issues/report - 200 null application/json; charset=utf-8 217.8804ms
+2026-04-09 01:23:01.801 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/student/issues - null null
+2026-04-09 01:23:01.818 +05:30 [INF] Request: GET /student/issues
+2026-04-09 01:23:01.820 +05:30 [INF] Executing endpoint 'HTTP: GET /student/issues'
+2026-04-09 01:23:01.829 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-04-09 01:23:01.862 +05:30 [INF] Executed DbCommand (7ms) [Parameters=[@__userId_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`
+FROM `Issues` AS `i`
+WHERE (`i`.`UserId` = @__userId_0) AND NOT (`i`.`IsDeleted`)
+ORDER BY `i`.`CreatedAt` DESC
+2026-04-09 01:23:01.885 +05:30 [INF] Setting HTTP status code 200.
+2026-04-09 01:23:01.890 +05:30 [INF] Writing value of type 'List`1' as Json.
+2026-04-09 01:23:01.901 +05:30 [INF] Executed endpoint 'HTTP: GET /student/issues'
+2026-04-09 01:23:01.905 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/student/issues - 200 null application/json; charset=utf-8 104.4944ms
+2026-04-09 01:49:46.056 +05:30 [INF] Attempting to run database migrations...
+2026-04-09 01:49:51.039 +05:30 [ERR] An error occurred using the connection to database '' on server 'localhost'.
+2026-04-09 01:49:51.095 +05:30 [WRN] Database not ready. Retrying in 5 seconds... (4 attempts left)
+2026-04-09 01:49:56.106 +05:30 [INF] Attempting to run database migrations...
+2026-04-09 01:50:00.187 +05:30 [ERR] An error occurred using the connection to database '' on server 'localhost'.
+2026-04-09 01:50:00.228 +05:30 [WRN] Database not ready. Retrying in 5 seconds... (3 attempts left)
