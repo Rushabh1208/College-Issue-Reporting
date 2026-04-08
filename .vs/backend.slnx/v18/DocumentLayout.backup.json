@@ -1,0 +1,104 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\extensions\\endpointextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|solutionrelative:extensions\\endpointextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\dtos\\issueresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|solutionrelative:dtos\\issueresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\extensions\\databaseextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|solutionrelative:extensions\\databaseextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\extensions\\securityextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|solutionrelative:extensions\\securityextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IssueResponseDto.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\DTOs\\IssueResponseDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\IssueResponseDto.cs",
+              "ToolTip": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\DTOs\\IssueResponseDto.cs",
+              "RelativeToolTip": "DTOs\\IssueResponseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-08T21:23:41.206Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-08T20:36:03.15Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SecurityExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\SecurityExtensions.cs",
+              "RelativeDocumentMoniker": "Extensions\\SecurityExtensions.cs",
+              "ToolTip": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\SecurityExtensions.cs",
+              "RelativeToolTip": "Extensions\\SecurityExtensions.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAQwCcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-08T20:35:30.321Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EndpointExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\EndpointExtensions.cs",
+              "RelativeDocumentMoniker": "Extensions\\EndpointExtensions.cs",
+              "ToolTip": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\EndpointExtensions.cs",
+              "RelativeToolTip": "Extensions\\EndpointExtensions.cs",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAgwF4AAABfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-08T20:33:08.141Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DatabaseExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\DatabaseExtensions.cs",
+              "RelativeDocumentMoniker": "Extensions\\DatabaseExtensions.cs",
+              "ToolTip": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\DatabaseExtensions.cs",
+              "RelativeToolTip": "Extensions\\DatabaseExtensions.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-08T20:33:02.781Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

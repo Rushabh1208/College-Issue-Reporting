@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: campus-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: campus_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: campus-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: campus-api
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      # Override MySQL connection string to use 'db' service name
+      - ConnectionStrings__DefaultConnection=Server=db;Database=campus_db;User=root;Password=root_password;Port=3306
+      # Override Redis connection string to use 'redis' service name
+      - Redis__ConnectionString=redis:6379
+
+volumes:
+  mysql-data:

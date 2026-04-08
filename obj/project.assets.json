@@ -4183,11 +4183,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\prit\\backend.csproj",
+      "projectUniqueName": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\prit\\backend.csproj",
+      "projectPath": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\backend.csproj",
       "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\prit\\obj\\",
+      "outputPath": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

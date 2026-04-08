@@ -14,17 +14,56 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 // 🔹 Add Services
+builder.Services.AddAppServices();
 builder.Services.AddDatabaseContext(builder.Configuration);
 builder.Services.AddRedisCache(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    var db = services.GetRequiredService<AppDbContext>();
+
+    int retries = 5;
+    while (retries > 0)
+    {
+        try
+        {
+            logger.LogInformation("Attempting to run database migrations...");
+            db.Database.Migrate();
+            logger.LogInformation("Database migrations applied successfully.");
+
+            // 🔹 Seed Database within the same resilient scope
+            logger.LogInformation("Seeding database...");
+            app.SeedDatabase();
+            logger.LogInformation("Database seeded successfully.");
+            
+            break;
+        }
+        catch (Exception ex)
+        {
+            retries--;
+            logger.LogWarning($"Database not ready. Retrying in 5 seconds... ({retries} attempts left)");
+            if (retries == 0)
+            {
+                logger.LogCritical(ex, "Could not connect to database after several attempts.");
+                throw;
+            }
+            Thread.Sleep(5000);
+        }
+    }
+}
 
 
 // 🔹 Configure Middleware
+app.UseSwaggerDocumentation();
 
-
+app.UseCors("AllowAll");
+app.UseRateLimiter();
 
 app.Use(async (ctx, next) =>
 {
