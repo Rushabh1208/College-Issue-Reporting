@@ -763,3 +763,66 @@ ORDER BY `t`.`CreatedAt` DESC
 2026-04-09 03:01:15.199 +05:30 [INF] Writing value of type 'SelectListIterator`2' as Json.
 2026-04-09 03:01:15.202 +05:30 [INF] Executed endpoint 'HTTP: GET /admin/issues'
 2026-04-09 03:01:15.204 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/admin/issues?page=1&pageSize=10 - 200 null application/json; charset=utf-8 126.5437ms
+2026-04-09 03:11:09.420 +05:30 [INF] Attempting to run database migrations...
+2026-04-09 03:11:14.034 +05:30 [ERR] An error occurred using the connection to database '' on server 'localhost'.
+2026-04-09 03:11:14.074 +05:30 [WRN] Database not ready. Retrying in 5 seconds... (4 attempts left)
+2026-04-09 03:11:19.091 +05:30 [INF] Attempting to run database migrations...
+2026-04-09 03:11:19.166 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-04-09 03:11:19.181 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-04-09 03:11:19.210 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-04-09 03:11:19.230 +05:30 [INF] No migrations were applied. The database is already up to date.
+2026-04-09 03:11:19.232 +05:30 [INF] Database migrations applied successfully.
+2026-04-09 03:11:19.233 +05:30 [INF] Seeding database...
+2026-04-09 03:11:19.389 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 1)
+2026-04-09 03:11:19.399 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 2)
+2026-04-09 03:11:19.406 +05:30 [INF] Database seeded successfully.
+2026-04-09 03:11:19.485 +05:30 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-09 03:11:19.711 +05:30 [INF] Now listening on: http://localhost:5275
+2026-04-09 03:11:19.718 +05:30 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2026-04-09 03:11:19.760 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-09 03:11:19.763 +05:30 [INF] Hosting environment: Development
+2026-04-09 03:11:19.772 +05:30 [INF] Content root path: C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting
+2026-04-09 03:11:20.419 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/ - null null
+2026-04-09 03:11:20.746 +05:30 [INF] Request: GET /
+2026-04-09 03:11:20.859 +05:30 [INF] Executing endpoint 'HTTP: GET /'
+2026-04-09 03:11:20.901 +05:30 [INF] Executed endpoint 'HTTP: GET /'
+2026-04-09 03:11:20.912 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/ - 200 null text/plain; charset=utf-8 504.8333ms
+2026-04-09 03:11:20.952 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/favicon.ico - null null
+2026-04-09 03:11:20.969 +05:30 [INF] Request: GET /favicon.ico
+2026-04-09 03:11:21.000 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/favicon.ico - 404 0 null 48.3046ms
+2026-04-09 03:11:21.017 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5275/favicon.ico, Response status code: 404
+2026-04-09 03:11:29.146 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger - null null
+2026-04-09 03:11:29.171 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger - 301 null null 25.3444ms
+2026-04-09 03:11:29.188 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/index.html - null null
+2026-04-09 03:11:29.304 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/index.html - 200 null text/html;charset=utf-8 115.8692ms
+2026-04-09 03:11:29.320 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui.css - null null
+2026-04-09 03:11:29.327 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - null null
+2026-04-09 03:11:29.321 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui-bundle.js - null null
+2026-04-09 03:11:29.372 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - 200 14919 application/javascript; charset=utf-8 44.931ms
+2026-04-09 03:11:29.450 +05:30 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2026-04-09 03:11:29.328 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_vs/browserLink - null null
+2026-04-09 03:11:29.464 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui.css - 200 144929 text/css 143.396ms
+2026-04-09 03:11:29.480 +05:30 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2026-04-09 03:11:29.329 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui-standalone-preset.js - null null
+2026-04-09 03:11:29.592 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_vs/browserLink - 200 null text/javascript; charset=UTF-8 264.1085ms
+2026-04-09 03:11:29.594 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui-bundle.js - 200 1061536 text/javascript 273.1673ms
+2026-04-09 03:11:29.616 +05:30 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2026-04-09 03:11:29.632 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui-standalone-preset.js - 200 312163 text/javascript 303.4262ms
+2026-04-09 03:11:29.668 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - null null
+2026-04-09 03:11:29.687 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/favicon-32x32.png - null null
+2026-04-09 03:11:29.700 +05:30 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2026-04-09 03:11:29.700 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 32.6247ms
+2026-04-09 03:11:29.704 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/favicon-32x32.png - 200 628 image/png 16.8503ms

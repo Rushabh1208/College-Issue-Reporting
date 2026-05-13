@@ -42,8 +42,7 @@
               "RelativeToolTip": "DTOs\\IssueResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T21:23:41.206Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-08T21:23:41.206Z"
             },
             {
               "$type": "Document",
@@ -55,8 +54,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T20:36:03.15Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-08T20:36:03.15Z"
             },
             {
               "$type": "Document",
@@ -78,7 +76,7 @@
               "RelativeDocumentMoniker": "Extensions\\EndpointExtensions.cs",
               "ToolTip": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\EndpointExtensions.cs",
               "RelativeToolTip": "Extensions\\EndpointExtensions.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAAAgwF4AAABfAAAAAAAAAA==",
+              "ViewState": "AgIAADgAAAAAAAAAAAAAwEoAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-08T20:33:08.141Z",
               "EditorCaption": ""
@@ -93,8 +91,7 @@
               "RelativeToolTip": "Extensions\\DatabaseExtensions.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T20:33:02.781Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-08T20:33:02.781Z"
             }
           ]
         }
