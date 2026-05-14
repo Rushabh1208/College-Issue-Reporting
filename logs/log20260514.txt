@@ -516,3 +516,55 @@ ORDER BY `i`.`CreatedAt` DESC
 2026-05-14 20:22:30.895 +05:30 [INF] Writing value of type 'List`1' as Json.
 2026-05-14 20:22:30.895 +05:30 [INF] Executed endpoint 'HTTP: GET /staff/issues'
 2026-05-14 20:22:30.896 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/staff/issues - 200 null application/json; charset=utf-8 8.3948ms
+2026-05-14 21:21:26.187 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 21:21:26.216 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 21:21:26.270 +05:30 [INF] Executed DbCommand (42ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-05-14 21:21:26.278 +05:30 [INF] Applying migration '20260514155000_RemoveImagePath'.
+2026-05-14 21:21:26.305 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE `Issues` DROP COLUMN `ImagePath`;
+2026-05-14 21:21:26.309 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20260514155000_RemoveImagePath', '8.0.8');
+2026-05-14 21:39:43.933 +05:30 [INF] Attempting to run database migrations...
+2026-05-14 21:39:44.406 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 21:39:44.418 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 21:39:44.431 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-05-14 21:39:44.440 +05:30 [INF] No migrations were applied. The database is already up to date.
+2026-05-14 21:39:44.441 +05:30 [INF] Database migrations applied successfully.
+2026-05-14 21:39:44.442 +05:30 [INF] Seeding database...
+2026-05-14 21:39:44.606 +05:30 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 1)
+2026-05-14 21:39:44.617 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 2)
+2026-05-14 21:39:44.634 +05:30 [INF] Database seeded successfully.
+2026-05-14 21:39:44.699 +05:30 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-14 21:39:44.910 +05:30 [INF] Now listening on: http://localhost:5275
+2026-05-14 21:39:44.920 +05:30 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2026-05-14 21:39:44.949 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-14 21:39:44.951 +05:30 [INF] Hosting environment: Development
+2026-05-14 21:39:44.964 +05:30 [INF] Content root path: C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting
+2026-05-14 21:39:45.501 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/ - null null
+2026-05-14 21:39:45.922 +05:30 [INF] Request: GET /
+2026-05-14 21:39:46.172 +05:30 [INF] Executing endpoint 'HTTP: GET /'
+2026-05-14 21:39:46.230 +05:30 [INF] Executed endpoint 'HTTP: GET /'
+2026-05-14 21:39:46.241 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/ - 200 null text/plain; charset=utf-8 754.8582ms
+2026-05-14 21:39:46.275 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/favicon.ico - null null
+2026-05-14 21:39:46.285 +05:30 [INF] Request: GET /favicon.ico
+2026-05-14 21:39:46.296 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/favicon.ico - 404 0 null 21.6944ms
+2026-05-14 21:39:46.305 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5275/favicon.ico, Response status code: 404

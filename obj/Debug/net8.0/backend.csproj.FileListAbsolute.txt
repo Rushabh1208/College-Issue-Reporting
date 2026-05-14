@@ -272,3 +272,4 @@ C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting\obj\De
 C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting\obj\Debug\net8.0\backend.pdb
 C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting\obj\Debug\net8.0\backend.genruntimeconfig.cache
 C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting\obj\Debug\net8.0\ref\backend.dll
+C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

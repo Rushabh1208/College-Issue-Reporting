@@ -8,7 +8,7 @@ namespace backend.Extensions
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var key = configuration["Jwt:Key"] ?? "THIS_IS_SUPER_SECRET_KEY_1236547890";
+            var key = configuration["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key", "JWT Key is missing from configuration.");
             
             services.AddAuthentication(options =>
             {

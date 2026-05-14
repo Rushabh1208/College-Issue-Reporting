@@ -17,7 +17,6 @@ namespace backend.Models
         public long? AssignedToId { get; set; } // Staff
         public User AssignedTo { get; set; }
 
-        public string? ImagePath { get; set; }
 
         
         public string Block { get; set; }          // e.g., A, B, C

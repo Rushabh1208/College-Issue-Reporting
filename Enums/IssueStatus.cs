@@ -4,7 +4,6 @@ namespace backend.Enums
     {
         Open,
         InProgress,
-        Resolved,
-        Closed
+        Resolved
     }
 }

@@ -9,11 +9,9 @@ namespace backend.Common
 {
     public static class SecurityHelper
     {
-        private const string DefaultKey = "THIS_IS_SUPER_SECRET_KEY_1236547890";
-
         public static string GenerateToken(User user, IConfiguration configuration)
         {
-            var key = configuration["Jwt:Key"] ?? DefaultKey;
+            var key = configuration["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key", "JWT Key is missing from configuration.");
             
             var claims = new[]
             {
@@ -55,9 +53,5 @@ namespace backend.Common
             return user.Id;
         }
 
-        public static string GetUserRole(HttpContext ctx)
-        {
-            return ctx.User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
-        }
     }
 }
