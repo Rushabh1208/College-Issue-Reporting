@@ -1,6 +1,6 @@
 using Microsoft.OpenApi.Models;
 
-namespace backend.Extensions
+namespace backend.Infrastructure.Extensions
 {
     public static class SwaggerExtensions
     {

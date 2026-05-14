@@ -1,4 +1,4 @@
-namespace backend.DTOs
+namespace backend.Features.Issues
 {
     public class IssueResponseDto
     {

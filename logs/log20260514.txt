@@ -568,3 +568,112 @@ SELECT EXISTS (
 2026-05-14 21:39:46.285 +05:30 [INF] Request: GET /favicon.ico
 2026-05-14 21:39:46.296 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/favicon.ico - 404 0 null 21.6944ms
 2026-05-14 21:39:46.305 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5275/favicon.ico, Response status code: 404
+2026-05-14 22:17:23.196 +05:30 [INF] Attempting to run database migrations...
+2026-05-14 22:17:23.877 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 22:17:23.893 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 22:17:23.913 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-05-14 22:17:23.932 +05:30 [INF] No migrations were applied. The database is already up to date.
+2026-05-14 22:17:23.935 +05:30 [INF] Database migrations applied successfully.
+2026-05-14 22:17:23.939 +05:30 [INF] Seeding database...
+2026-05-14 22:17:24.138 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 1)
+2026-05-14 22:17:24.147 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 2)
+2026-05-14 22:17:24.154 +05:30 [INF] Database seeded successfully.
+2026-05-14 22:17:24.209 +05:30 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-14 22:17:24.460 +05:30 [INF] Now listening on: http://localhost:5275
+2026-05-14 22:17:24.468 +05:30 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2026-05-14 22:17:24.519 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-14 22:17:24.540 +05:30 [INF] Hosting environment: Development
+2026-05-14 22:17:24.543 +05:30 [INF] Content root path: C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting
+2026-05-14 22:17:24.744 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/ - null null
+2026-05-14 22:17:25.075 +05:30 [INF] Request: GET /
+2026-05-14 22:17:25.204 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/ - 404 null null 478.3051ms
+2026-05-14 22:17:25.215 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5275/, Response status code: 404
+2026-05-14 22:17:28.296 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/ - null null
+2026-05-14 22:17:28.337 +05:30 [INF] Request: GET /
+2026-05-14 22:17:28.341 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/ - 404 null null 44.7009ms
+2026-05-14 22:17:28.348 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5275/, Response status code: 404
+2026-05-14 22:17:40.868 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger - null null
+2026-05-14 22:17:40.885 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger - 301 null null 16.7337ms
+2026-05-14 22:17:40.895 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/index.html - null null
+2026-05-14 22:17:41.027 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/index.html - 200 null text/html;charset=utf-8 131.671ms
+2026-05-14 22:17:41.034 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui-bundle.js - null null
+2026-05-14 22:17:41.035 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-14 22:17:41.035 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_vs/browserLink - null null
+2026-05-14 22:17:41.037 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui.css - null null
+2026-05-14 22:17:41.053 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - 200 14919 application/javascript; charset=utf-8 18.445ms
+2026-05-14 22:17:41.035 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui-standalone-preset.js - null null
+2026-05-14 22:17:41.162 +05:30 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2026-05-14 22:17:41.162 +05:30 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2026-05-14 22:17:41.202 +05:30 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2026-05-14 22:17:41.204 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui.css - 200 144929 text/css 167.0695ms
+2026-05-14 22:17:41.206 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui-bundle.js - 200 1061536 text/javascript 171.2991ms
+2026-05-14 22:17:41.208 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/swagger-ui-standalone-preset.js - 200 312163 text/javascript 172.6103ms
+2026-05-14 22:17:41.243 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_vs/browserLink - 200 null text/javascript; charset=UTF-8 207.9416ms
+2026-05-14 22:17:41.324 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - null null
+2026-05-14 22:17:41.343 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 18.6924ms
+2026-05-14 22:17:41.398 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/favicon-32x32.png - null null
+2026-05-14 22:17:41.408 +05:30 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2026-05-14 22:17:41.412 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/favicon-32x32.png - 200 628 image/png 14.8066ms
+2026-05-14 22:19:24.708 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/index.html - null null
+2026-05-14 22:19:24.756 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/index.html - 200 null text/html;charset=utf-8 48.3843ms
+2026-05-14 22:19:24.788 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_vs/browserLink - null null
+2026-05-14 22:19:24.789 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-14 22:19:24.808 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - 200 14919 application/javascript; charset=utf-8 18.5439ms
+2026-05-14 22:19:24.824 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_vs/browserLink - 200 null text/javascript; charset=UTF-8 35.5679ms
+2026-05-14 22:19:25.148 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - null null
+2026-05-14 22:19:25.167 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 19.6514ms
+2026-05-14 22:20:02.062 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/ - null null
+2026-05-14 22:20:02.072 +05:30 [INF] Request: GET /
+2026-05-14 22:20:02.079 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/ - 404 null null 17.2007ms
+2026-05-14 22:20:02.088 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5275/, Response status code: 404
+2026-05-14 22:20:15.022 +05:30 [INF] Attempting to run database migrations...
+2026-05-14 22:20:15.671 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 22:20:15.689 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 22:20:15.715 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-05-14 22:20:15.732 +05:30 [INF] No migrations were applied. The database is already up to date.
+2026-05-14 22:20:15.733 +05:30 [INF] Database migrations applied successfully.
+2026-05-14 22:20:15.734 +05:30 [INF] Seeding database...
+2026-05-14 22:20:15.901 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 1)
+2026-05-14 22:20:15.907 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 2)
+2026-05-14 22:20:15.914 +05:30 [INF] Database seeded successfully.
+2026-05-14 22:20:15.967 +05:30 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-14 22:20:16.177 +05:30 [INF] Now listening on: http://localhost:5275
+2026-05-14 22:20:16.186 +05:30 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2026-05-14 22:20:16.217 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-14 22:20:16.218 +05:30 [INF] Hosting environment: Development
+2026-05-14 22:20:16.221 +05:30 [INF] Content root path: C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting
+2026-05-14 22:20:16.518 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/ - null null
+2026-05-14 22:20:16.804 +05:30 [INF] Request: GET /
+2026-05-14 22:20:16.949 +05:30 [INF] Executing endpoint 'HTTP: GET /'
+2026-05-14 22:20:16.996 +05:30 [INF] Executed endpoint 'HTTP: GET /'
+2026-05-14 22:20:17.005 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/ - 200 null text/plain; charset=utf-8 497.7469ms
+2026-05-14 22:20:17.029 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/favicon.ico - null null
+2026-05-14 22:20:17.038 +05:30 [INF] Request: GET /favicon.ico
+2026-05-14 22:20:17.041 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/favicon.ico - 404 0 null 12.3015ms
+2026-05-14 22:20:17.047 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5275/favicon.ico, Response status code: 404

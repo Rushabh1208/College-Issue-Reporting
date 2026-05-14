@@ -1,6 +1,6 @@
 using backend.Enums;
 
-namespace backend.DTOs
+namespace backend.Features.Issues
 {
     public class UpdateStatusDto
     {

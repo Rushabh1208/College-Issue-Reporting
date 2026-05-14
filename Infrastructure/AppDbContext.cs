@@ -1,4 +1,4 @@
-namespace backend
+namespace backend.Infrastructure
 {
     using backend.Models;
     using Microsoft.EntityFrameworkCore;

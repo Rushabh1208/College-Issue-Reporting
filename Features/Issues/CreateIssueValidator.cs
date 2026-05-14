@@ -1,5 +1,5 @@
 using FluentValidation;
-using backend.DTOs;
+using backend.Features.Issues;
 
 public class CreateIssueDtoValidator : AbstractValidator<CreateIssueDto>
 {

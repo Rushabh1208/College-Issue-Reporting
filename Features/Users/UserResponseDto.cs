@@ -1,4 +1,4 @@
-namespace backend.DTOs
+namespace backend.Features.Users
 {
     public class UserResponseDto
     {

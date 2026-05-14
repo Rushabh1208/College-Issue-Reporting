@@ -1,7 +1,7 @@
 [
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapAppEndpoints\u003Eb__0_0",
+    "ContainingType": "Program\u002B\u003C\u003Ec",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_0",
     "RelativePath": "",
     "HttpMethod": "GET",
     "IsController": false,
@@ -18,8 +18,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapAdminEndpoints\u003Eb__2_1",
+    "ContainingType": "backend.Features.Issues.IssueEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapIssueEndpoints\u003Eb__0_0",
     "RelativePath": "admin/issues",
     "HttpMethod": "GET",
     "IsController": false,
@@ -50,8 +50,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapAdminEndpoints\u003Eb__2_3",
+    "ContainingType": "backend.Features.Issues.IssueEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapIssueEndpoints\u003Eb__0_2",
     "RelativePath": "admin/issues/{id}",
     "HttpMethod": "DELETE",
     "IsController": false,
@@ -72,8 +72,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapAdminEndpoints\u003Eb__2_2",
+    "ContainingType": "backend.Features.Issues.IssueEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapIssueEndpoints\u003Eb__0_1",
     "RelativePath": "admin/issues/{id}/assign/{staffId}",
     "HttpMethod": "PUT",
     "IsController": false,
@@ -99,8 +99,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapAdminEndpoints\u003Eb__2_0",
+    "ContainingType": "backend.Features.Users.UserEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapUserEndpoints\u003Eb__0_0",
     "RelativePath": "admin/users",
     "HttpMethod": "GET",
     "IsController": false,
@@ -126,8 +126,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapIssueEndpoints\u003Eb__3_0",
+    "ContainingType": "backend.Features.Issues.IssueEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapIssueEndpoints\u003Eb__0_3",
     "RelativePath": "issues/report",
     "HttpMethod": "POST",
     "IsController": false,
@@ -135,7 +135,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "backend.DTOs.CreateIssueDto",
+        "Type": "backend.Features.Issues.CreateIssueDto",
         "IsRequired": true
       }
     ],
@@ -148,8 +148,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapAuthEndpoints\u003Eb__1_0",
+    "ContainingType": "backend.Features.Auth.AuthEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapAuthEndpoints\u003Eb__0_0",
     "RelativePath": "login",
     "HttpMethod": "POST",
     "IsController": false,
@@ -157,7 +157,7 @@
     "Parameters": [
       {
         "Name": "loginUser",
-        "Type": "backend.DTOs.LoginUserDto",
+        "Type": "backend.Features.Auth.LoginDto",
         "IsRequired": true
       }
     ],
@@ -170,8 +170,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapAuthEndpoints\u003Eb__1_1",
+    "ContainingType": "backend.Features.Auth.AuthEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapAuthEndpoints\u003Eb__0_1",
     "RelativePath": "register",
     "HttpMethod": "POST",
     "IsController": false,
@@ -179,7 +179,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "backend.DTOs.RegisterDto",
+        "Type": "backend.Features.Auth.RegisterDto",
         "IsRequired": true
       }
     ],
@@ -192,8 +192,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapStaffEndpoints\u003Eb__4_0",
+    "ContainingType": "backend.Features.Issues.IssueEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapIssueEndpoints\u003Eb__0_4",
     "RelativePath": "staff/issues",
     "HttpMethod": "GET",
     "IsController": false,
@@ -208,8 +208,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapStaffEndpoints\u003Eb__4_1",
+    "ContainingType": "backend.Features.Issues.IssueEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapIssueEndpoints\u003Eb__0_5",
     "RelativePath": "staff/issues/{id}/status",
     "HttpMethod": "PUT",
     "IsController": false,
@@ -222,7 +222,7 @@
       },
       {
         "Name": "dto",
-        "Type": "backend.DTOs.UpdateStatusDto",
+        "Type": "backend.Features.Issues.UpdateStatusDto",
         "IsRequired": true
       }
     ],
@@ -235,8 +235,8 @@
     ]
   },
   {
-    "ContainingType": "backend.Extensions.EndpointExtensions\u002B\u003C\u003Ec",
-    "Method": "\u003CMapStudentEndpoints\u003Eb__5_0",
+    "ContainingType": "backend.Features.Issues.IssueEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapIssueEndpoints\u003Eb__0_6",
     "RelativePath": "student/issues",
     "HttpMethod": "GET",
     "IsController": false,

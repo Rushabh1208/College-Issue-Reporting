@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
-namespace backend.Extensions
+namespace backend.Infrastructure.Extensions
 {
     public static class ServiceExtensions
     {

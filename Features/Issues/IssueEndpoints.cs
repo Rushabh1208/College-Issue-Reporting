@@ -1,80 +1,19 @@
+using backend.Infrastructure;
 using backend.Models;
 using backend.Enums;
-using backend.DTOs;
-using backend.Common;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using System.Text.Json;
 
-namespace backend.Extensions
+namespace backend.Features.Issues
 {
-    public static class EndpointExtensions
+    public static class IssueEndpoints
     {
-        public static void MapAppEndpoints(this IEndpointRouteBuilder app)
-        {
-            app.MapAuthEndpoints();
-            app.MapAdminEndpoints();
-            app.MapIssueEndpoints();
-            app.MapStaffEndpoints();
-            app.MapStudentEndpoints();
-            app.MapGet("/", () => "Campus API is running...");
-        }
-
-        private static void MapAuthEndpoints(this IEndpointRouteBuilder app)
-        {
-            app.MapPost("/login", async (AppDbContext db, LoginUserDto loginUser, IConfiguration config) =>
-            {
-                var user = await db.Users.FirstOrDefaultAsync(u => u.Email == loginUser.Email);
-
-                if (user == null || user.PasswordHash != SecurityHelper.HashPassword(loginUser.Password))
-                    return Results.Unauthorized();
-
-                return Results.Ok(new { token = SecurityHelper.GenerateToken(user, config) });
-            }).RequireRateLimiting("login");
-
-            app.MapPost("/register", async (AppDbContext db, RegisterDto dto) =>
-            {
-                if (await db.Users.AnyAsync(u => u.Email == dto.Email))
-                    return Results.BadRequest("Email already registered");
-
-                var user = new User
-                {
-                    Name = dto.Name,
-                    Email = dto.Email,
-                    PasswordHash = SecurityHelper.HashPassword(dto.Password),
-                    Role = UserRole.Student 
-                };
-
-                db.Users.Add(user);
-                await db.SaveChangesAsync();
-
-                return Results.Ok(new { message = "User registered successfully", user.Id, user.Email });
-            });
-        }
-
-        private static void MapAdminEndpoints(this IEndpointRouteBuilder app)
+        public static void MapIssueEndpoints(this IEndpointRouteBuilder app)
         {
             var adminGroup = app.MapGroup("/admin").RequireAuthorization("AdminOnly");
-
-            adminGroup.MapGet("/users", async (AppDbContext db, int page = 1, int pageSize = 10) =>
-            {
-                var users = await db.Users
-                    .OrderBy(u => u.Id)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Select(u => new UserResponseDto
-                    {
-                        Id = u.Id,
-                        Name = u.Name,
-                        Email = u.Email,
-                        Role = u.Role.ToString()
-                    })
-                    .ToListAsync();
-
-                return Results.Ok(users);
-            });
-
+            
             adminGroup.MapGet("/issues", async (AppDbContext db, IConnectionMultiplexer redis, IssueStatus? status, int page = 1, int pageSize = 10) =>
             {
                 var cache = redis.GetDatabase();
@@ -141,10 +80,7 @@ namespace backend.Extensions
 
                 return Results.Ok(new { message = "Issue deleted successfully" });
             });
-        }
 
-        private static void MapIssueEndpoints(this IEndpointRouteBuilder app)
-        {
             app.MapPost("/issues/report", async (HttpContext ctx, AppDbContext db, IValidator<CreateIssueDto> validator, CreateIssueDto dto) =>
             {
                 var validation = await validator.ValidateAsync(dto);
@@ -169,10 +105,7 @@ namespace backend.Extensions
             })
             .RequireAuthorization("StudentOnly")
             .RequireRateLimiting("issue");
-        }
 
-        private static void MapStaffEndpoints(this IEndpointRouteBuilder app)
-        {
             var staffGroup = app.MapGroup("/staff").RequireAuthorization("StaffOrAdmin");
 
             staffGroup.MapGet("/issues", async (HttpContext ctx, AppDbContext db) =>
@@ -207,10 +140,7 @@ namespace backend.Extensions
 
                 return Results.Ok(new { message = "Status updated" });
             });
-        }
 
-        private static void MapStudentEndpoints(this IEndpointRouteBuilder app)
-        {
             app.MapGet("/student/issues", async (HttpContext ctx, AppDbContext db) =>
             {
                 var userId = SecurityHelper.GetUserId(ctx, db);

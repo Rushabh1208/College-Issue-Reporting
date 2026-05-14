@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace backend.Common
+namespace backend.Infrastructure
 {
     public static class SecurityHelper
     {

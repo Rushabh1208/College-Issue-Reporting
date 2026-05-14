@@ -1,10 +1,10 @@
 using backend.Models;
 using backend.Enums;
-using backend.Common;
+using backend.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
-namespace backend.Extensions
+namespace backend.Infrastructure.Extensions
 {
     public static class DatabaseExtensions
     {

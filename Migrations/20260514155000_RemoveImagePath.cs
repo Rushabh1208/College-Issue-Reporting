@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+using backend.Infrastructure;
 namespace backend.Migrations
 {
     /// <inheritdoc />

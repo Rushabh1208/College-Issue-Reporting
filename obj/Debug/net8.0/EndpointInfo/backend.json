@@ -14,7 +14,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginUserDto"
+                "$ref": "#/components/schemas/LoginDto"
               }
             }
           },
@@ -98,38 +98,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/admin/users": {
-      "get": {
-        "tags": [
-          "backend"
-        ],
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
           }
         }
       }
@@ -272,6 +240,38 @@
           }
         }
       }
+    },
+    "/admin/users": {
+      "get": {
+        "tags": [
+          "backend"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -307,7 +307,7 @@
         "type": "integer",
         "format": "int32"
       },
-      "LoginUserDto": {
+      "LoginDto": {
         "type": "object",
         "properties": {
           "email": {

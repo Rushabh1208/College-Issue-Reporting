@@ -9,6 +9,7 @@ using backend;
 
 #nullable disable
 
+using backend.Infrastructure;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
