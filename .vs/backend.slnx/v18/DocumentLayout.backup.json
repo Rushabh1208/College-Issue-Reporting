@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\extensions\\endpointextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|solutionrelative:extensions\\endpointextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\dtos\\issueresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|solutionrelative:dtos\\issueresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -30,11 +26,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "IssueResponseDto.cs",
               "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\DTOs\\IssueResponseDto.cs",
               "RelativeDocumentMoniker": "DTOs\\IssueResponseDto.cs",
@@ -42,11 +38,12 @@
               "RelativeToolTip": "DTOs\\IssueResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T21:23:41.206Z"
+              "WhenOpened": "2026-04-08T21:23:41.206Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -58,7 +55,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "SecurityExtensions.cs",
               "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\SecurityExtensions.cs",
               "RelativeDocumentMoniker": "Extensions\\SecurityExtensions.cs",
@@ -70,20 +67,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "EndpointExtensions.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\EndpointExtensions.cs",
-              "RelativeDocumentMoniker": "Extensions\\EndpointExtensions.cs",
-              "ToolTip": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\EndpointExtensions.cs",
-              "RelativeToolTip": "Extensions\\EndpointExtensions.cs",
-              "ViewState": "AgIAADgAAAAAAAAAAAAAwEoAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T20:33:08.141Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "DatabaseExtensions.cs",
               "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Extensions\\DatabaseExtensions.cs",
               "RelativeDocumentMoniker": "Extensions\\DatabaseExtensions.cs",

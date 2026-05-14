@@ -1,0 +1,518 @@
+2026-05-14 20:05:34.899 +05:30 [INF] Attempting to run database migrations...
+2026-05-14 20:05:36.103 +05:30 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 20:05:36.128 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 20:05:36.181 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-05-14 20:05:36.216 +05:30 [INF] No migrations were applied. The database is already up to date.
+2026-05-14 20:05:36.220 +05:30 [INF] Database migrations applied successfully.
+2026-05-14 20:05:36.222 +05:30 [INF] Seeding database...
+2026-05-14 20:05:36.595 +05:30 [INF] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 1)
+2026-05-14 20:05:36.625 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 2)
+2026-05-14 20:05:36.631 +05:30 [INF] Database seeded successfully.
+2026-05-14 20:05:36.752 +05:30 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-14 20:05:37.218 +05:30 [INF] Now listening on: http://localhost:5275
+2026-05-14 20:05:37.271 +05:30 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2026-05-14 20:05:37.362 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-14 20:05:37.403 +05:30 [INF] Hosting environment: Development
+2026-05-14 20:05:37.421 +05:30 [INF] Content root path: C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting
+2026-05-14 20:05:38.257 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/ - null null
+2026-05-14 20:05:39.434 +05:30 [INF] Request: GET /
+2026-05-14 20:05:40.175 +05:30 [INF] Executing endpoint 'HTTP: GET /'
+2026-05-14 20:05:40.614 +05:30 [INF] Executed endpoint 'HTTP: GET /'
+2026-05-14 20:05:40.635 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/ - 200 null text/plain; charset=utf-8 2402.5923ms
+2026-05-14 20:05:41.880 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/favicon.ico - null null
+2026-05-14 20:05:41.891 +05:30 [INF] Request: GET /favicon.ico
+2026-05-14 20:05:42.025 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/favicon.ico - 404 0 null 145.5323ms
+2026-05-14 20:05:42.075 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5275/favicon.ico, Response status code: 404
+2026-05-14 20:05:46.626 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/index.html - null null
+2026-05-14 20:05:47.723 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_vs/browserLink - null null
+2026-05-14 20:05:47.750 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/index.html - 200 null text/html;charset=utf-8 1109.9022ms
+2026-05-14 20:05:47.750 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-14 20:05:48.621 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_vs/browserLink - 200 null text/javascript; charset=UTF-8 898.318ms
+2026-05-14 20:05:48.633 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/_framework/aspnetcore-browser-refresh.js - 200 14919 application/javascript; charset=utf-8 883.0215ms
+2026-05-14 20:05:57.963 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - null null
+2026-05-14 20:05:58.511 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 547.2619ms
+2026-05-14 20:06:32.940 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/login - application/json 62
+2026-05-14 20:06:33.100 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:06:33.130 +05:30 [INF] Request: POST /login
+2026-05-14 20:06:33.234 +05:30 [INF] Executing endpoint 'HTTP: POST /login'
+2026-05-14 20:06:34.377 +05:30 [INF] Executed DbCommand (149ms) [Parameters=[@__loginUser_Email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__loginUser_Email_0
+LIMIT 1
+2026-05-14 20:06:34.408 +05:30 [INF] Setting HTTP status code 401.
+2026-05-14 20:06:34.505 +05:30 [INF] Executed endpoint 'HTTP: POST /login'
+2026-05-14 20:06:34.534 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/login - 401 0 null 1594.3896ms
+2026-05-14 20:06:46.983 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/login - application/json 63
+2026-05-14 20:06:47.109 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:06:47.124 +05:30 [INF] Request: POST /login
+2026-05-14 20:06:47.129 +05:30 [INF] Executing endpoint 'HTTP: POST /login'
+2026-05-14 20:06:47.151 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[@__loginUser_Email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__loginUser_Email_0
+LIMIT 1
+2026-05-14 20:06:47.341 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:06:47.348 +05:30 [INF] Writing value of type '<>f__AnonymousType0`1' as Json.
+2026-05-14 20:06:47.353 +05:30 [INF] Executed endpoint 'HTTP: POST /login'
+2026-05-14 20:06:47.356 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/login - 200 null application/json; charset=utf-8 372.9701ms
+2026-05-14 20:07:47.563 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/issues/report - application/json 112
+2026-05-14 20:07:47.569 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:07:47.571 +05:30 [INF] Request: POST /issues/report
+2026-05-14 20:07:47.678 +05:30 [INF] Executing endpoint 'HTTP: POST /issues/report'
+2026-05-14 20:07:47.761 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-05-14 20:07:48.189 +05:30 [ERR] Failed executing DbCommand (13ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (Size = 4000), @p2='?' (DbType = DateTime), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (DbType = Boolean), @p6='?' (Size = 4000), @p7='?' (Size = 255), @p8='?' (Size = 4000), @p9='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Issues` (`AssignedToId`, `Block`, `CreatedAt`, `Description`, `ImagePath`, `IsDeleted`, `RoomNumber`, `Status`, `Title`, `UserId`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+SELECT `Id`
+FROM `Issues`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2026-05-14 20:07:48.322 +05:30 [ERR] An exception occurred in the database while saving changes for context type 'backend.AppDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Unknown column 'ImagePath' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 894
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 37
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 130
+   at MySqlConnector.MySqlDataReader.InitAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 483
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 56
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 357
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 350
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Unknown column 'ImagePath' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 894
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 37
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 130
+   at MySqlConnector.MySqlDataReader.InitAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 483
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 56
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 357
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 350
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-05-14 20:07:48.437 +05:30 [INF] Executed endpoint 'HTTP: POST /issues/report'
+2026-05-14 20:07:48.539 +05:30 [ERR] An unhandled exception occurred.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Unknown column 'ImagePath' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 894
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 37
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 130
+   at MySqlConnector.MySqlDataReader.InitAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 483
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 56
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 357
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 350
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at backend.Extensions.EndpointExtensions.<>c.<<MapIssueEndpoints>b__3_0>d.MoveNext() in C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting\Extensions\EndpointExtensions.cs:line 151
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Program.<>c.<<<Main>$>b__0_1>d.MoveNext() in C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting\Program.cs:line 79
+2026-05-14 20:07:48.560 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/issues/report - 500 null null 996.8546ms
+2026-05-14 20:08:01.916 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/issues/report - application/json 112
+2026-05-14 20:08:01.925 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:08:01.927 +05:30 [INF] Request: POST /issues/report
+2026-05-14 20:08:01.933 +05:30 [INF] Executing endpoint 'HTTP: POST /issues/report'
+2026-05-14 20:08:01.943 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-05-14 20:08:01.971 +05:30 [ERR] Failed executing DbCommand (7ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (Size = 4000), @p2='?' (DbType = DateTime), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (DbType = Boolean), @p6='?' (Size = 4000), @p7='?' (Size = 255), @p8='?' (Size = 4000), @p9='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Issues` (`AssignedToId`, `Block`, `CreatedAt`, `Description`, `ImagePath`, `IsDeleted`, `RoomNumber`, `Status`, `Title`, `UserId`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+SELECT `Id`
+FROM `Issues`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2026-05-14 20:08:01.986 +05:30 [ERR] An exception occurred in the database while saving changes for context type 'backend.AppDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Unknown column 'ImagePath' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 894
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 37
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 130
+   at MySqlConnector.MySqlDataReader.InitAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 483
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 56
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 357
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 350
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Unknown column 'ImagePath' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 894
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 37
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 130
+   at MySqlConnector.MySqlDataReader.InitAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 483
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 56
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 357
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 350
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-05-14 20:08:02.108 +05:30 [INF] Executed endpoint 'HTTP: POST /issues/report'
+2026-05-14 20:08:02.203 +05:30 [ERR] An unhandled exception occurred.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Unknown column 'ImagePath' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsync(IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 894
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 37
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 130
+   at MySqlConnector.MySqlDataReader.InitAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 483
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 56
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 357
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 350
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at backend.Extensions.EndpointExtensions.<>c.<<MapIssueEndpoints>b__3_0>d.MoveNext() in C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting\Extensions\EndpointExtensions.cs:line 151
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Program.<>c.<<<Main>$>b__0_1>d.MoveNext() in C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting\Program.cs:line 79
+2026-05-14 20:08:02.231 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/issues/report - 500 null null 315.4519ms
+2026-05-14 20:14:45.693 +05:30 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 20:14:45.756 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 20:14:45.776 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-05-14 20:14:45.793 +05:30 [INF] Applying migration '20260514144345_FixMissingImagePath'.
+2026-05-14 20:14:45.864 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE `Issues` ADD `ImagePath` longtext CHARACTER SET utf8mb4 NULL;
+2026-05-14 20:14:45.867 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20260514144345_FixMissingImagePath', '8.0.8');
+2026-05-14 20:15:05.402 +05:30 [INF] Attempting to run database migrations...
+2026-05-14 20:15:06.373 +05:30 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 20:15:06.391 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='campus_db' AND TABLE_NAME='__EFMigrationsHistory';
+2026-05-14 20:15:06.411 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2026-05-14 20:15:06.426 +05:30 [INF] No migrations were applied. The database is already up to date.
+2026-05-14 20:15:06.426 +05:30 [INF] Database migrations applied successfully.
+2026-05-14 20:15:06.426 +05:30 [INF] Seeding database...
+2026-05-14 20:15:06.744 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 1)
+2026-05-14 20:15:06.750 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Users` AS `u`
+    WHERE `u`.`Role` = 2)
+2026-05-14 20:15:06.753 +05:30 [INF] Database seeded successfully.
+2026-05-14 20:15:06.779 +05:30 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-14 20:15:06.932 +05:30 [INF] Now listening on: http://localhost:5275
+2026-05-14 20:15:06.932 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-14 20:15:06.933 +05:30 [INF] Hosting environment: Development
+2026-05-14 20:15:06.933 +05:30 [INF] Content root path: C:\Users\ASUS\OneDrive\Documents\Desktop\Projects\College-Issue-Reporting
+2026-05-14 20:16:28.690 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/index.html - null null
+2026-05-14 20:16:28.894 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/index.html - 200 null text/html;charset=utf-8 207.1922ms
+2026-05-14 20:16:29.197 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - null null
+2026-05-14 20:16:29.206 +05:30 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2026-05-14 20:16:29.420 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 222.9444ms
+2026-05-14 20:16:56.372 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/login - application/json 63
+2026-05-14 20:16:56.376 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:16:56.394 +05:30 [INF] Request: POST /login
+2026-05-14 20:16:56.448 +05:30 [INF] Executing endpoint 'HTTP: POST /login'
+2026-05-14 20:16:56.862 +05:30 [INF] Executed DbCommand (61ms) [Parameters=[@__loginUser_Email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__loginUser_Email_0
+LIMIT 1
+2026-05-14 20:16:57.016 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:16:57.019 +05:30 [INF] Writing value of type '<>f__AnonymousType0`1' as Json.
+2026-05-14 20:16:57.023 +05:30 [INF] Executed endpoint 'HTTP: POST /login'
+2026-05-14 20:16:57.032 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/login - 200 null application/json; charset=utf-8 660.0183ms
+2026-05-14 20:17:39.106 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/issues/report - application/json 99
+2026-05-14 20:17:39.112 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:17:39.114 +05:30 [INF] Request: POST /issues/report
+2026-05-14 20:17:39.191 +05:30 [INF] Executing endpoint 'HTTP: POST /issues/report'
+2026-05-14 20:17:39.250 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-05-14 20:17:39.538 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (Size = 4000), @p2='?' (DbType = DateTime), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (DbType = Boolean), @p6='?' (Size = 4000), @p7='?' (Size = 255), @p8='?' (Size = 4000), @p9='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Issues` (`AssignedToId`, `Block`, `CreatedAt`, `Description`, `ImagePath`, `IsDeleted`, `RoomNumber`, `Status`, `Title`, `UserId`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+SELECT `Id`
+FROM `Issues`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2026-05-14 20:17:39.596 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:17:39.599 +05:30 [INF] Writing value of type '<>f__AnonymousType4`2' as Json.
+2026-05-14 20:17:39.602 +05:30 [INF] Executed endpoint 'HTTP: POST /issues/report'
+2026-05-14 20:17:39.605 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/issues/report - 200 null application/json; charset=utf-8 499.0805ms
+2026-05-14 20:18:05.551 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/student/issues - null null
+2026-05-14 20:18:05.553 +05:30 [INF] Request: GET /student/issues
+2026-05-14 20:18:05.560 +05:30 [INF] Executing endpoint 'HTTP: GET /student/issues'
+2026-05-14 20:18:05.571 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-05-14 20:18:05.614 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[@__userId_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`
+FROM `Issues` AS `i`
+WHERE (`i`.`UserId` = @__userId_0) AND NOT (`i`.`IsDeleted`)
+ORDER BY `i`.`CreatedAt` DESC
+2026-05-14 20:18:05.624 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:18:05.644 +05:30 [INF] Writing value of type 'List`1' as Json.
+2026-05-14 20:18:05.657 +05:30 [INF] Executed endpoint 'HTTP: GET /student/issues'
+2026-05-14 20:18:05.657 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/student/issues - 200 null application/json; charset=utf-8 106.9256ms
+2026-05-14 20:18:58.045 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/login - application/json 58
+2026-05-14 20:18:58.046 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:18:58.046 +05:30 [INF] Request: POST /login
+2026-05-14 20:18:58.046 +05:30 [INF] Executing endpoint 'HTTP: POST /login'
+2026-05-14 20:18:58.053 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__loginUser_Email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__loginUser_Email_0
+LIMIT 1
+2026-05-14 20:18:58.055 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:18:58.056 +05:30 [INF] Writing value of type '<>f__AnonymousType0`1' as Json.
+2026-05-14 20:18:58.056 +05:30 [INF] Executed endpoint 'HTTP: POST /login'
+2026-05-14 20:18:58.057 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/login - 200 null application/json; charset=utf-8 11.2566ms
+2026-05-14 20:19:34.829 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/admin/users - null null
+2026-05-14 20:19:34.830 +05:30 [INF] Request: GET /admin/users
+2026-05-14 20:19:34.835 +05:30 [INF] Executing endpoint 'HTTP: GET /admin/users'
+2026-05-14 20:19:34.845 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+2026-05-14 20:19:34.847 +05:30 [INF] Executed endpoint 'HTTP: GET /admin/users'
+2026-05-14 20:19:34.848 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/admin/users - 200 null application/json; charset=utf-8 18.4255ms
+2026-05-14 20:19:56.368 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/admin/issues?status=0&page=1&pageSize=10 - null null
+2026-05-14 20:19:56.370 +05:30 [INF] Request: GET /admin/issues
+2026-05-14 20:19:56.372 +05:30 [INF] Executing endpoint 'HTTP: GET /admin/issues'
+2026-05-14 20:19:56.633 +05:30 [INF] Executed DbCommand (31ms) [Parameters=[@__status_Value_0='?' (Size = 255), @__p_2='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`AssignedToId`, `t`.`Block`, `t`.`CreatedAt`, `t`.`Description`, `t`.`ImagePath`, `t`.`IsDeleted`, `t`.`RoomNumber`, `t`.`Status`, `t`.`Title`, `t`.`UserId`, `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`, `u0`.`Id`, `u0`.`Email`, `u0`.`Name`, `u0`.`PasswordHash`, `u0`.`Role`
+FROM (
+    SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`
+    FROM `Issues` AS `i`
+    WHERE NOT (`i`.`IsDeleted`) AND (`i`.`Status` = @__status_Value_0)
+    ORDER BY `i`.`CreatedAt` DESC
+    LIMIT @__p_2 OFFSET @__p_1
+) AS `t`
+INNER JOIN `Users` AS `u` ON `t`.`UserId` = `u`.`Id`
+LEFT JOIN `Users` AS `u0` ON `t`.`AssignedToId` = `u0`.`Id`
+ORDER BY `t`.`CreatedAt` DESC
+2026-05-14 20:19:56.686 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:19:56.687 +05:30 [INF] Writing value of type 'SelectListIterator`2' as Json.
+2026-05-14 20:19:56.692 +05:30 [INF] Executed endpoint 'HTTP: GET /admin/issues'
+2026-05-14 20:19:56.693 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/admin/issues?status=0&page=1&pageSize=10 - 200 null application/json; charset=utf-8 324.4058ms
+2026-05-14 20:20:18.618 +05:30 [INF] Request starting HTTP/1.1 PUT http://localhost:5275/admin/issues/6/assign/2 - null 0
+2026-05-14 20:20:18.619 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:20:18.620 +05:30 [INF] Request: PUT /admin/issues/6/assign/2
+2026-05-14 20:20:18.620 +05:30 [INF] Executing endpoint 'HTTP: PUT /admin/issues/{id}/assign/{staffId}'
+2026-05-14 20:20:18.657 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`
+FROM `Issues` AS `i`
+WHERE `i`.`Id` = @__p_0
+LIMIT 1
+2026-05-14 20:20:18.668 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Id` = @__p_0
+LIMIT 1
+2026-05-14 20:20:18.690 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[@p2='?' (DbType = Int64), @p0='?' (DbType = Int64), @p1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `Issues` SET `AssignedToId` = @p0, `Status` = @p1
+WHERE `Id` = @p2;
+SELECT ROW_COUNT();
+2026-05-14 20:20:18.696 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:20:18.701 +05:30 [INF] Writing value of type '<>f__AnonymousType2`3' as Json.
+2026-05-14 20:20:18.703 +05:30 [INF] Executed endpoint 'HTTP: PUT /admin/issues/{id}/assign/{staffId}'
+2026-05-14 20:20:18.703 +05:30 [INF] Request finished HTTP/1.1 PUT http://localhost:5275/admin/issues/6/assign/2 - 200 null application/json; charset=utf-8 85.3506ms
+2026-05-14 20:20:37.648 +05:30 [INF] Request starting HTTP/1.1 DELETE http://localhost:5275/admin/issues/7 - null null
+2026-05-14 20:20:37.648 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:20:37.648 +05:30 [INF] Request: DELETE /admin/issues/7
+2026-05-14 20:20:37.650 +05:30 [INF] Executing endpoint 'HTTP: DELETE /admin/issues/{id}'
+2026-05-14 20:20:37.656 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`
+FROM `Issues` AS `i`
+WHERE `i`.`Id` = @__p_0
+LIMIT 1
+2026-05-14 20:20:37.663 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[@p1='?' (DbType = Int64), @p0='?' (DbType = Boolean)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `Issues` SET `IsDeleted` = @p0
+WHERE `Id` = @p1;
+SELECT ROW_COUNT();
+2026-05-14 20:20:37.665 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:20:37.666 +05:30 [INF] Writing value of type '<>f__AnonymousType3`1' as Json.
+2026-05-14 20:20:37.667 +05:30 [INF] Executed endpoint 'HTTP: DELETE /admin/issues/{id}'
+2026-05-14 20:20:37.668 +05:30 [INF] Request finished HTTP/1.1 DELETE http://localhost:5275/admin/issues/7 - 200 null application/json; charset=utf-8 19.6947ms
+2026-05-14 20:21:11.532 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5275/login - application/json 60
+2026-05-14 20:21:11.532 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:21:11.532 +05:30 [INF] Request: POST /login
+2026-05-14 20:21:11.533 +05:30 [INF] Executing endpoint 'HTTP: POST /login'
+2026-05-14 20:21:11.536 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__loginUser_Email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__loginUser_Email_0
+LIMIT 1
+2026-05-14 20:21:11.537 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:21:11.537 +05:30 [INF] Writing value of type '<>f__AnonymousType0`1' as Json.
+2026-05-14 20:21:11.538 +05:30 [INF] Executed endpoint 'HTTP: POST /login'
+2026-05-14 20:21:11.538 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5275/login - 200 null application/json; charset=utf-8 6.1819ms
+2026-05-14 20:21:26.773 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/staff/issues - null null
+2026-05-14 20:21:26.774 +05:30 [INF] Request: GET /staff/issues
+2026-05-14 20:21:26.776 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin|Staff)
+2026-05-14 20:21:26.782 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-14 20:21:26.783 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/staff/issues - 401 0 null 9.7129ms
+2026-05-14 20:21:38.254 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/staff/issues - null null
+2026-05-14 20:21:38.255 +05:30 [INF] Request: GET /staff/issues
+2026-05-14 20:21:38.256 +05:30 [INF] Executing endpoint 'HTTP: GET /staff/issues'
+2026-05-14 20:21:38.262 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-05-14 20:21:38.277 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[@__userId_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`, `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Issues` AS `i`
+INNER JOIN `Users` AS `u` ON `i`.`UserId` = `u`.`Id`
+WHERE (`i`.`AssignedToId` = @__userId_0) AND NOT (`i`.`IsDeleted`)
+ORDER BY `i`.`CreatedAt` DESC
+2026-05-14 20:21:38.279 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:21:38.279 +05:30 [INF] Writing value of type 'List`1' as Json.
+2026-05-14 20:21:38.280 +05:30 [INF] Executed endpoint 'HTTP: GET /staff/issues'
+2026-05-14 20:21:38.281 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/staff/issues - 200 null application/json; charset=utf-8 26.5448ms
+2026-05-14 20:22:07.887 +05:30 [INF] Request starting HTTP/1.1 PUT http://localhost:5275/staff/issues/6/status - application/json 17
+2026-05-14 20:22:07.888 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:22:07.888 +05:30 [INF] Request: PUT /staff/issues/6/status
+2026-05-14 20:22:07.889 +05:30 [INF] Executing endpoint 'HTTP: PUT /staff/issues/{id}/status'
+2026-05-14 20:22:07.931 +05:30 [INF] Setting HTTP status code 400.
+2026-05-14 20:22:07.932 +05:30 [INF] Writing value of type 'SelectListIterator`2' as Json.
+2026-05-14 20:22:07.934 +05:30 [INF] Executed endpoint 'HTTP: PUT /staff/issues/{id}/status'
+2026-05-14 20:22:07.934 +05:30 [INF] Request finished HTTP/1.1 PUT http://localhost:5275/staff/issues/6/status - 400 null application/json; charset=utf-8 46.7141ms
+2026-05-14 20:22:16.526 +05:30 [INF] Request starting HTTP/1.1 PUT http://localhost:5275/staff/issues/6/status - application/json 17
+2026-05-14 20:22:16.526 +05:30 [INF] CORS policy execution successful.
+2026-05-14 20:22:16.526 +05:30 [INF] Request: PUT /staff/issues/6/status
+2026-05-14 20:22:16.527 +05:30 [INF] Executing endpoint 'HTTP: PUT /staff/issues/{id}/status'
+2026-05-14 20:22:16.532 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-05-14 20:22:16.539 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`
+FROM `Issues` AS `i`
+WHERE `i`.`Id` = @__p_0
+LIMIT 1
+2026-05-14 20:22:16.549 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[@p1='?' (DbType = Int64), @p0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `Issues` SET `Status` = @p0
+WHERE `Id` = @p1;
+SELECT ROW_COUNT();
+2026-05-14 20:22:16.549 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:22:16.549 +05:30 [INF] Writing value of type '<>f__AnonymousType3`1' as Json.
+2026-05-14 20:22:16.550 +05:30 [INF] Executed endpoint 'HTTP: PUT /staff/issues/{id}/status'
+2026-05-14 20:22:16.551 +05:30 [INF] Request finished HTTP/1.1 PUT http://localhost:5275/staff/issues/6/status - 200 null application/json; charset=utf-8 24.218ms
+2026-05-14 20:22:30.887 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5275/staff/issues - null null
+2026-05-14 20:22:30.887 +05:30 [INF] Request: GET /staff/issues
+2026-05-14 20:22:30.888 +05:30 [INF] Executing endpoint 'HTTP: GET /staff/issues'
+2026-05-14 20:22:30.891 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Users` AS `u`
+WHERE `u`.`Email` = @__email_0
+LIMIT 1
+2026-05-14 20:22:30.894 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT `i`.`Id`, `i`.`AssignedToId`, `i`.`Block`, `i`.`CreatedAt`, `i`.`Description`, `i`.`ImagePath`, `i`.`IsDeleted`, `i`.`RoomNumber`, `i`.`Status`, `i`.`Title`, `i`.`UserId`, `u`.`Id`, `u`.`Email`, `u`.`Name`, `u`.`PasswordHash`, `u`.`Role`
+FROM `Issues` AS `i`
+INNER JOIN `Users` AS `u` ON `i`.`UserId` = `u`.`Id`
+WHERE (`i`.`AssignedToId` = @__userId_0) AND NOT (`i`.`IsDeleted`)
+ORDER BY `i`.`CreatedAt` DESC
+2026-05-14 20:22:30.895 +05:30 [INF] Setting HTTP status code 200.
+2026-05-14 20:22:30.895 +05:30 [INF] Writing value of type 'List`1' as Json.
+2026-05-14 20:22:30.895 +05:30 [INF] Executed endpoint 'HTTP: GET /staff/issues'
+2026-05-14 20:22:30.896 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5275/staff/issues - 200 null application/json; charset=utf-8 8.3948ms
