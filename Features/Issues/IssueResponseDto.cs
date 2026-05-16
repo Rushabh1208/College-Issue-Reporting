@@ -12,6 +12,7 @@ namespace backend.Features.Issues
         public string RoomNumber { get; set; } = string.Empty;
 
         public string AssignedStaffName { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

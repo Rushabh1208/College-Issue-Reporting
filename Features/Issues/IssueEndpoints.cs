@@ -1,4 +1,5 @@
 using backend.Infrastructure;
+using backend.Infrastructure.Services;
 using backend.Models;
 using backend.Enums;
 using FluentValidation;
@@ -14,7 +15,7 @@ namespace backend.Features.Issues
         {
             var adminGroup = app.MapGroup("/admin").RequireAuthorization("AdminOnly");
             
-            adminGroup.MapGet("/issues", async (AppDbContext db, IConnectionMultiplexer redis, IssueStatus? status, int page = 1, int pageSize = 10) =>
+            adminGroup.MapGet("/issues", async (AppDbContext db, IConnectionMultiplexer redis, IStorageService storage, HttpContext ctx, IssueStatus? status, int page = 1, int pageSize = 10) =>
             {
                 var cache = redis.GetDatabase();
                 var cacheKey = $"admin:issues:{status}:{page}:{pageSize}";
@@ -47,7 +48,8 @@ namespace backend.Features.Issues
                     Block = i.Block,
                     RoomNumber = i.RoomNumber,
                     CreatedAt = i.CreatedAt,
-                    AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Unassigned"
+                    AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Unassigned",
+                    ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, ctx) : null
                 });
 
                 await cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(result), TimeSpan.FromMinutes(5));
@@ -71,20 +73,36 @@ namespace backend.Features.Issues
                 return Results.Ok(new { message = "Issue assigned to staff", issue.Id, issue.Status });
             });
 
-            adminGroup.MapDelete("/issues/{id}", async (AppDbContext db, IConnectionMultiplexer redis, long id) =>
+            adminGroup.MapDelete("/issues/{id}", async (AppDbContext db, IConnectionMultiplexer redis, IStorageService storage, long id) =>
             {
                 var issue = await db.Issues.FindAsync(id);
                 if (issue == null || issue.IsDeleted) return Results.NotFound();
 
                 issue.IsDeleted = true;
+                if (!string.IsNullOrEmpty(issue.ImagePath))
+                {
+                    await storage.DeleteFileAsync(issue.ImagePath);
+                    issue.ImagePath = null;
+                }
+                
                 await db.SaveChangesAsync();
 
                 await InvalidateAdminCache(redis);
                 return Results.Ok(new { message = "Issue deleted successfully" });
             });
 
-            app.MapPost("/issues/report", async (HttpContext ctx, AppDbContext db, IConnectionMultiplexer redis, IValidator<CreateIssueDto> validator, CreateIssueDto dto) =>
+            app.MapPost("/issues/report", async (HttpContext ctx, AppDbContext db, IConnectionMultiplexer redis, IStorageService storage, IValidator<CreateIssueDto> validator) =>
             {
+                var form = await ctx.Request.ReadFormAsync();
+                
+                var dto = new CreateIssueDto
+                {
+                    Title = form["Title"].ToString(),
+                    Description = form["Description"].ToString(),
+                    Block = form["Block"].ToString(),
+                    RoomNumber = form["RoomNumber"].ToString()
+                };
+
                 var validation = await validator.ValidateAsync(dto);
                 if (!validation.IsValid)
                     return Results.BadRequest(validation.Errors.Select(e => e.ErrorMessage));
@@ -101,17 +119,34 @@ namespace backend.Features.Issues
                 };
 
                 db.Issues.Add(issue);
-                await db.SaveChangesAsync();
+                await db.SaveChangesAsync(); // Save first to get ID
+
+                var image = form.Files.GetFile("Image");
+                if (image != null)
+                {
+                    // Validation: MIME Type & Size (5MB)
+                    var allowedTypes = new[] { "image/jpeg", "image/jpg", "image/png" };
+                    if (!allowedTypes.Contains(image.ContentType))
+                        return Results.BadRequest("Only JPEG/PNG images are allowed.");
+
+                    if (image.Length > 5 * 1024 * 1024)
+                        return Results.BadRequest("File size exceeds 5MB limit.");
+
+                    // Filename: {id}.jpeg
+                    var fileName = $"{issue.Id}.jpeg";
+                    issue.ImagePath = await storage.SaveFileAsync(image, fileName);
+                    await db.SaveChangesAsync();
+                }
 
                 await InvalidateAdminCache(redis);
-                return Results.Ok(new { message = "Issue created", issue.Id });
+                return Results.Ok(new { message = "Issue created", issue.Id, imageUrl = issue.ImagePath != null ? storage.GetUrl(issue.ImagePath, ctx) : null });
             })
             .RequireAuthorization("StudentOnly")
             .RequireRateLimiting("issue");
 
             var staffGroup = app.MapGroup("/staff").RequireAuthorization("StaffOrAdmin");
 
-            staffGroup.MapGet("/issues", async (HttpContext ctx, AppDbContext db) =>
+            staffGroup.MapGet("/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage) =>
             {
                 var userId = SecurityHelper.GetUserId(ctx);
                 var issues = await db.Issues
@@ -127,7 +162,8 @@ namespace backend.Features.Issues
                         Block = i.Block,
                         RoomNumber = i.RoomNumber,
                         CreatedAt = i.CreatedAt,
-                        AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Me"
+                        AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Me",
+                        ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, ctx) : null
                     })
                     .ToListAsync();
 
@@ -156,7 +192,7 @@ namespace backend.Features.Issues
                 return Results.Ok(new { message = "Status updated" });
             });
 
-            app.MapGet("/student/issues", async (HttpContext ctx, AppDbContext db) =>
+            app.MapGet("/student/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage) =>
             {
                 var userId = SecurityHelper.GetUserId(ctx);
                 var issues = await db.Issues
@@ -171,7 +207,8 @@ namespace backend.Features.Issues
                         Block = i.Block,
                         RoomNumber = i.RoomNumber,
                         CreatedAt = i.CreatedAt,
-                        AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Unassigned"
+                        AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Unassigned",
+                        ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, ctx) : null
                     })
                     .ToListAsync();
 

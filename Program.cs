@@ -68,6 +68,20 @@ app.UseSwaggerDocumentation();
 app.UseCors("AllowAll");
 app.UseRateLimiter();
 
+// 🔹 Ensure uploads directory exists for Static Files
+var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "uploads");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "uploads")),
+    RequestPath = "/uploads"
+});
+
 app.UseSerilogRequestLogging();
 app.UseGlobalExceptionHandler();
 

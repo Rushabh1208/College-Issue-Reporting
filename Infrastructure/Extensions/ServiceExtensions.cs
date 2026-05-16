@@ -2,6 +2,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
+using backend.Infrastructure.Services;
+
 namespace backend.Infrastructure.Extensions
 {
     public static class ServiceExtensions
@@ -9,6 +11,7 @@ namespace backend.Infrastructure.Extensions
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
             services.AddValidatorsFromAssemblyContaining<Program>();
+            services.AddSingleton<IStorageService, LocalStorageService>();
             
             services.AddCors(opt =>
             {

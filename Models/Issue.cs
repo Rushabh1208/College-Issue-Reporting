@@ -24,6 +24,8 @@ namespace backend.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public string? ImagePath { get; set; }
+
         public bool IsDeleted { get; set; } = false;
     }
 }
