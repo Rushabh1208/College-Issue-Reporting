@@ -30,5 +30,8 @@ WORKDIR /app
 # Copy published files from the publish stage
 COPY --from=publish /app/publish .
 
+# Ensure uploads directory exists
+RUN mkdir -p uploads
+
 # Run the app
 ENTRYPOINT ["dotnet", "backend.dll"]
