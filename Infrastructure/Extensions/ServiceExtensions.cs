@@ -14,8 +14,8 @@ namespace backend.Infrastructure.Extensions
             {
                 opt.AddPolicy("AllowAll", policy =>
                     policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod());
+                          .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                          .WithHeaders("Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"));
             });
 
             services.AddRateLimiter(options =>
@@ -32,6 +32,16 @@ namespace backend.Infrastructure.Extensions
                     opt.PermitLimit = 5;
                     opt.Window = TimeSpan.FromMinutes(1);
                 });
+            });
+
+            services.ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            });
+
+            services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
             });
 
             return services;

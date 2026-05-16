@@ -68,7 +68,7 @@ app.UseSwaggerDocumentation();
 app.UseCors("AllowAll");
 app.UseRateLimiter();
 
-app.UseRequestLogging();
+app.UseSerilogRequestLogging();
 app.UseGlobalExceptionHandler();
 
 app.UseAuthentication();

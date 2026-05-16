@@ -13,7 +13,7 @@ namespace backend.Features.Auth
             {
                 var user = await db.Users.FirstOrDefaultAsync(u => u.Email == loginUser.Email);
 
-                if (user == null || user.PasswordHash != SecurityHelper.HashPassword(loginUser.Password))
+                if (user == null || !SecurityHelper.VerifyPassword(loginUser.Password, user.PasswordHash))
                     return Results.Unauthorized();
 
                 return Results.Ok(new { token = SecurityHelper.GenerateToken(user, config) });

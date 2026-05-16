@@ -1,3 +1,4 @@
+using backend.Infrastructure.Filters;
 using Microsoft.OpenApi.Models;
 
 namespace backend.Infrastructure.Extensions
@@ -9,6 +10,7 @@ namespace backend.Infrastructure.Extensions
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>
             {
+                options.SchemaFilter<EnumSchemaFilter>();
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Campus API",

@@ -43,18 +43,18 @@ namespace backend.Features.Issues
                     Id = i.Id,
                     Title = i.Title,
                     Description = i.Description,
-                    Status = i.Status.ToString()!,
+                    Status = i.Status ?? IssueStatus.Open,
                     Block = i.Block,
                     RoomNumber = i.RoomNumber,
                     CreatedAt = i.CreatedAt,
                     AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Unassigned"
                 });
 
-                await cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(result), TimeSpan.FromSeconds(60));
+                await cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(result), TimeSpan.FromMinutes(5));
                 return Results.Ok(result);
             });
 
-            adminGroup.MapPut("/issues/{id}/assign/{staffId}", async (AppDbContext db, long id, long staffId) =>
+            adminGroup.MapPut("/issues/{id}/assign/{staffId}", async (AppDbContext db, IConnectionMultiplexer redis, long id, long staffId) =>
             {
                 var issue = await db.Issues.FindAsync(id);
                 if (issue == null || issue.IsDeleted) return Results.NotFound();
@@ -67,10 +67,11 @@ namespace backend.Features.Issues
                 issue.Status = IssueStatus.InProgress;
                 await db.SaveChangesAsync();
 
+                await InvalidateAdminCache(redis);
                 return Results.Ok(new { message = "Issue assigned to staff", issue.Id, issue.Status });
             });
 
-            adminGroup.MapDelete("/issues/{id}", async (AppDbContext db, long id) =>
+            adminGroup.MapDelete("/issues/{id}", async (AppDbContext db, IConnectionMultiplexer redis, long id) =>
             {
                 var issue = await db.Issues.FindAsync(id);
                 if (issue == null || issue.IsDeleted) return Results.NotFound();
@@ -78,10 +79,11 @@ namespace backend.Features.Issues
                 issue.IsDeleted = true;
                 await db.SaveChangesAsync();
 
+                await InvalidateAdminCache(redis);
                 return Results.Ok(new { message = "Issue deleted successfully" });
             });
 
-            app.MapPost("/issues/report", async (HttpContext ctx, AppDbContext db, IValidator<CreateIssueDto> validator, CreateIssueDto dto) =>
+            app.MapPost("/issues/report", async (HttpContext ctx, AppDbContext db, IConnectionMultiplexer redis, IValidator<CreateIssueDto> validator, CreateIssueDto dto) =>
             {
                 var validation = await validator.ValidateAsync(dto);
                 if (!validation.IsValid)
@@ -93,7 +95,7 @@ namespace backend.Features.Issues
                     Description = dto.Description,
                     Block = dto.Block,
                     RoomNumber = dto.RoomNumber,
-                    UserId = SecurityHelper.GetUserId(ctx, db),
+                    UserId = SecurityHelper.GetUserId(ctx),
                     Status = IssueStatus.Open,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -101,6 +103,7 @@ namespace backend.Features.Issues
                 db.Issues.Add(issue);
                 await db.SaveChangesAsync();
 
+                await InvalidateAdminCache(redis);
                 return Results.Ok(new { message = "Issue created", issue.Id });
             })
             .RequireAuthorization("StudentOnly")
@@ -110,23 +113,34 @@ namespace backend.Features.Issues
 
             staffGroup.MapGet("/issues", async (HttpContext ctx, AppDbContext db) =>
             {
-                var userId = SecurityHelper.GetUserId(ctx, db);
+                var userId = SecurityHelper.GetUserId(ctx);
                 var issues = await db.Issues
                     .Where(i => i.AssignedToId == userId && !i.IsDeleted)
                     .Include(i => i.User)
                     .OrderByDescending(i => i.CreatedAt)
+                    .Select(i => new IssueResponseDto
+                    {
+                        Id = i.Id,
+                        Title = i.Title,
+                        Description = i.Description,
+                        Status = i.Status ?? IssueStatus.Open,
+                        Block = i.Block,
+                        RoomNumber = i.RoomNumber,
+                        CreatedAt = i.CreatedAt,
+                        AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Me"
+                    })
                     .ToListAsync();
 
                 return Results.Ok(issues);
             });
 
-            staffGroup.MapPut("/issues/{id}/status", async (HttpContext ctx, AppDbContext db, IValidator<UpdateStatusDto> validator, long id, UpdateStatusDto dto) =>
+            staffGroup.MapPut("/issues/{id}/status", async (HttpContext ctx, AppDbContext db, IConnectionMultiplexer redis, IValidator<UpdateStatusDto> validator, long id, UpdateStatusDto dto) =>
             {
                 var validation = await validator.ValidateAsync(dto);
                 if (!validation.IsValid)
                     return Results.BadRequest(validation.Errors.Select(e => e.ErrorMessage));
 
-                var userId = SecurityHelper.GetUserId(ctx, db);
+                var userId = SecurityHelper.GetUserId(ctx);
                 var issue = await db.Issues.FindAsync(id);
 
                 if (issue == null || issue.IsDeleted) return Results.NotFound();
@@ -138,20 +152,44 @@ namespace backend.Features.Issues
                 issue.Status = dto.Status;
                 await db.SaveChangesAsync();
 
+                await InvalidateAdminCache(redis);
                 return Results.Ok(new { message = "Status updated" });
             });
 
             app.MapGet("/student/issues", async (HttpContext ctx, AppDbContext db) =>
             {
-                var userId = SecurityHelper.GetUserId(ctx, db);
+                var userId = SecurityHelper.GetUserId(ctx);
                 var issues = await db.Issues
                     .Where(i => i.UserId == userId && !i.IsDeleted)
                     .OrderByDescending(i => i.CreatedAt)
+                    .Select(i => new IssueResponseDto
+                    {
+                        Id = i.Id,
+                        Title = i.Title,
+                        Description = i.Description,
+                        Status = i.Status ?? IssueStatus.Open,
+                        Block = i.Block,
+                        RoomNumber = i.RoomNumber,
+                        CreatedAt = i.CreatedAt,
+                        AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Unassigned"
+                    })
                     .ToListAsync();
 
                 return Results.Ok(issues);
             })
             .RequireAuthorization("StudentOnly");
+        }
+
+        private static async Task InvalidateAdminCache(IConnectionMultiplexer redis)
+        {
+            var endpoints = redis.GetEndPoints();
+            var server = redis.GetServer(endpoints.First());
+            var keys = server.Keys(pattern: "admin:issues:*");
+            var db = redis.GetDatabase();
+            foreach (var key in keys)
+            {
+                await db.KeyDeleteAsync(key);
+            }
         }
     }
 }

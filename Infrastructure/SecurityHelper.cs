@@ -15,6 +15,7 @@ namespace backend.Infrastructure
             
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(ClaimTypes.Role, user.Role.ToString()) 
             };
@@ -32,25 +33,25 @@ namespace backend.Infrastructure
 
         public static string HashPassword(string password)
         {
-            using var sha = SHA256.Create();
-            var bytes = Encoding.UTF8.GetBytes(password);
-            var hash = sha.ComputeHash(bytes);
-            return Convert.ToBase64String(hash);
+            return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 11);
         }
 
-        public static long GetUserId(HttpContext ctx, AppDbContext db)
+        public static bool VerifyPassword(string password, string hash)
         {
-            var email = ctx.User.Identity?.Name;
+            if (string.IsNullOrEmpty(hash)) return false;
 
-            if (string.IsNullOrEmpty(email))
-                throw new Exception("User email missing from token");
+            return BCrypt.Net.BCrypt.Verify(password, hash);
+        }
 
-            var user = db.Users.FirstOrDefault(u => u.Email == email);
+        public static long GetUserId(HttpContext ctx)
+        {
+            var userIdClaim = ctx.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!string.IsNullOrEmpty(userIdClaim) && long.TryParse(userIdClaim, out var claimUserId))
+            {
+                return claimUserId;
+            }
 
-            if (user == null)
-                throw new Exception($"User not found in DB: {email}");
-
-            return user.Id;
+            throw new UnauthorizedAccessException("User identification missing from token");
         }
 
     }

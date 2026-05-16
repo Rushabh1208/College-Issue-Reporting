@@ -20,7 +20,7 @@ namespace backend.Features.Users
                         Id = u.Id,
                         Name = u.Name,
                         Email = u.Email,
-                        Role = u.Role.ToString()
+                        Role = u.Role
                     })
                     .ToListAsync();
 

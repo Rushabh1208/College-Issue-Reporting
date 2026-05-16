@@ -1,3 +1,5 @@
+using backend.Enums;
+
 namespace backend.Features.Issues
 {
     public class IssueResponseDto
@@ -5,7 +7,7 @@ namespace backend.Features.Issues
         public long Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string Status { get; set; } = string.Empty;
+        public IssueStatus Status { get; set; }
         public string Block { get; set; } = string.Empty;
         public string RoomNumber { get; set; } = string.Empty;
 
