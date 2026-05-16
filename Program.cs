@@ -92,13 +92,12 @@ app.UseGlobalExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+// 🔹 Root Endpoint
+app.MapGet("/", () => "Campus API is running and healthy! 🚀");
 
 // 🔹 Map Feature Endpoints
 app.MapAuthEndpoints();
 app.MapIssueEndpoints();
 app.MapUserEndpoints();
-
-app.MapGet("/", () => "Campus API is running...");
 
 app.Run();
