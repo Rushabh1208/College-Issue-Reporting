@@ -1,0 +1,296 @@
+Backend Architecture Overview
+
+This document maps the actual backend code in this repository. It describes folder responsibilities, major modules, feature boundaries, data and auth flow, DI, middleware pipeline, and notes for AI agents. The content reflects files present in the `Features/`, `Infrastructure/`, `Models/`, `Enums/`, and root startup files.
+
+Project Structure Tree
+
+backend/
+├── Program.cs                  # App startup, DI and endpoint mapping
+├── appsettings.json            # Configuration (JWT key, DB, Redis, etc.)
+├── Features/
+│   ├── Auth/
+│   │   ├── AuthEndpoints.cs    # Minimal endpoints for /login and /register
+│   │   ├── LoginDto.cs
+│   │   └── RegisterDto.cs
+│   │   
+│   ├── Issues/
+│   │   ├── IssueEndpoints.cs   # All issue-related routes (student, staff, admin)
+│   │   ├── CreateIssueDto.cs
+│   │   ├── CreateIssueValidator.cs
+│   │   ├── IssueResponseDto.cs
+│   │   ├── UpdateStatusDto.cs
+│   │   └── UpdateStatusValidator.cs
+│   │
+│   └── Users/
+│       ├── UserEndpoints.cs    # Admin user listing
+│       └── UserResponseDto.cs
+│
+├── Infrastructure/
+│   ├── AppDbContext.cs         # EF Core DbContext with DbSet<User>, DbSet<Issue>
+│   ├── SecurityHelper.cs       # JWT creation, password hashing, user id extraction
+│   ├── Services/
+│   │   ├── IStorageService.cs
+│   │   └── LocalStorageService.cs  # Local file storage for uploads (uploads/ folder)
+│   ├── Filters/
+│   │   └── EnumSchemaFilter.cs     # Swagger enum string conversion
+│   ├── Middleware/
+│   │   └── GlobalExceptionMiddleware.cs
+│   └── Extensions/
+│       ├── ServiceExtensions.cs    # CORS, RateLimiter, Validators, Storage DI
+│       ├── DatabaseExtensions.cs   # AddDbContext, Redis, DB seeding helpers
+│       ├── SecurityExtensions.cs   # JWT authentication + Authorization policies
+│       ├── SwaggerExtensions.cs
+│       └── MiddlewareExtensions.cs
+│
+├── Models/
+│   ├── User.cs                  # User entity
+│   └── Issue.cs                 # Issue entity with relationships
+│
+├── Enums/
+│   ├── IssueStatus.cs
+│   └── UserRole.cs
+│
+├── Migrations/                  # EF Core migrations (actual migration files present)
+│   ├── 20260514172014_InitialSchema.cs
+│   └── 20260516085532_AddIssueImagePath.cs
+│
+├── uploads/                     # Static files served from /uploads (images)
+
+
+Feature/Module Breakdown
+
+Auth Module
+Responsible for:
+- user registration and login
+- password hashing and verification
+- JWT generation
+- role assignment at registration (defaults to Student)
+
+Main files:
+- Features/Auth/AuthEndpoints.cs
+- Features/Auth/LoginDto.cs
+- Features/Auth/RegisterDto.cs
+- Infrastructure/SecurityHelper.cs
+
+Dependencies:
+- `AppDbContext` (Users table)
+- BCrypt.Net for password hashing
+- Microsoft.IdentityModel/Tokens for JWT
+- Jwt configuration in `appsettings.json`
+
+Notes:
+- Login returns a JWT via SecurityHelper.GenerateToken which embeds `ClaimTypes.NameIdentifier`, `ClaimTypes.Name`, and `ClaimTypes.Role`.
+- Authorization policies are defined in `SecurityExtensions.AddJwtAuthentication()` (AdminOnly, StudentOnly, StaffOrAdmin).
+
+Issues Module
+Responsible for:
+- students reporting issues with optional image upload
+- staff viewing and updating assigned issues
+- admins listing, assigning, and deleting issues
+- caching admin issue lists in Redis
+
+Main files:
+- Features/Issues/IssueEndpoints.cs
+- Features/Issues/CreateIssueDto.cs
+- Features/Issues/CreateIssueValidator.cs
+- Features/Issues/IssueResponseDto.cs
+- Features/Issues/UpdateStatusDto.cs
+- Features/Issues/UpdateStatusValidator.cs
+
+Dependencies:
+- `AppDbContext` (Issues and Users)
+- `IStorageService` (LocalStorageService) for image handling
+- `IConnectionMultiplexer` (StackExchange.Redis) for caching and cache invalidation
+- FluentValidation for DTO validation
+
+Behavior highlights:
+- Student creates issue via `/issues/report` (multipart form). Validation occurs via `IValidator<CreateIssueDto>`.
+- Image validation enforces MIME type and 5MB size, saved as `{issue.Id}.jpeg`.
+- Admin endpoints under `/admin/*` are protected by `AdminOnly` policy.
+- Staff endpoints under `/staff/*` use `StaffOrAdmin` policy and include ownership checks (issue.AssignedToId == userId) for status updates.
+- Admin cache keys are stored as `admin:issues:{status}:{page}:{pageSize}` and invalidated on write operations.
+
+Users Module
+Responsible for:
+- admin-level user listing
+
+Main files:
+- Features/Users/UserEndpoints.cs
+- Features/Users/UserResponseDto.cs
+
+Dependencies:
+- `AppDbContext` (Users)
+- AdminOnly authorization policy
+
+
+API Flow Mapping
+
+Typical request flow (high-level):
+
+Route
+→ Minimal API endpoint (defined in Feature`*`/...Endpoints.cs)
+→ Validation (FluentValidation validators auto-registered) if applied
+→ Security checks: `RequireAuthorization(...)` triggers ASP.NET Core auth middleware
+→ Endpoint logic interacts with `AppDbContext`, `IStorageService`, and `IConnectionMultiplexer` as needed
+→ Data transformation to Response DTOs
+→ Response serialized to JSON and returned
+
+Example - Student reporting an issue:
+/user POST /issues/report (multipart form)
+→ Authentication middleware validates JWT and attaches ClaimsPrincipal
+→ Endpoint reads form data and maps to `CreateIssueDto`
+→ `CreateIssueDtoValidator` runs; returns 400 if invalid
+→ Create Issue entity and Save in `AppDbContext` (DB)
+→ If image present: validate MIME/size → LocalStorageService.SaveFileAsync → persist ImagePath on entity → Save changes
+→ Invalidate admin Redis cache
+→ Return 200 with `issue.Id` and `imageUrl`
+
+Example - Admin listing issues:
+/admin GET /admin/issues?status=Open&page=1&pageSize=10
+→ Authorization policy ensures role Admin
+→ Check Redis cache for `admin:issues:*` key
+→ If cached, return cached payload
+→ Else query `AppDbContext` with `.Include(i => i.User).Include(i => i.AssignedTo)`, map to `IssueResponseDto`, cache result for 5 minutes, return result
+
+
+Authentication & Authorization Architecture
+
+JWT handling:
+- `SecurityHelper.GenerateToken(User, IConfiguration)` builds a JWT with NameIdentifier, Name (email), and Role claim and sets 2 hour expiry.
+- JWT signing uses symmetric key configured at `Jwt:Key` in `appsettings.json`.
+- `SecurityExtensions.AddJwtAuthentication()` configures JwtBearer authentication and registers authorization policies.
+
+Middleware flow for auth:
+- `app.UseAuthentication()` runs before endpoint dispatch; JwtBearer validates tokens and populates User claims.
+- `app.UseAuthorization()` enforces policies; feature endpoints call `.RequireAuthorization("PolicyName")` where necessary.
+
+Role policies and checks:
+- Policies: `AdminOnly`, `StudentOnly`, `StaffOrAdmin` are registered; implemented as `RequireRole("Admin")`, `RequireRole("Student")`, `RequireRole("Admin","Staff")`.
+- Additional ownership checks exist in endpoints (e.g., staff updating status checks `issue.AssignedToId == userId`).
+
+Permission flow:
+- Authentication establishes identity & role.
+- Authorization via policy reduces surface area (group routes like `/admin` and `/staff`).
+- Endpoints perform final resource-level checks (e.g., forbids when assigned user mismatch).
+
+
+Database Architecture
+
+DbContext:
+- `Infrastructure/AppDbContext.cs` exposes `DbSet<User>` and `DbSet<Issue>`.
+- OnModelCreating configures:
+  - Issue -> User relationship (HasOne User, WithMany)
+  - Index on `Issue.Status`
+  - Enum conversion for `Issue.Status` stored as string
+
+Entities:
+- `User`: Id, Name, Email, PasswordHash, Role
+- `Issue`: Id, Title, Description, Status (IssueStatus enum), UserId, AssignedToId, Block, RoomNumber, CreatedAt, ImagePath, IsDeleted
+
+Migrations:
+- Migration files exist in `Migrations/` confirming the schema evolution including adding `ImagePath` for Issue.
+
+Repositories & data access:
+- Data access is implemented directly in endpoints using `AppDbContext` (no separate repository layer present).
+- Queries use EF Core `Include()` and standard LINQ.
+
+Seeders:
+- `DatabaseExtensions.SeedDatabase(IApplicationBuilder)` seeds default Admin and Staff users if missing.
+
+
+Shared Infrastructure
+
+Caching:
+- Redis `IConnectionMultiplexer` is registered in `DatabaseExtensions.AddRedisCache()`.
+- Used in Issues admin listing for caching query results for 5 minutes.
+- Cache invalidation implemented via scanning keys matching `admin:issues:*` and deleting them.
+
+File uploads:
+- `IStorageService` abstraction with `LocalStorageService` implementation.
+- Files saved under `uploads/` and served as static files via `app.UseStaticFiles()` mapped to `/uploads`.
+- Image URL resolved by `LocalStorageService.GetUrl(fileName, HttpContext)`.
+- Upload validation (MIME/size) is done inline in the `/issues/report` endpoint.
+
+Logging:
+- Serilog configured in `Program.cs` to log to console and `logs/log.txt`.
+- `GlobalExceptionMiddleware` logs unhandled exceptions using Serilog.
+
+Configuration:
+- Configuration via `appsettings.json` and environment variables; `Program.cs` reads `PORT` and `Jwt:Key`, `DefaultConnection`, `Redis:ConnectionString`.
+
+Helpers & Utilities:
+- `SecurityHelper` centralizes token generation and password hashing/verification.
+- `EnumSchemaFilter` converts enums to strings for Swagger.
+
+
+Dependency Injection Overview
+
+Registered services (not exhaustive but primary):
+- `services.AddValidatorsFromAssemblyContaining<Program>()` (FluentValidation validators)
+- `IStorageService` -> `LocalStorageService` (singleton)
+- `AppDbContext` via `AddDbContext<AppDbContext>` (scoped by EF Core per request)
+- `IConnectionMultiplexer` (singleton)
+- Authentication and Authorization (standard lifetimes inside the framework)
+- RateLimiter configured with named limiters (`login`, `issue`)
+
+Patterns:
+- Minimal APIs pattern: endpoints are declared in static `Map*Endpoints` extension methods.
+- Services wiring: `AddAppServices()` centralizes app-level registrations.
+- Validators are auto-registered from assembly.
+
+
+Middleware Pipeline
+
+Order and purpose (as configured in `Program.cs`):
+1. `UseSwaggerDocumentation()` - swagger + UI
+2. `UseCors("AllowAll")` - open CORS policy
+3. `UseRateLimiter()` - named rate limiters (applied per-endpoint with `.RequireRateLimiting`)
+4. Static files middleware for `/uploads`
+5. `UseSerilogRequestLogging()` - request logging
+6. `UseGlobalExceptionHandler()` - centralized exception handling
+7. `UseAuthentication()` - JWT validation
+8. `UseAuthorization()` - policy enforcement
+9. Endpoint mapping and execution
+
+Notes:
+- Rate limiting applied to routes using `.RequireRateLimiting("login")` and `.RequireRateLimiting("issue")`.
+- No explicit rate limiting middleware ordering issues observed; `UseRateLimiter()` is invoked before auth.
+
+
+Feature Ownership Mapping
+
+Feature | Main Folder | Related APIs | Related Models
+---
+Auth | Features/Auth | POST /login, POST /register | User
+Issues | Features/Issues | POST /issues/report, GET /student/issues, /staff/issues, /admin/issues, PUT /issues/{id}/status, PUT /issues/{id}/assign/{staffId}, DELETE /issues/{id} | Issue, User
+Users | Features/Users | GET /admin/users | User
+Shared infra | Infrastructure | Storage, DB, Security, Middleware | User, Issue
+
+
+AI AGENT NOTES
+
+- Business logic location: Mostly inside the `Features/*/ *Endpoints.cs` minimal API files. These contain DB interactions, validation orchestration, file handling, and caching.
+- Validation location: FluentValidation validators are in `Features/Issues` (CreateIssueDto validator, UpdateStatus validator) and auto-registered via `AddValidatorsFromAssemblyContaining<Program>()`.
+- Auth logic location: `Infrastructure/SecurityHelper.cs` (token creation + password), `Infrastructure/Extensions/SecurityExtensions.cs` (auth config). `RequireAuthorization()` in endpoints enforces per-route policy.
+- Role checks: Per-route policies (`AdminOnly`, `StudentOnly`, `StaffOrAdmin`) plus resource checks (e.g., `issue.AssignedToId != userId` leads to `Results.Forbid()`).
+- API responses shaped: Endpoints map EF entities into `*ResponseDto` classes (`IssueResponseDto`, `UserResponseDto`) before returning.
+- File upload handling: Done inside `POST /issues/report` in `IssueEndpoints.cs` using `IStorageService` (LocalStorageService). File validation (MIME and max size 5MB) enforced inline.
+- Database interactions: Performed directly using `AppDbContext` in endpoints; no repository abstraction.
+- Separation of concerns: Minimal API style puts routes, validation orchestration, and business logic together — moderate mixing of concerns; light service abstraction (Storage) exists.
+
+
+Uncertainties & Notes
+
+- No explicit repository layer or background job system detected. (Search for `BackgroundService`, `IHostedService`, `Hangfire` returned no project references.)
+- No WebSocket endpoints or real-time notifications implemented. (Repo contains no WebSocket code; `.vs` files reference IIS WebSocket features but nothing in app code.)
+- Caching limited to admin issues listing via Redis; no global cache abstraction found.
+- Rate limiter is configured with named fixed-window limiters; their use is per-endpoint via `.RequireRateLimiting`.
+
+
+Actionable next steps for developers or agents
+- To add a repository layer: extract EF access from `*Endpoints.cs` into services under `Infrastructure/Services` or `Features/*/Services`.
+- To add background processing: implement `IHostedService` for periodic jobs and register it in `Program.cs`.
+- To support cloud storage: add alternative `IStorageService` implementations (S3, Azure Blob) and configure via DI.
+
+
+End of file
