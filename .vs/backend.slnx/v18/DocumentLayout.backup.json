@@ -3,11 +3,11 @@
   "WorkspaceRootPath": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ASUS\\AppData\\Roaming\\Microsoft\\UserSecrets\\8c9a1943-da41-450c-8ef5-7502e0771c69\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ASUS\\AppData\\Roaming\\Microsoft\\UserSecrets\\8c9a1943-da41-450c-8ef5-7502e0771c69\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}|backend.csproj|c:\\users\\asus\\onedrive\\documents\\desktop\\projects\\college-issue-reporting\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -21,7 +21,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
@@ -37,7 +37,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "secrets.json",
               "DocumentMoniker": "C:\\Users\\ASUS\\AppData\\Roaming\\Microsoft\\UserSecrets\\8c9a1943-da41-450c-8ef5-7502e0771c69\\secrets.json",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Roaming\\Microsoft\\UserSecrets\\8c9a1943-da41-450c-8ef5-7502e0771c69\\secrets.json",
@@ -45,17 +45,18 @@
               "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Roaming\\Microsoft\\UserSecrets\\8c9a1943-da41-450c-8ef5-7502e0771c69\\secrets.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-14T15:54:49.92Z"
+              "WhenOpened": "2026-05-14T15:54:49.92Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\ASUS\\OneDrive\\Documents\\Desktop\\Projects\\College-Issue-Reporting\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAADwv1UAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEcAAAAAAAAAAADwv1gAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-08T20:36:03.15Z",
               "EditorCaption": ""

@@ -24,7 +24,7 @@
 - **Rate limiting:**
   - `POST /login`: 5 requests per minute
   - `POST /issues/report`: 5 requests per minute
-- **File upload strategy:** S3-backed object storage; image URLs are returned by the API.
+- **File upload strategy:** S3-backed object storage. Uploads are validated server-side, stored in AWS S3, and returned as presigned URLs by default.
 - **Realtime support:** None.
 - **Webhooks:** None.
 - **Queue jobs:** None.
@@ -513,7 +513,7 @@ curl -X POST https://college-issue-reporting.onrender.com/register \
 ## [POST] /issues/report
 
 ### Description
-Allows a student to create a new issue report and optionally upload one image.
+Allows a student to create a new issue report and optionally upload one image. Uploaded files are stored in AWS S3 and exposed through presigned URLs by default.
 
 ---
 
@@ -587,7 +587,7 @@ Image=@/path/to/photo.png
 ### File Uploads
 | Field | MIME Types | Max Size | Single / Multiple | Storage |
 |---|---|---|---|---|
-| `Image` | `image/jpeg`, `image/jpg`, `image/png` | 5 MB | Single | Stored in AWS S3 and returned as a cloud URL |
+| `Image` | `image/jpeg`, `image/jpg`, `image/png` | 5 MB | Single | Stored in AWS S3 using `issues/{issueId}/{guid}.{ext}` |
 
 ---
 
@@ -595,8 +595,28 @@ Image=@/path/to/photo.png
 ```json
 {
   "message": "Issue created",
-  "id": 456,
-  "imageUrl": "https://your-cdn-or-s3-url.example/..."
+  "issue": {
+    "id": 456,
+    "title": "Broken fan",
+    "description": "The fan in classroom A101 is not working.",
+    "status": "Open",
+    "block": "A",
+    "roomNumber": "A101",
+    "assignedStaffName": "Unassigned",
+    "imageUrl": "https://your-s3-presigned-url.example/...",
+    "imageObjectKey": "issues/456/abcd1234.jpg",
+    "imageStorageProvider": "s3",
+    "imageMimeType": "image/jpeg",
+    "imageSizeBytes": 4352,
+    "createdAt": "2026-06-03T12:34:56Z"
+  },
+  "imageUrl": "https://your-s3-presigned-url.example/...",
+  "image": {
+    "url": "https://your-s3-presigned-url.example/...",
+    "provider": "s3",
+    "mimeType": "image/jpeg",
+    "sizeBytes": 4352
+  }
 }
 ```
 
@@ -606,8 +626,9 @@ Image=@/path/to/photo.png
 | Field | Type | Description |
 |---|---|---|
 | `message` | string | Confirmation string |
-| `id` | integer | Created issue id |
-| `imageUrl` | string|null | URL to uploaded image if provided |
+| `issue` | object | Created issue with image metadata |
+| `imageUrl` | string|null | Presigned or CDN URL to uploaded image if provided |
+| `image` | object|null | Convenience object with URL and metadata |
 
 ---
 
@@ -624,8 +645,10 @@ Image=@/path/to/photo.png
 ### Business Logic Notes
 - The authenticated user becomes the `UserId` for the issue.
 - Status is set to `Open` initially.
-- If an image is uploaded, it is saved as `{issueId}.jpeg`.
-- Writes to the database are performed before image persistence so the issue id is available.
+- If an image is uploaded, the backend validates MIME type, file signature, and size before uploading to S3.
+- The object key format is `issues/{issueId}/{guid}.{ext}`.
+- The issue row stores `ImagePath`, `ImageObjectKey`, `ImageStorageProvider`, `ImageMimeType`, and `ImageSizeBytes`.
+- The API returns presigned URLs by default when `AWS__UseSignedUrls=true`.
 - Admin issue cache is invalidated after creation.
 
 ---
@@ -767,7 +790,7 @@ None
     "block": "A",
     "roomNumber": "A101",
     "assignedStaffName": "Unassigned",
-    "imageUrl": "https://your-cdn-or-s3-url.example/...",
+    "imageUrl": "https://your-s3-presigned-url.example/...",
     "createdAt": "2026-06-03T12:34:56Z"
   }
 ]
@@ -785,7 +808,11 @@ None
 | `block` | string | Campus block |
 | `roomNumber` | string | Room number |
 | `assignedStaffName` | string | Staff name or `Unassigned` |
-| `imageUrl` | string|null | Public URL if image exists |
+| `imageUrl` | string|null | Presigned or CDN URL if image exists |
+| `imageObjectKey` | string|null | S3 object key for the image |
+| `imageStorageProvider` | string|null | Storage provider name |
+| `imageMimeType` | string|null | Stored MIME type |
+| `imageSizeBytes` | long|null | Uploaded file size in bytes |
 | `createdAt` | string | UTC timestamp |
 
 ---
@@ -813,6 +840,7 @@ None
 ### Frontend Integration Notes
 - Use this endpoint to populate student issue dashboards.
 - Treat `imageUrl` as optional.
+- Use `imageObjectKey` / `imageStorageProvider` if you need to trace the asset in storage.
 - No pagination metadata is returned, so use cursor / incremental load only with client-side logic.
 
 ---
@@ -910,6 +938,10 @@ Same schema as `GET /student/issues`, except `assignedStaffName` may be `Me` for
 | Field | Type | Description |
 |---|---|---|
 | `assignedStaffName` | string | Returns `Me` or staff display name |
+| `imageObjectKey` | string|null | S3 object key |
+| `imageStorageProvider` | string|null | Storage provider name |
+| `imageMimeType` | string|null | Stored MIME type |
+| `imageSizeBytes` | long|null | Uploaded file size in bytes |
 
 ---
 
@@ -1307,7 +1339,7 @@ curl -X PUT https://college-issue-reporting.onrender.com/admin/issues/456/assign
 ## [DELETE] /admin/issues/{id}
 
 ### Description
-Soft-deletes an issue and deletes its uploaded image if present.
+Soft-deletes an issue and deletes its uploaded image from S3 if present.
 
 ---
 
@@ -1391,7 +1423,7 @@ None
 
 ### Business Logic Notes
 - Sets `IsDeleted = true` on the issue.
-- Deletes the image file from local storage if present.
+- Deletes the image object from S3 if present.
 - Does not physically remove the database row.
 - Invalidates the admin issue cache.
 
@@ -1564,7 +1596,7 @@ curl -H "Authorization: Bearer {{token}}" \
   "block": "B",
   "roomNumber": "201",
   "assignedStaffName": "Unassigned",
-  "imageUrl": "https://your-cdn-or-s3-url.example/...",
+  "imageUrl": "https://your-s3-presigned-url.example/...",
   "createdAt": "2026-06-03T12:00:00Z"
 }
 ```
@@ -1635,6 +1667,14 @@ Plain text body: `Internal Server Error`
 | `ConnectionStrings:DefaultConnection` | MySQL database connection string |
 | `Jwt:Key` | JWT signing secret (DO NOT expose) |
 | `Redis:ConnectionString` | Redis connection string for caching and invalidation |
+| `Storage:Provider` | Storage backend selector, usually `s3` |
+| `AWS:BucketName` | S3 bucket name |
+| `AWS:Region` | AWS region for the bucket |
+| `AWS:AccessKey` | IAM access key for S3 uploads |
+| `AWS:SecretKey` | IAM secret key for S3 uploads |
+| `AWS:UseCloudFront` | Optional CloudFront toggle |
+| `AWS:CloudFrontBaseUrl` | Optional CloudFront distribution URL |
+| `AWS:UseSignedUrls` | Generate presigned URLs when `true` |
 
 > Do not expose actual secret values in public documentation.
 
@@ -1659,7 +1699,11 @@ Plain text body: `Internal Server Error`
 - `Block` (string)
 - `RoomNumber` (string)
 - `CreatedAt` (DateTime)
-- `ImagePath` (string?) — local storage path / filename
+- `ImagePath` (string?) — canonical image object key or legacy path field
+- `ImageObjectKey` (string?) — S3 object key
+- `ImageStorageProvider` (string?) — storage provider name
+- `ImageMimeType` (string?) — stored MIME type
+- `ImageSizeBytes` (long?) — uploaded file size
 - `IsDeleted` (bool)
 
 ### Relationships
@@ -1681,10 +1725,11 @@ Plain text body: `Internal Server Error`
 ### Issue creation flow
 1. Student provides issue details and optionally uploads an image.
 2. Frontend sends multipart/form-data to `POST /issues/report`.
-3. Server validates required fields and image constraints.
-4. Server stores the issue and saves the image locally.
-5. Admin issue caches are invalidated.
-6. The student receives issue id and image URL.
+3. Server validates required fields, MIME type, image signature, and image size.
+4. Server stores the issue in MySQL and uploads the image to AWS S3 using a generated object key.
+5. The issue row is updated with image metadata.
+6. Admin issue caches are invalidated.
+7. The student receives the issue payload and a presigned image URL.
 
 ### Issue resolution flow
 1. Staff or Admin requests `PUT /staff/issues/{id}/status`.
