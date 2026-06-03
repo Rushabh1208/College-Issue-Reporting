@@ -8,6 +8,11 @@
 # Visual Studio cache/options directory
 .vs/
 
+#folders
+.backend-folder-structure.txt
+.RONTEND_FOLDER_STRUCTURE.md
+.prompt.md
+
 # Visual Studio Code
 .vscode/*
 !.vscode/settings.json
@@ -35,8 +40,18 @@
 # Environment / Secrets
 .env
 .env.*
+!**/.env.example
 secrets.json
 **/appsettings.Local.json
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.eslintcache
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
 
 # Docker generated/override files
 docker-compose.override.yml
