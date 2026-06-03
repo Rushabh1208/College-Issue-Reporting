@@ -1,0 +1,61 @@
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Environment / Secrets
+.env
+.env.*
+secrets.json
+appsettings.Local.json
+
+# Docker generated/override files
+docker-compose.override.yml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Other
+*.log
+publish/
+uploads/
+.gemini/
+.vs/
+bin/
+obj/
+.vs/ProjectEvaluation/backend.metadata.v10.bin
+.vs/backend.slnx/v18/.futdcache.v2
+.vs/ProjectEvaluation/backend.strings.v10.bin
+.vs/backend.slnx/v18/DocumentLayout.json
+.vs/backend.slnx/v18/.futdcache.v2
+.vs/backend.slnx/v18/.suo

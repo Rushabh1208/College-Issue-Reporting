@@ -1,0 +1,206 @@
+{
+  "info": {
+    "name": "College Issue Reporting API",
+    "_postman_id": "4e953dc3-8d5d-4cef-8e71-73b3abf3f3e1",
+    "description": "Collection for College Issue Reporting backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://college-issue-reporting.onrender.com"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Root Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": ["/"]
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"admin123\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["login"]
+        }
+      }
+    },
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Jane Student\",\n  \"email\": \"jane.student@college.edu\",\n  \"password\": \"StrongPassword123\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["register"]
+        }
+      }
+    },
+    {
+      "name": "Report Issue (Student)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "Title", "value": "Broken classroom fan", "type": "text" },
+            { "key": "Description", "value": "The fan in room A101 is not working.", "type": "text" },
+            { "key": "Block", "value": "A", "type": "text" },
+            { "key": "RoomNumber", "value": "A101", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/issues/report",
+          "host": ["{{baseUrl}}"],
+          "path": ["issues", "report"]
+        }
+      }
+    },
+    {
+      "name": "Get Student Issues",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/student/issues",
+          "host": ["{{baseUrl}}"],
+          "path": ["student", "issues"]
+        }
+      }
+    },
+    {
+      "name": "Get Staff Issues",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/staff/issues",
+          "host": ["{{baseUrl}}"],
+          "path": ["staff", "issues"]
+        }
+      }
+    },
+    {
+      "name": "Update Staff Issue Status",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Resolved\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/staff/issues/1/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["staff", "issues", "1", "status"]
+        }
+      }
+    },
+    {
+      "name": "Admin - List Issues",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/admin/issues?page=1&pageSize=10&status=Open",
+          "host": ["{{baseUrl}}"],
+          "path": ["admin", "issues"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "pageSize", "value": "10" },
+            { "key": "status", "value": "Open" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin - Assign Issue",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/admin/issues/1/assign/2",
+          "host": ["{{baseUrl}}"],
+          "path": ["admin", "issues", "1", "assign", "2"]
+        }
+      }
+    },
+    {
+      "name": "Admin - Delete Issue",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/admin/issues/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["admin", "issues", "1"]
+        }
+      }
+    },
+    {
+      "name": "Admin - List Users",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/admin/users?page=1&pageSize=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["admin", "users"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "pageSize", "value": "10" }
+          ]
+        }
+      }
+    }
+  ]
+}
