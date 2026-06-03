@@ -30,7 +30,7 @@ backend/
 │   ├── SecurityHelper.cs       # JWT creation, password hashing, user id extraction
 │   ├── Services/
 │   │   ├── IStorageService.cs
-│   │   └── LocalStorageService.cs  # Local file storage for uploads (uploads/ folder)
+│   │   └── Storage/             # S3-backed image storage and upload abstractions
 │   ├── Filters/
 │   │   └── EnumSchemaFilter.cs     # Swagger enum string conversion
 │   ├── Middleware/
@@ -54,7 +54,7 @@ backend/
 │   ├── 20260514172014_InitialSchema.cs
 │   └── 20260516085532_AddIssueImagePath.cs
 │
-├── uploads/                     # Static files served from /uploads (images)
+├── AWS S3                       # Uploaded images stored in S3
 
 
 Feature/Module Breakdown
@@ -207,7 +207,7 @@ Caching:
 
 File uploads:
 - `IStorageService` abstraction with `LocalStorageService` implementation.
-- Files saved under `uploads/` and served as static files via `app.UseStaticFiles()` mapped to `/uploads`.
+- Files are uploaded to AWS S3 and image URLs are resolved by the storage provider.
 - Image URL resolved by `LocalStorageService.GetUrl(fileName, HttpContext)`.
 - Upload validation (MIME/size) is done inline in the `/issues/report` endpoint.
 
@@ -245,7 +245,7 @@ Order and purpose (as configured in `Program.cs`):
 1. `UseSwaggerDocumentation()` - swagger + UI
 2. `UseCors("AllowAll")` - open CORS policy
 3. `UseRateLimiter()` - named rate limiters (applied per-endpoint with `.RequireRateLimiting`)
-4. Static files middleware for `/uploads`
+4. S3-backed image URL resolution
 5. `UseSerilogRequestLogging()` - request logging
 6. `UseGlobalExceptionHandler()` - centralized exception handling
 7. `UseAuthentication()` - JWT validation

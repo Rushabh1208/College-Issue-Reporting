@@ -1,5 +1,7 @@
 using backend.Infrastructure;
+using backend.Infrastructure.Media;
 using backend.Infrastructure.Services;
+using backend.Infrastructure.Storage.Models;
 using backend.Models;
 using backend.Enums;
 using FluentValidation;
@@ -49,7 +51,11 @@ namespace backend.Features.Issues
                     RoomNumber = i.RoomNumber,
                     CreatedAt = i.CreatedAt,
                     AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Unassigned",
-                    ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, ctx) : null
+                    ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, i.ImageStorageProvider, ctx) : null,
+                    ImageObjectKey = i.ImageObjectKey ?? i.ImagePath,
+                    ImageStorageProvider = i.ImageStorageProvider ?? "local",
+                    ImageMimeType = i.ImageMimeType,
+                    ImageSizeBytes = i.ImageSizeBytes
                 });
 
                 await cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(result), TimeSpan.FromMinutes(5));
@@ -81,8 +87,12 @@ namespace backend.Features.Issues
                 issue.IsDeleted = true;
                 if (!string.IsNullOrEmpty(issue.ImagePath))
                 {
-                    await storage.DeleteFileAsync(issue.ImagePath);
+                    await storage.DeleteAsync(issue.ImagePath, issue.ImageStorageProvider);
                     issue.ImagePath = null;
+                    issue.ImageObjectKey = null;
+                    issue.ImageStorageProvider = null;
+                    issue.ImageMimeType = null;
+                    issue.ImageSizeBytes = null;
                 }
                 
                 await db.SaveChangesAsync();
@@ -91,7 +101,7 @@ namespace backend.Features.Issues
                 return Results.Ok(new { message = "Issue deleted successfully" });
             });
 
-            app.MapPost("/issues/report", async (HttpContext ctx, AppDbContext db, IConnectionMultiplexer redis, IStorageService storage, IValidator<CreateIssueDto> validator) =>
+            app.MapPost("/issues/report", async (HttpContext ctx, AppDbContext db, IConnectionMultiplexer redis, IStorageService storage, IUploadService uploadService, IValidator<CreateIssueDto> validator) =>
             {
                 var form = await ctx.Request.ReadFormAsync();
                 
@@ -124,22 +134,62 @@ namespace backend.Features.Issues
                 var image = form.Files.GetFile("Image");
                 if (image != null)
                 {
-                    // Validation: MIME Type & Size (5MB)
-                    var allowedTypes = new[] { "image/jpeg", "image/jpg", "image/png" };
-                    if (!allowedTypes.Contains(image.ContentType))
-                        return Results.BadRequest("Only JPEG/PNG images are allowed.");
-
-                    if (image.Length > 5 * 1024 * 1024)
-                        return Results.BadRequest("File size exceeds 5MB limit.");
-
-                    // Filename: {id}.jpeg
-                    var fileName = $"{issue.Id}.jpeg";
-                    issue.ImagePath = await storage.SaveFileAsync(image, fileName);
-                    await db.SaveChangesAsync();
+                    try
+                    {
+                        var upload = await uploadService.UploadIssueImageAsync(issue.Id, image);
+                        issue.ImagePath = upload.ObjectKey;
+                        issue.ImageObjectKey = upload.ObjectKey;
+                        issue.ImageStorageProvider = upload.ProviderName;
+                        issue.ImageMimeType = upload.ContentType;
+                        issue.ImageSizeBytes = upload.SizeBytes;
+                        await db.SaveChangesAsync();
+                    }
+                    catch (ValidationException ex)
+                    {
+                        db.Issues.Remove(issue);
+                        await db.SaveChangesAsync();
+                        return Results.BadRequest(ex.Errors.Select(e => e.ErrorMessage));
+                    }
+                    catch
+                    {
+                        db.Issues.Remove(issue);
+                        await db.SaveChangesAsync();
+                        throw;
+                    }
                 }
 
                 await InvalidateAdminCache(redis);
-                return Results.Ok(new { message = "Issue created", issue.Id, imageUrl = issue.ImagePath != null ? storage.GetUrl(issue.ImagePath, ctx) : null });
+                var imageUrl = issue.ImagePath != null ? storage.GetUrl(issue.ImagePath, issue.ImageStorageProvider, ctx) : null;
+                var responseIssue = new IssueResponseDto
+                {
+                    Id = issue.Id,
+                    Title = issue.Title,
+                    Description = issue.Description,
+                    Status = issue.Status ?? IssueStatus.Open,
+                    Block = issue.Block,
+                    RoomNumber = issue.RoomNumber,
+                    CreatedAt = issue.CreatedAt,
+                    AssignedStaffName = "Unassigned",
+                    ImageUrl = imageUrl,
+                    ImageObjectKey = issue.ImageObjectKey ?? issue.ImagePath,
+                    ImageStorageProvider = issue.ImageStorageProvider ?? "local",
+                    ImageMimeType = issue.ImageMimeType,
+                    ImageSizeBytes = issue.ImageSizeBytes
+                };
+
+                return Results.Ok(new
+                {
+                    message = "Issue created",
+                    issue = responseIssue,
+                    imageUrl,
+                    image = issue.ImagePath == null ? null : new
+                    {
+                        url = imageUrl,
+                        provider = issue.ImageStorageProvider ?? "local",
+                        mimeType = issue.ImageMimeType,
+                        sizeBytes = issue.ImageSizeBytes
+                    }
+                });
             })
             .RequireAuthorization("StudentOnly")
             .RequireRateLimiting("issue");
@@ -163,7 +213,11 @@ namespace backend.Features.Issues
                         RoomNumber = i.RoomNumber,
                         CreatedAt = i.CreatedAt,
                         AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Me",
-                        ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, ctx) : null
+                        ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, i.ImageStorageProvider, ctx) : null,
+                        ImageObjectKey = i.ImageObjectKey ?? i.ImagePath,
+                        ImageStorageProvider = i.ImageStorageProvider ?? "local",
+                        ImageMimeType = i.ImageMimeType,
+                        ImageSizeBytes = i.ImageSizeBytes
                     })
                     .ToListAsync();
 
@@ -208,7 +262,11 @@ namespace backend.Features.Issues
                         RoomNumber = i.RoomNumber,
                         CreatedAt = i.CreatedAt,
                         AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Unassigned",
-                        ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, ctx) : null
+                        ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, i.ImageStorageProvider, ctx) : null,
+                        ImageObjectKey = i.ImageObjectKey ?? i.ImagePath,
+                        ImageStorageProvider = i.ImageStorageProvider ?? "local",
+                        ImageMimeType = i.ImageMimeType,
+                        ImageSizeBytes = i.ImageSizeBytes
                     })
                     .ToListAsync();
 

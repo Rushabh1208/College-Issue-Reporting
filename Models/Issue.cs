@@ -25,6 +25,10 @@ namespace backend.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public string? ImagePath { get; set; }
+        public string? ImageObjectKey { get; set; }
+        public string? ImageStorageProvider { get; set; }
+        public string? ImageMimeType { get; set; }
+        public long? ImageSizeBytes { get; set; }
 
         public bool IsDeleted { get; set; } = false;
     }

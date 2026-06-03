@@ -44,8 +44,22 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ImageMimeType")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("ImageObjectKey")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("ImagePath")
                         .HasColumnType("longtext");
+
+                    b.Property<long?>("ImageSizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ImageStorageProvider")
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar(32)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");

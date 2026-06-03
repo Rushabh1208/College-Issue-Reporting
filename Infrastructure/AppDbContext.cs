@@ -24,6 +24,14 @@ namespace backend.Infrastructure
             modelBuilder.Entity<Issue>()
                 .Property(i => i.Status)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Issue>()
+                .Property(i => i.ImageStorageProvider)
+                .HasMaxLength(32);
+
+            modelBuilder.Entity<Issue>()
+                .Property(i => i.ImageMimeType)
+                .HasMaxLength(100);
         }
     }
 }

@@ -28,7 +28,7 @@ The system is implemented as a **.NET 8 Minimal API** that manages the lifecycle
 
 ### 2. Issue Reporting with Image Uploads
 - **Implementation:** Students can submit maintenance requests with an optional **Image Upload**.
-- **Storage:** Images are stored on the local filesystem with deterministic naming (`{id}.jpeg`).
+- **Storage:** Images now flow through an S3-backed storage abstraction.
 - **Evidence:** `Features/Issues/IssueEndpoints.cs:84-110`.
 
 ### 3. Issue Management (Admin)
@@ -73,7 +73,7 @@ The system is implemented as a **.NET 8 Minimal API** that manages the lifecycle
 ├── Models/                  # Shared Domain entities
 ├── Enums/                   # Role and Status constants
 ├── Migrations/              # EF Core database migrations
-└── uploads/                 # Local directory for stored issue images
+└── AWS S3                  # Stored issue images
 ```
 
 ---
@@ -81,11 +81,28 @@ The system is implemented as a **.NET 8 Minimal API** that manages the lifecycle
 ## Setup Instructions
 
 ### Environment Variables
-The following variables are required in the **Production (Render)** environment:
+The following variables are required in the **Production (Render)** environment and should be supplied through your hosting platform's secret/config store:
 - `ConnectionStrings__DefaultConnection`: AWS RDS MySQL connection string.
 - `Jwt__Key`: Secure secret key for JWT signing.
 - `Redis__ConnectionString`: Upstash Redis connection address.
+- `Storage__Provider`: Set to `s3` for production uploads.
+- `Storage__PublicBaseUrl`: Optional absolute base URL for CDN or public image serving.
+- `AWS__BucketName`: S3 bucket name for issue images.
+- `AWS__Region`: AWS region for the bucket.
+- `AWS__AccessKey`: IAM access key with limited S3 permissions.
+- `AWS__SecretKey`: IAM secret key with limited S3 permissions.
+- `AWS__CloudFrontBaseUrl`: Optional CloudFront distribution URL.
+- `AWS__UseCloudFront`: Set to `true` if CloudFront should serve public images.
+- `AWS__UseSignedUrls`: Set to `true` if the bucket should stay private and the backend should return presigned URLs.
 - `PORT`: Automatically handled by Render (defaults to 10000).
+
+For Docker-based local development, set these environment variables before running `docker-compose up --build`:
+- `MYSQL_ROOT_PASSWORD`
+- `MYSQL_DATABASE` (optional, defaults to `campus_db`)
+- `REDIS_CONNECTION_STRING` (optional, defaults to `redis:6379`)
+- `JWT_KEY`
+- `Storage__Provider=s3` if you want Docker to use S3 as well
+- `AWS__BucketName`, `AWS__Region`, `AWS__AccessKey`, `AWS__SecretKey`
 
 ### Local Development
 ```bash
@@ -118,7 +135,7 @@ docker-compose up --build
 
 ## Future Improvements
 
-- **Cloud Storage Migration**: Transition `IStorageService` to AWS S3 or Azure Blob Storage for persistent image handling.
+- **Cloud Storage**: S3 is now the persistent image store.
 - **CI/CD**: Fully automate testing and deployment using GitHub Actions.
 - **CORS Hardening**: Restrict `AllowAll` origins to a specific frontend whitelist.
 - **Global Error Handling**: Implement more granular problem-details responses.

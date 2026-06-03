@@ -13,6 +13,10 @@ namespace backend.Features.Issues
 
         public string AssignedStaffName { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
+        public string? ImageObjectKey { get; set; }
+        public string? ImageStorageProvider { get; set; }
+        public string? ImageMimeType { get; set; }
+        public long? ImageSizeBytes { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

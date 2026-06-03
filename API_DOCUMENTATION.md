@@ -24,7 +24,7 @@
 - **Rate limiting:**
   - `POST /login`: 5 requests per minute
   - `POST /issues/report`: 5 requests per minute
-- **File upload strategy:** Local storage in `uploads/`; served via `/uploads/{filename}` using static files middleware.
+- **File upload strategy:** S3-backed object storage; image URLs are returned by the API.
 - **Realtime support:** None.
 - **Webhooks:** None.
 - **Queue jobs:** None.
@@ -587,7 +587,7 @@ Image=@/path/to/photo.png
 ### File Uploads
 | Field | MIME Types | Max Size | Single / Multiple | Storage |
 |---|---|---|---|---|
-| `Image` | `image/jpeg`, `image/jpg`, `image/png` | 5 MB | Single | Local `uploads/` folder; served from `/uploads/{filename}` |
+| `Image` | `image/jpeg`, `image/jpg`, `image/png` | 5 MB | Single | Stored in AWS S3 and returned as a cloud URL |
 
 ---
 
@@ -596,7 +596,7 @@ Image=@/path/to/photo.png
 {
   "message": "Issue created",
   "id": 456,
-  "imageUrl": "https://college-issue-reporting.onrender.com/uploads/456.jpeg"
+  "imageUrl": "https://your-cdn-or-s3-url.example/..."
 }
 ```
 
@@ -767,7 +767,7 @@ None
     "block": "A",
     "roomNumber": "A101",
     "assignedStaffName": "Unassigned",
-    "imageUrl": "https://college-issue-reporting.onrender.com/uploads/456.jpeg",
+    "imageUrl": "https://your-cdn-or-s3-url.example/...",
     "createdAt": "2026-06-03T12:34:56Z"
   }
 ]
@@ -1564,7 +1564,7 @@ curl -H "Authorization: Bearer {{token}}" \
   "block": "B",
   "roomNumber": "201",
   "assignedStaffName": "Unassigned",
-  "imageUrl": "https://college-issue-reporting.onrender.com/uploads/101.jpeg",
+  "imageUrl": "https://your-cdn-or-s3-url.example/...",
   "createdAt": "2026-06-03T12:00:00Z"
 }
 ```
