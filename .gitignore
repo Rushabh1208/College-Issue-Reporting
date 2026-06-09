@@ -65,3 +65,4 @@ Thumbs.db
 **/publish/
 **/uploads/
 .gemini/
+prompt.md
