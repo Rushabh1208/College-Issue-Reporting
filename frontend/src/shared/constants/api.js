@@ -3,7 +3,8 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://colleg
 export const ROLES = {
   STUDENT: "Student",
   STAFF: "Staff",
-  ADMIN: "Admin"
+  ADMIN: "Admin",
+  WOMENCELL: "WomenCell"
 };
 
 export const ISSUE_STATUSES = ["Open", "InProgress", "Resolved"];

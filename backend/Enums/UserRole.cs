@@ -4,6 +4,7 @@ namespace backend.Enums
     {
         Student,
         Admin,
-        Staff
+        Staff,
+        WomenCell
     }
 }

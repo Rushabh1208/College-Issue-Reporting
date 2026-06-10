@@ -9,7 +9,7 @@ namespace backend.Infrastructure.Extensions
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var key = configuration["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key", "JWT Key is missing from configuration.");
-            
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -31,6 +31,9 @@ namespace backend.Infrastructure.Extensions
                 options.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
                 options.AddPolicy("StudentOnly", p => p.RequireRole("Student"));
                 options.AddPolicy("StaffOrAdmin", p => p.RequireRole("Admin", "Staff"));
+                options.AddPolicy("WomenCellOnly", p => p.RequireRole("WomenCell"));
+                options.AddPolicy("WomenCellOrAdmin", p => p.RequireRole("Admin", "WomenCell"));
+                options.AddPolicy("AnyStaff", p => p.RequireRole("Admin", "Staff", "WomenCell"));
             });
 
             return services;

@@ -3,6 +3,7 @@ using backend.Infrastructure.Extensions;
 using backend.Features.Auth;
 using backend.Features.Issues;
 using backend.Features.Users;
+using backend.Features.Students;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
 
@@ -85,5 +86,6 @@ app.MapGet("/", () => "Campus API is running and healthy! 🚀");
 app.MapAuthEndpoints();
 app.MapIssueEndpoints();
 app.MapUserEndpoints();
+app.MapStudentEndpoints();
 
 app.Run();

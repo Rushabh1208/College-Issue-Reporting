@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { ClipboardList, LogOut, PlusCircle, UsersRound, Wrench, LayoutDashboard } from "lucide-react";
+import { ClipboardList, LogOut, PlusCircle, UsersRound, Wrench, LayoutDashboard, ShieldAlert, GraduationCap } from "lucide-react";
 import { Button } from "../../shared/ui/Button";
 import { ROLES } from "../../shared/constants/api";
 import { cn } from "../../shared/utils/cn";
@@ -15,7 +15,11 @@ const roleNav = {
   ],
   [ROLES.ADMIN]: [
     { to: "/admin/issues", label: "Issues", icon: LayoutDashboard },
-    { to: "/admin/users", label: "Users", icon: UsersRound }
+    { to: "/admin/users", label: "Users", icon: UsersRound },
+    { to: "/admin/students", label: "Students", icon: GraduationCap }
+  ],
+  [ROLES.WOMENCELL]: [
+    { to: "/womencell/issues", label: "Complaints", icon: ShieldAlert }
   ]
 };
 

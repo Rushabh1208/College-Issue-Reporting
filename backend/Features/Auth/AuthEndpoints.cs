@@ -1,6 +1,5 @@
 using backend.Infrastructure;
 using backend.Models;
-using backend.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Features.Auth
@@ -9,34 +8,49 @@ namespace backend.Features.Auth
     {
         public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
         {
-            app.MapPost("/login", async (AppDbContext db, LoginDto loginUser, IConfiguration config) =>
+            app.MapPost("/login", async (AppDbContext db, LoginDto dto, IConfiguration config) =>
             {
-                var user = await db.Users.FirstOrDefaultAsync(u => u.Email == loginUser.Email);
+                // normalize input — could be studentId like "2025001" or email
+                var input = dto.Identifier.Trim().ToLowerInvariant();
 
-                if (user == null || !SecurityHelper.VerifyPassword(loginUser.Password, user.PasswordHash))
+                // check Students table first
+                // students can log in with their StudentId OR their college email
+                var student = await db.Students
+                    .FirstOrDefaultAsync(s =>
+                        (s.StudentId.ToLower() == input || s.Email.ToLower() == input)
+                        && s.IsActive);
+
+                if (student != null)
+                {
+                    if (!SecurityHelper.VerifyPassword(dto.Password, student.PasswordHash))
+                        return Results.Unauthorized();
+
+                    return Results.Ok(new
+                    {
+                        token = SecurityHelper.GenerateToken(student, config),
+                        role = "Student",
+                        name = student.Name,
+                        email = student.Email,
+                        studentId = student.StudentId
+                    });
+                }
+
+                // check Users table (Admin, Staff, WomenCell)
+                var user = await db.Users
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == input);
+
+                if (user == null || !SecurityHelper.VerifyPassword(dto.Password, user.PasswordHash))
                     return Results.Unauthorized();
 
-                return Results.Ok(new { token = SecurityHelper.GenerateToken(user, config) });
-            }).RequireRateLimiting("login");
-
-            app.MapPost("/register", async (AppDbContext db, RegisterDto dto) =>
-            {
-                if (await db.Users.AnyAsync(u => u.Email == dto.Email))
-                    return Results.BadRequest("Email already registered");
-
-                var user = new User
+                return Results.Ok(new
                 {
-                    Name = dto.Name,
-                    Email = dto.Email,
-                    PasswordHash = SecurityHelper.HashPassword(dto.Password),
-                    Role = UserRole.Student 
-                };
-
-                db.Users.Add(user);
-                await db.SaveChangesAsync();
-
-                return Results.Ok(new { message = "User registered successfully", user.Id, user.Email });
-            });
+                    token = SecurityHelper.GenerateToken(user, config),
+                    role = user.Role.ToString(),
+                    name = user.Name,
+                    email = user.Email
+                });
+            })
+            .RequireRateLimiting("login");
         }
     }
 }

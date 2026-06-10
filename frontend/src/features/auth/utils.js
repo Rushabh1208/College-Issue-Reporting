@@ -17,6 +17,8 @@ export function decodeJwt(token) {
       id: payload.nameid || payload.sub || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
       email: payload.unique_name || payload.email || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
       role: payload.role || payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+      studentId: payload.studentId || null,
+      gender: payload.gender || null,
       exp: payload.exp
     };
   } catch {
@@ -31,5 +33,6 @@ export function isExpired(user) {
 export function roleHome(role) {
   if (role === "Admin") return "/admin/issues";
   if (role === "Staff") return "/staff/issues";
+  if (role === "WomenCell") return "/womencell/issues";
   return "/student/issues";
 }

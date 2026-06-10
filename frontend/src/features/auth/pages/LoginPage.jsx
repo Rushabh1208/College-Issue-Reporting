@@ -19,7 +19,7 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting }
-  } = useForm({ defaultValues: { email: "", password: "" } });
+  } = useForm({ defaultValues: { identifier: "", password: "" } });
 
   async function onSubmit(values) {
     try {
@@ -37,22 +37,29 @@ export default function LoginPage() {
   return (
     <Card>
       <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-        <FormField label="Email" error={errors.email?.message}>
-          <input className={inputClass(errors.email)} autoComplete="email" inputMode="email" {...register("email", loginRules.email)} />
+        <FormField label="Student ID or Email" error={errors.identifier?.message}>
+          <input
+            className={inputClass(errors.identifier)}
+            autoComplete="username"
+            placeholder="e.g. 2025001 or you@college.edu"
+            {...register("identifier", loginRules.identifier)}
+          />
         </FormField>
         <FormField label="Password" error={errors.password?.message}>
-          <input className={inputClass(errors.password)} type="password" autoComplete="current-password" {...register("password", loginRules.password)} />
+          <input
+            className={inputClass(errors.password)}
+            type="password"
+            autoComplete="current-password"
+            {...register("password", loginRules.password)}
+          />
         </FormField>
         <Button className="mt-2 w-full" type="submit" isLoading={isSubmitting}>
           <LogIn className="h-4 w-4" aria-hidden="true" />
           Sign in
         </Button>
       </form>
-      <p className="mt-5 text-center text-sm text-slate-600">
-        New student? <Link className="font-bold text-brand-600 hover:text-brand-700" to="/register">Create an account</Link>
-      </p>
       <div className="mt-5 rounded-lg bg-slate-50 p-3 text-xs leading-5 text-slate-600">
-        Seeded access: admin@gmail.com / admin123, staff1@gmail.com / staff@123.
+        Staff and admin use their email address. Students use their Student ID or college email.
       </div>
     </Card>
   );

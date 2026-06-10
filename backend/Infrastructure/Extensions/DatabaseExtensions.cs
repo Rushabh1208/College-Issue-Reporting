@@ -62,6 +62,32 @@ namespace backend.Infrastructure.Extensions
                 });
                 db.SaveChanges();
             }
+
+            if (!db.Users.Any(u => u.Role == UserRole.WomenCell))
+            {
+                db.Users.Add(new User
+                {
+                    Name = "Women Cell Admin",
+                    Email = "womencell@college.edu",
+                    PasswordHash = SecurityHelper.HashPassword("womencell@123"),
+                    Role = UserRole.WomenCell
+                });
+                db.SaveChanges();
+            }
+
+            if (!db.Students.Any(s => s.StudentId == "2025001"))
+            {
+                db.Students.Add(new Student
+                {
+                    StudentId = "2025001",
+                    Name = "Test Student",
+                    Email = "student@college.edu",
+                    PasswordHash = SecurityHelper.HashPassword("Student@123"),
+                    Gender = Gender.Female,
+                    IsActive = true
+                });
+                db.SaveChanges();
+            }
         }
     }
 }

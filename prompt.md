@@ -1,418 +1,1013 @@
-# Generate Complete Frontend for Existing Backend API
+# Phase 3 — Student CSV Import
 
-You are an expert senior frontend architect.
+**Source Phase Definition:** Student CSV Import phase from the master implementation roadmap. 
 
-Using the provided backend implementation and `API_DOCUMENTATION.md`, generate a complete production-grade frontend application using:
+**Dependencies:**
 
-* React.js
-* Vite
-* Tailwind CSS
-* React Router
-* Axios
-* Context API or Zustand for auth/global state
-* React Hook Form
-* Mobile-first responsive design
-* Feature-based architecture
-
-The frontend must fully integrate with ALL APIs documented in `API_DOCUMENTATION.md`.
+* Phase 1 completed (Students table exists and is migrated)
+* Phase 2 completed (Admin authentication, role system, JWT authorization policies available)
+* Existing Admin dashboard and routing structure operational
 
 ---
 
-# VERY IMPORTANT ARCHITECTURE RULE
+# Phase Objective
 
-The frontend architecture MUST be:
+Introduce a controlled administrative onboarding workflow for student accounts.
 
-✅ FEATURE-BASED
-❌ NOT LAYER-BASED
-❌ NOT PAGE-BASED
-❌ NOT COMPONENT-TYPE-BASED
+This phase eliminates manual student creation and establishes a bulk-import mechanism that:
 
-DO NOT create folders like:
+1. Allows administrators to import student records from CSV.
+2. Automatically provisions student accounts.
+3. Applies validation and duplicate detection.
+4. Creates secure default credentials.
+5. Provides lifecycle management for student accounts.
+6. Establishes the student administration foundation required by later phases.
 
-```text id="kw55i9"
-/components
-/pages
-/hooks
-/utils
-/services
+This phase is intentionally focused on student account management only.
+
+It does **not** introduce:
+
+* Issue workflows
+* Categories
+* Upvotes
+* Timelines
+* Analytics
+* WomenCell routing logic beyond what Phase 2 already added
+
+---
+
+# Existing System Analysis
+
+Based on Phase 1 and Phase 2 state:
+
+## Existing Student Model
+
+The `Students` table contains:
+
+```csharp
+Id
+StudentId
+Name
+Email
+Gender
+PasswordHash
+IsActive
+CreatedAt
 ```
 
-as global dumping folders.
+Student authentication now uses:
 
-Instead organize the application by FEATURES / DOMAINS.
-
----
-
-# REQUIRED FOLDER STRUCTURE
-
-Use a scalable feature-separated architecture like this:
-
-```text id="gqkjb9"
-src/
-│
-├── app/
-│   ├── router/
-│   ├── providers/
-│   ├── layouts/
-│   └── store/
-│
-├── shared/
-│   ├── components/
-│   ├── ui/
-│   ├── lib/
-│   ├── utils/
-│   ├── constants/
-│   └── hooks/
-│
-├── features/
-│   │
-│   ├── auth/
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   ├── store/
-│   │   ├── schemas/
-│   │   ├── types/
-│   │   └── routes/
-│   │
-│   ├── issues/
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   ├── store/
-│   │   ├── schemas/
-│   │   ├── types/
-│   │   └── routes/
-│   │
-│   ├── admin/
-│   ├── staff/
-│   ├── student/
-│   └── users/
-│
-├── styles/
-└── main.jsx
+```csharp
+Students table
 ```
 
-Every feature must contain everything related to itself.
+instead of:
 
-No business logic leakage across modules.
+```csharp
+Users table
+```
 
----
+Phase 2 unified login already depends on:
 
-# DESIGN REQUIREMENTS
+```csharp
+StudentId
+Email
+PasswordHash
+IsActive
+```
 
-The UI must be:
-
-* Clean
-* Modern
-* Minimal
-* Fast
-* Mobile-first
-* Fully responsive
-* Production quality
-
----
-
-# MOBILE-FIRST DESIGN IS CRITICAL
-
-MOST USERS WILL USE MOBILE DEVICES.
-
-Design priority must be:
-
-1. Mobile phones
-2. Tablets
-3. Laptops/Desktop
-
-NOT the reverse.
-
-The UI should feel like a modern mobile application first.
+Therefore imported students must satisfy those requirements.
 
 ---
 
-# MOBILE UX REQUIREMENTS
+# Architectural Design
 
-Implement:
+## Import Flow
 
-* Bottom navigation on mobile
-* Sticky action buttons
-* Touch-friendly spacing
-* Large tap targets
-* Responsive drawers/sheets
-* Mobile optimized forms
-* Mobile-first cards
-* Optimized mobile tables
-* Smooth scrolling
-* Proper keyboard handling
-* Safe-area spacing
-* Responsive typography
-
-Avoid desktop-heavy admin panel designs.
-
----
-
-# DESIGN STYLE
-
-Use:
-
-* Soft modern shadows
-* Rounded corners
-* Clean spacing
-* Minimal borders
-* Smooth hover/transition states
-* Professional color palette
-* Accessible contrast
-* Skeleton loading states
-* Empty states
-* Error states
-* Toast notifications
-
-The design should resemble modern SaaS/mobile dashboards.
+```text
+Admin
+  ↓
+Upload CSV
+  ↓
+POST /admin/students/import
+  ↓
+CsvImportService
+  ↓
+CSV Validation
+  ↓
+Duplicate Detection
+  ↓
+Student Entity Creation
+  ↓
+Password Hash Generation
+  ↓
+Bulk Insert
+  ↓
+Import Summary
+  ↓
+Admin UI
+```
 
 ---
 
-# IMPLEMENT ALL FEATURES FROM API DOCUMENTATION
+# Security Requirements
 
-Read the entire `API_DOCUMENTATION.md`.
+## Authorization
 
-Implement ALL available backend capabilities including:
+Only administrators may access student-management endpoints.
 
-* Authentication
-* Login
-* Registration
-* JWT handling
-* Role-based routing
-* Protected routes
-* Student issue reporting
-* File uploads
-* Student issue tracking
-* Staff assigned issues
-* Issue status updates
-* Admin issue management
-* Staff assignment
-* User management
-* Pagination
-* Filtering
-* Error handling
-* Rate limit handling
+Every endpoint must require:
 
-Do NOT skip any documented API.
+```csharp
+.RequireAuthorization("AdminOnly")
+```
+
+or equivalent existing admin policy.
 
 ---
 
-# ROLE-BASED APPLICATION STRUCTURE
+## Password Security
 
-Generate separate UX flows for:
+Never store plaintext passwords.
 
-## Student
+Imported students receive:
 
-* Report issue
-* View own issues
-* Track issue status
+```text
+Student@123
+```
 
-## Staff
+as temporary password.
 
-* View assigned issues
-* Update issue status
+Before persistence:
 
-## Admin
+```csharp
+SecurityHelper.HashPassword()
+```
 
-* View all issues
-* Assign staff
-* Delete issues
-* View users
-* Manage workflows
+must be used.
 
 ---
 
-# AUTHENTICATION REQUIREMENTS
+## CSV Validation Protection
 
-Implement complete auth system:
+Reject:
 
-* JWT login
-* Persistent auth
-* Token storage
-* Auto logout
-* Protected routes
-* Role guards
-* Unauthorized handling
-* Session restoration
-* API interceptors
+```text
+Empty rows
+Malformed rows
+Duplicate rows
+Invalid emails
+Invalid gender values
+Missing required columns
+```
+
+before database insertion.
 
 ---
 
-# API LAYER REQUIREMENTS
+# Backend Implementation
 
-Generate a clean API architecture.
+---
+
+# Stage 1 — Student Feature Module Creation
+
+Create:
+
+```text
+backend/
+└── Features/
+    └── Students/
+        ├── StudentEndpoints.cs
+        ├── StudentResponseDto.cs
+        ├── ImportResultDto.cs
+        ├── ImportErrorDto.cs
+        └── StudentQueryDto.cs
+```
+
+---
+
+# StudentResponseDto
+
+Purpose:
+
+Student list API response.
+
+```csharp
+public class StudentResponseDto
+{
+    public long Id { get; set; }
+
+    public string StudentId { get; set; } = string.Empty;
+
+    public string Name { get; set; } = string.Empty;
+
+    public string Email { get; set; } = string.Empty;
+
+    public string Gender { get; set; } = string.Empty;
+
+    public bool IsActive { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+}
+```
+
+---
+
+# ImportResultDto
+
+Purpose:
+
+Import summary returned after upload.
+
+```csharp
+public class ImportResultDto
+{
+    public int TotalRows { get; set; }
+
+    public int ImportedRows { get; set; }
+
+    public int SkippedRows { get; set; }
+
+    public int DuplicateRows { get; set; }
+
+    public List<ImportErrorDto> Errors { get; set; } = [];
+}
+```
+
+---
+
+# ImportErrorDto
+
+```csharp
+public class ImportErrorDto
+{
+    public int RowNumber { get; set; }
+
+    public string Message { get; set; } = string.Empty;
+}
+```
+
+---
+
+# StudentQueryDto
+
+Supports pagination.
+
+```csharp
+public class StudentQueryDto
+{
+    public int Page { get; set; } = 1;
+
+    public int PageSize { get; set; } = 20;
+}
+```
+
+---
+
+# Stage 2 — CSV Import Service
+
+Create:
+
+```text
+backend/
+└── Infrastructure/
+    └── Services/
+        └── CsvImportService.cs
+```
+
+---
+
+# Service Responsibilities
+
+The service owns:
+
+```text
+File parsing
+Header validation
+Row validation
+Duplicate detection
+Entity creation
+Password generation
+Import summary generation
+```
+
+Endpoint must remain thin.
+
+---
+
+# Required Header Format
+
+Expected CSV:
+
+```csv
+student_id,student_name,student_email,student_gender
+2025001,John Doe,john@college.edu,Male
+2025002,Jane Doe,jane@college.edu,Female
+```
+
+Header comparison should be:
+
+```csharp
+OrdinalIgnoreCase
+```
+
+to prevent case issues.
+
+---
+
+# Row Validation Rules
+
+For every row:
+
+Validate:
+
+```text
+StudentId present
+Name present
+Email present
+Gender present
+```
+
+---
+
+Validate email:
+
+```csharp
+MailAddress
+```
+
+or equivalent validator.
+
+---
+
+Validate gender:
+
+Allowed values:
+
+```text
+Male
+Female
+Other
+```
+
+Any other value:
+
+```text
+Skipped
+Logged in Errors collection
+```
+
+---
+
+# Duplicate Detection
+
+Must detect duplicates in:
+
+### Database
+
+```csharp
+Students.StudentId
+Students.Email
+```
+
+---
+
+### Same Upload File
 
 Example:
 
-```text id="2g5e6f"
-features/issues/api/
-├── reportIssue.js
-├── getStudentIssues.js
-├── getStaffIssues.js
-├── updateIssueStatus.js
-└── adminIssueApi.js
+```csv
+2025001,...
+2025001,...
 ```
 
-Use centralized Axios configuration with interceptors.
-
-Handle:
-
-* 401
-* 403
-* 429
-* network failures
-* timeout handling
+Second occurrence skipped.
 
 ---
 
-# COMPONENT REQUIREMENTS
-
-Build reusable UI components such as:
-
-* Buttons
-* Inputs
-* Form fields
-* Mobile navigation
-* Sidebar
-* Cards
-* Tables
-* Status badges
-* Loaders
-* Modals
-* Sheets
-* Empty states
-* Error states
-* Pagination
-* Toasts
-
----
-
-# FORM REQUIREMENTS
-
-Use:
-
-* React Hook Form
-* Validation schemas
-* Real-time validation
-* Proper error messages
-* File upload previews
-* Disabled/loading states
-
----
-
-# ISSUE MANAGEMENT UX
-
-Implement optimized issue workflows:
-
-## Student
-
-* Quick issue creation
-* Camera/image upload
-* Issue timeline
-* Status tracking
-
-## Staff
-
-* Assigned issue queue
-* Quick status update actions
-
-## Admin
-
-* Issue overview dashboard
-* Assignment workflow
-* Filtering
-* Search
-* Pagination
-* User management
-
----
-
-# PERFORMANCE REQUIREMENTS
-
-Implement:
-
-* Lazy loading
-* Route-based code splitting
-* Optimized re-renders
-* Image optimization
-* Request deduplication
-* Efficient state management
-
----
-
-# RESPONSIVE REQUIREMENTS
-
-Every screen must support:
-
-* Mobile
-* Tablet
-* Desktop
-* Landscape mode
-
-The mobile version must NEVER feel like a shrunk desktop UI.
-
----
-
-# GENERATED OUTPUT
-
-Generate:
-
-```text id="pmy8vn"
-- Complete frontend source code
-- Folder structure
-- Routing system
-- Responsive layouts
-- API integration layer
-- Auth system
-- Protected routes
-- Reusable UI system
-- Feature modules
-- Tailwind configuration
-- Environment configuration
-- README.md
-```
-
----
-
-# CODE QUALITY REQUIREMENTS
-
-Generate:
-
-* Clean architecture
-* Reusable code
-* Modular logic
-* Proper naming
-* Consistent patterns
-* Scalable structure
-* Production-grade code
+# Performance Strategy
 
 Avoid:
 
-* giant files
-* duplicated logic
-* prop drilling everywhere
-* deeply nested JSX
-* hardcoded values
-* messy state management
+```csharp
+SELECT per row
+```
+
+Pattern.
+
+Instead:
+
+1. Read CSV.
+2. Extract all StudentIds.
+3. Extract all Emails.
+4. Query DB once.
+
+Example:
+
+```csharp
+existingStudentIds
+existingEmails
+```
+
+using:
+
+```csharp
+HashSet<string>
+```
+
+for O(1) lookups.
 
 ---
 
-# IMPORTANT RULES
+# Bulk Insert Strategy
 
-* Read ALL APIs from `API_DOCUMENTATION.md`
-* Fully integrate existing backend
-* Do NOT invent APIs
-* Do NOT skip endpoints
-* Respect role permissions
-* Follow backend validations
-* Use feature-based architecture strictly
-* Optimize for mobile-first usage
-* Generate clean production-ready UI
-* Ensure frontend is scalable and maintainable
-* Ensure architecture is suitable for long-term growth
+Do not call:
 
-The final result should feel like a real-world modern production application, not a demo project.
+```csharp
+SaveChanges()
+```
+
+per row.
+
+Instead:
+
+```csharp
+AddRange()
+SaveChangesAsync()
+```
+
+once.
+
+---
+
+# Stage 3 — Student Management Endpoints
+
+Create endpoint registration:
+
+```csharp
+app.MapStudentEndpoints();
+```
+
+inside Program startup configuration.
+
+---
+
+# Endpoint 1 — Import Students
+
+```http
+POST /admin/students/import
+```
+
+Content-Type:
+
+```text
+multipart/form-data
+```
+
+Payload:
+
+```text
+file=<csv>
+```
+
+---
+
+Validation:
+
+```text
+File required
+.csv only
+Not empty
+```
+
+---
+
+Response:
+
+```json
+{
+  "totalRows": 100,
+  "importedRows": 95,
+  "skippedRows": 5,
+  "duplicateRows": 3,
+  "errors": [...]
+}
+```
+
+---
+
+# Endpoint 2 — Student Listing
+
+```http
+GET /admin/students
+```
+
+Query:
+
+```text
+?page=1&pageSize=20
+```
+
+Response:
+
+```json
+{
+  "items": [],
+  "page": 1,
+  "pageSize": 20,
+  "total": 500
+}
+```
+
+---
+
+Sorting:
+
+```text
+Newest first
+```
+
+using:
+
+```csharp
+CreatedAt DESC
+```
+
+---
+
+# Endpoint 3 — Deactivate Student
+
+```http
+PUT /admin/students/{id}/deactivate
+```
+
+Behavior:
+
+```csharp
+student.IsActive = false;
+```
+
+---
+
+Validation:
+
+```text
+Student exists
+```
+
+---
+
+Response:
+
+```http
+204 No Content
+```
+
+---
+
+# Endpoint 4 — Reset Password
+
+```http
+PUT /admin/students/{id}/reset-password
+```
+
+Behavior:
+
+```text
+Reset to Student@123
+```
+
+Implementation:
+
+```csharp
+student.PasswordHash =
+    SecurityHelper.HashPassword("Student@123");
+```
+
+---
+
+Response:
+
+```json
+{
+  "message": "Password reset successfully"
+}
+```
+
+---
+
+# Frontend Implementation
+
+# Stage 4 — API Layer
+
+Create:
+
+```text
+frontend/src/features/students/api/studentApi.js
+```
+
+Functions:
+
+```javascript
+importStudents()
+getStudents()
+deactivateStudent()
+resetPassword()
+```
+
+---
+
+# Stage 5 — Student Administration Page
+
+Create:
+
+```text
+frontend/src/features/admin/pages/AdminStudentsPage.jsx
+```
+
+Responsibilities:
+
+```text
+CSV Upload
+Import Results
+Student Listing
+Pagination
+Deactivate
+Password Reset
+```
+
+---
+
+# Upload Section
+
+Components:
+
+```text
+File Picker
+Upload Button
+Import Result Card
+```
+
+Accepted:
+
+```html
+<input accept=".csv" />
+```
+
+only.
+
+---
+
+# Import Summary UI
+
+Display:
+
+```text
+Total Rows
+Imported Rows
+Skipped Rows
+Duplicate Rows
+```
+
+and
+
+```text
+Validation Errors
+```
+
+in expandable section.
+
+---
+
+# Student Table
+
+Columns:
+
+```text
+Student ID
+Name
+Email
+Gender
+Status
+Created Date
+Actions
+```
+
+---
+
+# Status Badge
+
+```text
+Active
+Inactive
+```
+
+visual distinction required.
+
+---
+
+# Actions Column
+
+Buttons:
+
+```text
+Reset Password
+Deactivate
+```
+
+Deactivate hidden when already inactive.
+
+---
+
+# Confirmation Dialogs
+
+Required for:
+
+```text
+Deactivate
+Reset Password
+```
+
+to prevent accidental actions.
+
+---
+
+# Stage 6 — Routing
+
+Modify:
+
+```text
+frontend/src/app/router/router.jsx
+```
+
+Add:
+
+```jsx
+{
+  path: "/admin/students",
+  element: <AdminStudentsPage />
+}
+```
+
+Protected by:
+
+```jsx
+RequireAuth([ROLES.ADMIN])
+```
+
+---
+
+# Stage 7 — Navigation
+
+Modify:
+
+```text
+frontend/src/app/layouts/AppLayout.jsx
+```
+
+Admin navigation:
+
+```javascript
+{
+  to: "/admin/students",
+  label: "Students",
+  icon: GraduationCap
+}
+```
+
+---
+
+# File-Level Impact Analysis
+
+## New Backend Files
+
+```text
+Features/Students/StudentEndpoints.cs
+Features/Students/StudentResponseDto.cs
+Features/Students/StudentQueryDto.cs
+Features/Students/ImportResultDto.cs
+Features/Students/ImportErrorDto.cs
+Infrastructure/Services/CsvImportService.cs
+```
+
+---
+
+## Modified Backend Files
+
+```text
+Program.cs
+AppDbContext.cs (read-only usage only, no schema changes)
+DependencyInjection registration file(s)
+```
+
+---
+
+## Files That Must Remain Unchanged
+
+```text
+IssueEndpoints.cs
+Issue Models
+Issue DTOs
+Issue Services
+IssueCategory logic
+Timeline logic
+Analytics logic
+```
+
+Those belong to later phases. 
+
+---
+
+## New Frontend Files
+
+```text
+features/students/api/studentApi.js
+features/admin/pages/AdminStudentsPage.jsx
+```
+
+---
+
+## Modified Frontend Files
+
+```text
+router.jsx
+AppLayout.jsx
+shared/constants/api.js (only if route constants exist)
+```
+
+---
+
+# Implementation Sequence
+
+## Step 1
+
+Create DTOs.
+
+---
+
+## Step 2
+
+Create CsvImportService.
+
+---
+
+## Step 3
+
+Implement import endpoint.
+
+---
+
+## Step 4
+
+Implement student list endpoint.
+
+---
+
+## Step 5
+
+Implement deactivate endpoint.
+
+---
+
+## Step 6
+
+Implement password reset endpoint.
+
+---
+
+## Step 7
+
+Register services and endpoints.
+
+---
+
+## Step 8
+
+Build frontend API layer.
+
+---
+
+## Step 9
+
+Build AdminStudentsPage.
+
+---
+
+## Step 10
+
+Add routing.
+
+---
+
+## Step 11
+
+Add navigation.
+
+---
+
+## Step 12
+
+End-to-end validation.
+
+---
+
+# Testing Strategy
+
+## Unit Tests
+
+CsvImportService:
+
+Test:
+
+```text
+Valid CSV
+Invalid header
+Duplicate StudentId
+Duplicate Email
+Invalid Gender
+Invalid Email
+Empty Rows
+Mixed Valid/Invalid Records
+```
+
+---
+
+## Integration Tests
+
+Verify:
+
+```http
+POST /admin/students/import
+GET /admin/students
+PUT /admin/students/{id}/deactivate
+PUT /admin/students/{id}/reset-password
+```
+
+Authorization:
+
+```text
+Admin = allowed
+Staff = denied
+Student = denied
+WomenCell = denied
+```
+
+---
+
+## Regression Testing
+
+Verify Phase 2 login still works:
+
+```text
+Student login
+Admin login
+Staff login
+WomenCell login
+```
+
+No auth behavior should change.
+
+---
+
+# Manual QA Checklist
+
+### Import
+
+* Upload valid CSV
+* Upload empty CSV
+* Upload malformed CSV
+* Upload duplicate records
+* Upload wrong extension
+
+### Student List
+
+* Pagination works
+* Correct counts displayed
+* Newly imported students visible
+
+### Password Reset
+
+* Reset password
+* Login with Student@123
+
+### Deactivation
+
+* Deactivate student
+* Verify login denied after deactivation
+
+---
+
+# Completion Criteria
+
+Phase 3 is complete only when:
+
+* CSV import successfully creates student accounts.
+* Duplicate detection works.
+* Validation errors are reported correctly.
+* Student list supports pagination.
+* Admin can deactivate students.
+* Admin can reset passwords.
+* Only Admin users can access all student-management endpoints.
+* Frontend management screen is fully operational.
+* No regression is introduced into Phase 1 or Phase 2 functionality.
+* Backend and frontend builds complete without errors.

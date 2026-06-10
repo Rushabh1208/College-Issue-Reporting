@@ -8,12 +8,12 @@ import { SkeletonList } from "../../shared/ui/Skeleton.jsx";
 import { ErrorState } from "../../shared/ui/ErrorState.jsx";
 
 const LoginPage = lazy(() => import("../../features/auth/pages/LoginPage.jsx"));
-const RegisterPage = lazy(() => import("../../features/auth/pages/RegisterPage.jsx"));
 const StudentIssuesPage = lazy(() => import("../../features/student/pages/StudentIssuesPage.jsx"));
 const ReportIssuePage = lazy(() => import("../../features/student/pages/ReportIssuePage.jsx"));
 const StaffIssuesPage = lazy(() => import("../../features/staff/pages/StaffIssuesPage.jsx"));
 const AdminIssuesPage = lazy(() => import("../../features/admin/pages/AdminIssuesPage.jsx"));
 const AdminUsersPage = lazy(() => import("../../features/users/pages/AdminUsersPage.jsx"));
+const AdminStudentsPage = lazy(() => import("../../features/admin/pages/AdminStudentsPage.jsx"));
 
 function PageLoader() {
   return <div className="py-6"><SkeletonList rows={3} /></div>;
@@ -30,14 +30,13 @@ export const router = createBrowserRouter([
       {
         element: <AuthLayout />,
         children: [
-          { path: "/login", element: <Suspense fallback={<PageLoader />}><LoginPage /></Suspense> },
-          { path: "/register", element: <Suspense fallback={<PageLoader />}><RegisterPage /></Suspense> }
+          { path: "/login", element: <Suspense fallback={<PageLoader />}><LoginPage /></Suspense> }
         ]
       }
     ]
   },
   {
-    element: <RequireAuth roles={[ROLES.STUDENT, ROLES.STAFF, ROLES.ADMIN]} />,
+    element: <RequireAuth roles={[ROLES.STUDENT, ROLES.STAFF, ROLES.ADMIN, ROLES.WOMENCELL]} />,
     children: [
       {
         element: <AppLayout />,
@@ -59,7 +58,8 @@ export const router = createBrowserRouter([
             element: <RequireAuth roles={[ROLES.ADMIN]} />,
             children: [
               { path: "/admin/issues", element: <Suspense fallback={<PageLoader />}><AdminIssuesPage /></Suspense> },
-              { path: "/admin/users", element: <Suspense fallback={<PageLoader />}><AdminUsersPage /></Suspense> }
+              { path: "/admin/users", element: <Suspense fallback={<PageLoader />}><AdminUsersPage /></Suspense> },
+              { path: "/admin/students", element: <Suspense fallback={<PageLoader />}><AdminStudentsPage /></Suspense> }
             ]
           }
         ]
