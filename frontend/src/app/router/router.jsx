@@ -14,6 +14,7 @@ const StaffIssuesPage = lazy(() => import("../../features/staff/pages/StaffIssue
 const AdminIssuesPage = lazy(() => import("../../features/admin/pages/AdminIssuesPage.jsx"));
 const AdminUsersPage = lazy(() => import("../../features/users/pages/AdminUsersPage.jsx"));
 const AdminStudentsPage = lazy(() => import("../../features/admin/pages/AdminStudentsPage.jsx"));
+const AdminStaffPage = lazy(() => import("../../features/admin/pages/AdminStaffPage.jsx"));
 
 function PageLoader() {
   return <div className="py-6"><SkeletonList rows={3} /></div>;
@@ -59,7 +60,8 @@ export const router = createBrowserRouter([
             children: [
               { path: "/admin/issues", element: <Suspense fallback={<PageLoader />}><AdminIssuesPage /></Suspense> },
               { path: "/admin/users", element: <Suspense fallback={<PageLoader />}><AdminUsersPage /></Suspense> },
-              { path: "/admin/students", element: <Suspense fallback={<PageLoader />}><AdminStudentsPage /></Suspense> }
+              { path: "/admin/students", element: <Suspense fallback={<PageLoader />}><AdminStudentsPage /></Suspense> },
+              { path: "/admin/staff", element: <Suspense fallback={<PageLoader />}><AdminStaffPage /></Suspense> }
             ]
           }
         ]

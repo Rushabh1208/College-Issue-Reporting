@@ -16,7 +16,8 @@ const roleNav = {
   [ROLES.ADMIN]: [
     { to: "/admin/issues", label: "Issues", icon: LayoutDashboard },
     { to: "/admin/users", label: "Users", icon: UsersRound },
-    { to: "/admin/students", label: "Students", icon: GraduationCap }
+    { to: "/admin/students", label: "Students", icon: GraduationCap },
+    { to: "/admin/staff", label: "Staff", icon: UsersRound }
   ],
   [ROLES.WOMENCELL]: [
     { to: "/womencell/issues", label: "Complaints", icon: ShieldAlert }

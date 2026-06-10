@@ -1,209 +1,260 @@
-# Phase 3 — Student CSV Import
+# Phase 4 — Staff Management by Admin (Final Approved Version)
 
-**Source Phase Definition:** Student CSV Import phase from the master implementation roadmap. 
+## Phase Objective
 
-**Dependencies:**
+This phase introduces a dedicated Staff Management module that allows administrators to manage operational staff accounts through the application rather than through manual database operations.
 
-* Phase 1 completed (Students table exists and is migrated)
-* Phase 2 completed (Admin authentication, role system, JWT authorization policies available)
-* Existing Admin dashboard and routing structure operational
+Administrators will be able to:
+
+* Create Staff accounts
+* View Staff accounts
+* Edit Staff account details
+* Deactivate Staff accounts
+* Reset Staff passwords
+
+This phase is intentionally limited to **Staff management only**.
 
 ---
 
-# Phase Objective
+# Out of Scope
 
-Introduce a controlled administrative onboarding workflow for student accounts.
+The following are explicitly excluded from Phase 4:
 
-This phase eliminates manual student creation and establishes a bulk-import mechanism that:
-
-1. Allows administrators to import student records from CSV.
-2. Automatically provisions student accounts.
-3. Applies validation and duplicate detection.
-4. Creates secure default credentials.
-5. Provides lifecycle management for student accounts.
-6. Establishes the student administration foundation required by later phases.
-
-This phase is intentionally focused on student account management only.
-
-It does **not** introduce:
-
-* Issue workflows
-* Categories
-* Upvotes
+* Student management (completed in Phase 3)
+* WomenCell management
+* Admin management
+* Issue assignment workflows
+* Issue categories
+* Priority handling
 * Timelines
 * Analytics
-* WomenCell routing logic beyond what Phase 2 already added
+* Staff grouping
+* Departments
+* Assignment groups
+* Resolution groups
+
+No additional organizational fields should be introduced.
+
+---
+
+# Dependency Analysis
+
+## Phase 1 Dependency
+
+Provides:
+
+```text
+Users table
+Role enum
+IsActive field
+PasswordHash field
+```
+
+---
+
+## Phase 2 Dependency
+
+Provides:
+
+```text
+Unified authentication
+JWT handling
+Admin authorization
+WomenCell role support
+Role-based access control
+```
+
+---
+
+## Phase 3 Dependency
+
+Provides:
+
+```text
+Admin management patterns
+Pagination patterns
+Password reset workflow patterns
+Activation/deactivation workflow patterns
+```
+
+Phase 4 should follow the same architectural approach used in Student Management.
 
 ---
 
 # Existing System Analysis
 
-Based on Phase 1 and Phase 2 state:
+Current user architecture:
 
-## Existing Student Model
+## Students
 
-The `Students` table contains:
+Stored in:
 
-```csharp
-Id
-StudentId
-Name
-Email
-Gender
-PasswordHash
-IsActive
-CreatedAt
-```
-
-Student authentication now uses:
-
-```csharp
+```text
 Students table
 ```
 
-instead of:
+Managed through:
 
-```csharp
-Users table
+```text
+Phase 3 Student Management
 ```
-
-Phase 2 unified login already depends on:
-
-```csharp
-StudentId
-Email
-PasswordHash
-IsActive
-```
-
-Therefore imported students must satisfy those requirements.
 
 ---
 
-# Architectural Design
+## Administrative Users
 
-## Import Flow
+Stored in:
+
+```text
+Users table
+```
+
+Contains:
+
+```text
+Admin
+Staff
+WomenCell
+```
+
+Current limitation:
+
+```text
+No administrative interface exists for Staff management.
+Staff accounts require manual database operations.
+```
+
+Phase 4 resolves this limitation.
+
+---
+
+# Architecture Overview
 
 ```text
 Admin
   ↓
-Upload CSV
+Staff Management Dashboard
   ↓
-POST /admin/students/import
+Create / Edit / Deactivate / Reset Password
   ↓
-CsvImportService
+UserEndpoints
   ↓
-CSV Validation
+Validation
   ↓
-Duplicate Detection
+Users Table
   ↓
-Student Entity Creation
-  ↓
-Password Hash Generation
-  ↓
-Bulk Insert
-  ↓
-Import Summary
-  ↓
-Admin UI
+Authentication System
 ```
 
 ---
 
-# Security Requirements
+# Design Constraints
 
-## Authorization
+## Single User Table
 
-Only administrators may access student-management endpoints.
-
-Every endpoint must require:
+Continue using:
 
 ```csharp
-.RequireAuthorization("AdminOnly")
+Users
 ```
 
-or equivalent existing admin policy.
+No new tables should be introduced.
 
 ---
 
-## Password Security
+## Staff Only
 
-Never store plaintext passwords.
-
-Imported students receive:
-
-```text
-Student@123
-```
-
-as temporary password.
-
-Before persistence:
+Every endpoint in this phase must operate exclusively on:
 
 ```csharp
-SecurityHelper.HashPassword()
+UserRole.Staff
 ```
 
-must be used.
-
----
-
-## CSV Validation Protection
-
-Reject:
+The following roles must never be managed through Staff Management:
 
 ```text
-Empty rows
-Malformed rows
-Duplicate rows
-Invalid emails
-Invalid gender values
-Missing required columns
+Admin
+WomenCell
+Student
 ```
-
-before database insertion.
 
 ---
 
 # Backend Implementation
 
----
-
-# Stage 1 — Student Feature Module Creation
+## Stage 1 — DTO Layer
 
 Create:
 
 ```text
 backend/
 └── Features/
-    └── Students/
-        ├── StudentEndpoints.cs
-        ├── StudentResponseDto.cs
-        ├── ImportResultDto.cs
-        ├── ImportErrorDto.cs
-        └── StudentQueryDto.cs
+    └── Users/
+        ├── CreateStaffDto.cs
+        ├── UpdateStaffDto.cs
+        ├── StaffResponseDto.cs
+        ├── StaffQueryDto.cs
+        └── ResetPasswordResponseDto.cs
 ```
 
 ---
 
-# StudentResponseDto
-
-Purpose:
-
-Student list API response.
+## CreateStaffDto
 
 ```csharp
-public class StudentResponseDto
+public class CreateStaffDto
+{
+    public string Name { get; set; } = string.Empty;
+
+    public string Email { get; set; } = string.Empty;
+}
+```
+
+---
+
+## Validation Rules
+
+### Name
+
+```text
+Required
+Minimum Length: 2
+Maximum Length: 100
+```
+
+### Email
+
+```text
+Required
+Valid email format
+Unique in Users table
+```
+
+---
+
+## UpdateStaffDto
+
+```csharp
+public class UpdateStaffDto
+{
+    public string Name { get; set; } = string.Empty;
+
+    public string Email { get; set; } = string.Empty;
+}
+```
+
+---
+
+## StaffResponseDto
+
+```csharp
+public class StaffResponseDto
 {
     public long Id { get; set; }
-
-    public string StudentId { get; set; } = string.Empty;
 
     public string Name { get; set; } = string.Empty;
 
     public string Email { get; set; } = string.Empty;
-
-    public string Gender { get; set; } = string.Empty;
 
     public bool IsActive { get; set; }
 
@@ -213,48 +264,10 @@ public class StudentResponseDto
 
 ---
 
-# ImportResultDto
-
-Purpose:
-
-Import summary returned after upload.
+## StaffQueryDto
 
 ```csharp
-public class ImportResultDto
-{
-    public int TotalRows { get; set; }
-
-    public int ImportedRows { get; set; }
-
-    public int SkippedRows { get; set; }
-
-    public int DuplicateRows { get; set; }
-
-    public List<ImportErrorDto> Errors { get; set; } = [];
-}
-```
-
----
-
-# ImportErrorDto
-
-```csharp
-public class ImportErrorDto
-{
-    public int RowNumber { get; set; }
-
-    public string Message { get; set; } = string.Empty;
-}
-```
-
----
-
-# StudentQueryDto
-
-Supports pagination.
-
-```csharp
-public class StudentQueryDto
+public class StaffQueryDto
 {
     public int Page { get; set; } = 1;
 
@@ -264,300 +277,159 @@ public class StudentQueryDto
 
 ---
 
-# Stage 2 — CSV Import Service
+# Stage 2 — UserEndpoints Expansion
 
-Create:
-
-```text
-backend/
-└── Infrastructure/
-    └── Services/
-        └── CsvImportService.cs
-```
-
----
-
-# Service Responsibilities
-
-The service owns:
+Modify:
 
 ```text
-File parsing
-Header validation
-Row validation
-Duplicate detection
-Entity creation
-Password generation
-Import summary generation
+backend/Features/Users/UserEndpoints.cs
 ```
 
-Endpoint must remain thin.
+Add the following endpoints.
 
 ---
 
-# Required Header Format
-
-Expected CSV:
-
-```csv
-student_id,student_name,student_email,student_gender
-2025001,John Doe,john@college.edu,Male
-2025002,Jane Doe,jane@college.edu,Female
-```
-
-Header comparison should be:
-
-```csharp
-OrdinalIgnoreCase
-```
-
-to prevent case issues.
-
----
-
-# Row Validation Rules
-
-For every row:
-
-Validate:
-
-```text
-StudentId present
-Name present
-Email present
-Gender present
-```
-
----
-
-Validate email:
-
-```csharp
-MailAddress
-```
-
-or equivalent validator.
-
----
-
-Validate gender:
-
-Allowed values:
-
-```text
-Male
-Female
-Other
-```
-
-Any other value:
-
-```text
-Skipped
-Logged in Errors collection
-```
-
----
-
-# Duplicate Detection
-
-Must detect duplicates in:
-
-### Database
-
-```csharp
-Students.StudentId
-Students.Email
-```
-
----
-
-### Same Upload File
-
-Example:
-
-```csv
-2025001,...
-2025001,...
-```
-
-Second occurrence skipped.
-
----
-
-# Performance Strategy
-
-Avoid:
-
-```csharp
-SELECT per row
-```
-
-Pattern.
-
-Instead:
-
-1. Read CSV.
-2. Extract all StudentIds.
-3. Extract all Emails.
-4. Query DB once.
-
-Example:
-
-```csharp
-existingStudentIds
-existingEmails
-```
-
-using:
-
-```csharp
-HashSet<string>
-```
-
-for O(1) lookups.
-
----
-
-# Bulk Insert Strategy
-
-Do not call:
-
-```csharp
-SaveChanges()
-```
-
-per row.
-
-Instead:
-
-```csharp
-AddRange()
-SaveChangesAsync()
-```
-
-once.
-
----
-
-# Stage 3 — Student Management Endpoints
-
-Create endpoint registration:
-
-```csharp
-app.MapStudentEndpoints();
-```
-
-inside Program startup configuration.
-
----
-
-# Endpoint 1 — Import Students
+# Endpoint 1 — Create Staff
 
 ```http
-POST /admin/students/import
+POST /admin/staff
 ```
 
-Content-Type:
+Authorization:
 
-```text
-multipart/form-data
+```csharp
+.RequireAuthorization("AdminOnly")
 ```
 
-Payload:
-
-```text
-file=<csv>
-```
-
----
-
-Validation:
-
-```text
-File required
-.csv only
-Not empty
-```
-
----
-
-Response:
+### Request
 
 ```json
 {
-  "totalRows": 100,
-  "importedRows": 95,
-  "skippedRows": 5,
-  "duplicateRows": 3,
-  "errors": [...]
+  "name": "Maintenance Officer",
+  "email": "maintenance@college.edu"
+}
+```
+
+### Processing
+
+1. Validate request
+2. Normalize email
+
+```csharp
+dto.Email.Trim().ToLowerInvariant()
+```
+
+3. Check email uniqueness
+4. Generate default password
+
+```text
+Staff@123
+```
+
+5. Hash password
+
+```csharp
+SecurityHelper.HashPassword()
+```
+
+6. Create user
+
+```csharp
+Role = UserRole.Staff
+IsActive = true
+```
+
+7. Save
+
+### Response
+
+```json
+{
+  "message": "Staff account created successfully"
 }
 ```
 
 ---
 
-# Endpoint 2 — Student Listing
+# Endpoint 2 — Update Staff
 
 ```http
-GET /admin/students
+PUT /admin/staff/{id}
 ```
 
-Query:
+Authorization:
 
 ```text
-?page=1&pageSize=20
+AdminOnly
 ```
 
-Response:
+### Editable Fields
 
-```json
-{
-  "items": [],
-  "page": 1,
-  "pageSize": 20,
-  "total": 500
-}
+```text
+Name
+Email
 ```
+
+### Non-Editable Fields
+
+```text
+Role
+PasswordHash
+CreatedAt
+```
+
+### Validation
+
+Verify:
+
+```text
+User exists
+Role == Staff
+Email uniqueness
+```
+
+Reject:
+
+```text
+Admin
+WomenCell
+```
+
+accounts.
 
 ---
 
-Sorting:
-
-```text
-Newest first
-```
-
-using:
-
-```csharp
-CreatedAt DESC
-```
-
----
-
-# Endpoint 3 — Deactivate Student
+# Endpoint 3 — Deactivate Staff
 
 ```http
-PUT /admin/students/{id}/deactivate
+PUT /admin/staff/{id}/deactivate
 ```
 
-Behavior:
+### Behavior
 
 ```csharp
-student.IsActive = false;
+user.IsActive = false;
 ```
 
----
+### Validation
 
-Validation:
+Verify:
 
 ```text
-Student exists
+User exists
+Role == Staff
 ```
 
----
+Reject:
 
-Response:
+```text
+Admin
+WomenCell
+```
+
+accounts.
+
+### Response
 
 ```http
 204 No Content
@@ -568,25 +440,41 @@ Response:
 # Endpoint 4 — Reset Password
 
 ```http
-PUT /admin/students/{id}/reset-password
+PUT /admin/staff/{id}/reset-password
 ```
 
-Behavior:
+### Password
 
 ```text
-Reset to Student@123
+Staff@123
 ```
 
 Implementation:
 
 ```csharp
-student.PasswordHash =
-    SecurityHelper.HashPassword("Student@123");
+user.PasswordHash =
+    SecurityHelper.HashPassword("Staff@123");
 ```
 
----
+### Validation
 
-Response:
+Verify:
+
+```text
+User exists
+Role == Staff
+```
+
+Reject:
+
+```text
+Admin
+WomenCell
+```
+
+accounts.
+
+### Response
 
 ```json
 {
@@ -596,98 +484,142 @@ Response:
 
 ---
 
-# Frontend Implementation
+# Endpoint 5 — Staff Listing
 
-# Stage 4 — API Layer
+```http
+GET /admin/staff
+```
+
+Authorization:
+
+```text
+AdminOnly
+```
+
+### Query
+
+```text
+?page=1&pageSize=20
+```
+
+### Filtering
+
+Only return:
+
+```csharp
+Role == UserRole.Staff
+```
+
+Exclude:
+
+```text
+Admin
+WomenCell
+Student
+```
+
+### Sorting
+
+```text
+CreatedAt DESC
+```
+
+Newest first.
+
+### Response
+
+```json
+{
+  "items": [],
+  "page": 1,
+  "pageSize": 20,
+  "total": 15
+}
+```
+
+---
+
+# Stage 3 — Validation Layer
 
 Create:
 
 ```text
-frontend/src/features/students/api/studentApi.js
+backend/Features/Users/Validators/
+    CreateStaffDtoValidator.cs
+```
+
+Validation Rules:
+
+```text
+Name required
+Valid email
+Email uniqueness checked in endpoint
+```
+
+---
+
+# Stage 4 — Frontend API Layer
+
+Create:
+
+```text
+frontend/src/features/users/api/staffApi.js
 ```
 
 Functions:
 
 ```javascript
-importStudents()
-getStudents()
-deactivateStudent()
-resetPassword()
+getStaff()
+createStaff()
+updateStaff()
+deactivateStaff()
+resetStaffPassword()
 ```
 
 ---
 
-# Stage 5 — Student Administration Page
+# Stage 5 — Staff Management Page
 
 Create:
 
 ```text
-frontend/src/features/admin/pages/AdminStudentsPage.jsx
+frontend/src/features/admin/pages/AdminStaffPage.jsx
 ```
 
 Responsibilities:
 
 ```text
-CSV Upload
-Import Results
-Student Listing
+Staff listing
+Create staff
+Edit staff
+Deactivate staff
+Reset password
 Pagination
-Deactivate
-Password Reset
 ```
 
 ---
 
-# Upload Section
-
-Components:
+# Layout Structure
 
 ```text
-File Picker
-Upload Button
-Import Result Card
++---------------------------------------------------+
+| Staff Management                                  |
++---------------------------------------------------+
+
+[ Add Staff ]
+
++---------------------------------------------------+
+| Name | Email | Status | Created Date | Actions |
++---------------------------------------------------+
 ```
-
-Accepted:
-
-```html
-<input accept=".csv" />
-```
-
-only.
 
 ---
 
-# Import Summary UI
-
-Display:
+# Table Columns
 
 ```text
-Total Rows
-Imported Rows
-Skipped Rows
-Duplicate Rows
-```
-
-and
-
-```text
-Validation Errors
-```
-
-in expandable section.
-
----
-
-# Student Table
-
-Columns:
-
-```text
-Student ID
 Name
 Email
-Gender
 Status
 Created Date
 Actions
@@ -697,25 +629,50 @@ Actions
 
 # Status Badge
 
+Display:
+
 ```text
 Active
 Inactive
 ```
 
-visual distinction required.
+---
+
+# Add Staff Modal
+
+Fields:
+
+```text
+Name
+Email
+```
+
+All accounts created through this module become:
+
+```csharp
+UserRole.Staff
+```
 
 ---
 
-# Actions Column
+# Edit Staff Modal
 
-Buttons:
+Fields:
 
 ```text
+Name
+Email
+```
+
+---
+
+# Actions
+
+```text
+Edit
 Reset Password
 Deactivate
 ```
-
-Deactivate hidden when already inactive.
 
 ---
 
@@ -727,8 +684,6 @@ Required for:
 Deactivate
 Reset Password
 ```
-
-to prevent accidental actions.
 
 ---
 
@@ -744,8 +699,8 @@ Add:
 
 ```jsx
 {
-  path: "/admin/students",
-  element: <AdminStudentsPage />
+  path: "/admin/staff",
+  element: <AdminStaffPage />
 }
 ```
 
@@ -765,15 +720,17 @@ Modify:
 frontend/src/app/layouts/AppLayout.jsx
 ```
 
-Admin navigation:
+Add:
 
 ```javascript
 {
-  to: "/admin/students",
-  label: "Students",
-  icon: GraduationCap
+  to: "/admin/staff",
+  label: "Staff",
+  icon: UsersRound
 }
 ```
+
+to the Admin navigation menu.
 
 ---
 
@@ -782,12 +739,12 @@ Admin navigation:
 ## New Backend Files
 
 ```text
-Features/Students/StudentEndpoints.cs
-Features/Students/StudentResponseDto.cs
-Features/Students/StudentQueryDto.cs
-Features/Students/ImportResultDto.cs
-Features/Students/ImportErrorDto.cs
-Infrastructure/Services/CsvImportService.cs
+Features/Users/CreateStaffDto.cs
+Features/Users/UpdateStaffDto.cs
+Features/Users/StaffResponseDto.cs
+Features/Users/StaffQueryDto.cs
+Features/Users/ResetPasswordResponseDto.cs
+Features/Users/Validators/CreateStaffDtoValidator.cs
 ```
 
 ---
@@ -795,34 +752,33 @@ Infrastructure/Services/CsvImportService.cs
 ## Modified Backend Files
 
 ```text
+Features/Users/UserEndpoints.cs
 Program.cs
-AppDbContext.cs (read-only usage only, no schema changes)
-DependencyInjection registration file(s)
+Dependency Injection registration files
 ```
 
 ---
 
-## Files That Must Remain Unchanged
+## Backend Files That Must Remain Unchanged
 
 ```text
+Features/Auth/*
+Features/Students/*
 IssueEndpoints.cs
-Issue Models
 Issue DTOs
-Issue Services
-IssueCategory logic
-Timeline logic
-Analytics logic
+Issue Models
+Analytics
+Timeline
+Categories
 ```
-
-Those belong to later phases. 
 
 ---
 
 ## New Frontend Files
 
 ```text
-features/students/api/studentApi.js
-features/admin/pages/AdminStudentsPage.jsx
+features/users/api/staffApi.js
+features/admin/pages/AdminStaffPage.jsx
 ```
 
 ---
@@ -830,84 +786,27 @@ features/admin/pages/AdminStudentsPage.jsx
 ## Modified Frontend Files
 
 ```text
-router.jsx
-AppLayout.jsx
-shared/constants/api.js (only if route constants exist)
+app/router/router.jsx
+app/layouts/AppLayout.jsx
 ```
 
 ---
 
 # Implementation Sequence
 
-## Step 1
-
-Create DTOs.
-
----
-
-## Step 2
-
-Create CsvImportService.
-
----
-
-## Step 3
-
-Implement import endpoint.
-
----
-
-## Step 4
-
-Implement student list endpoint.
-
----
-
-## Step 5
-
-Implement deactivate endpoint.
-
----
-
-## Step 6
-
-Implement password reset endpoint.
-
----
-
-## Step 7
-
-Register services and endpoints.
-
----
-
-## Step 8
-
-Build frontend API layer.
-
----
-
-## Step 9
-
-Build AdminStudentsPage.
-
----
-
-## Step 10
-
-Add routing.
-
----
-
-## Step 11
-
-Add navigation.
-
----
-
-## Step 12
-
-End-to-end validation.
+1. Create DTOs
+2. Create validators
+3. Implement GET staff list endpoint
+4. Implement POST create staff endpoint
+5. Implement PUT update staff endpoint
+6. Implement PUT reset password endpoint
+7. Implement PUT deactivate endpoint
+8. Register endpoints
+9. Create frontend API layer
+10. Build Staff Management page
+11. Add routing
+12. Add navigation
+13. Execute end-to-end validation
 
 ---
 
@@ -915,99 +814,89 @@ End-to-end validation.
 
 ## Unit Tests
 
-CsvImportService:
+### CreateStaffDtoValidator
 
 Test:
 
 ```text
-Valid CSV
-Invalid header
-Duplicate StudentId
-Duplicate Email
-Invalid Gender
-Invalid Email
-Empty Rows
-Mixed Valid/Invalid Records
+Valid payload
+Empty name
+Invalid email
+Duplicate email
 ```
 
 ---
 
-## Integration Tests
+## Endpoint Tests
+
+### POST /admin/staff
 
 Verify:
 
-```http
-POST /admin/students/import
-GET /admin/students
-PUT /admin/students/{id}/deactivate
-PUT /admin/students/{id}/reset-password
+```text
+Staff creation succeeds
+Duplicate email rejected
+Invalid email rejected
 ```
 
-Authorization:
+### PUT /admin/staff/{id}
+
+Verify:
 
 ```text
-Admin = allowed
-Staff = denied
-Student = denied
-WomenCell = denied
+Update succeeds
+Duplicate email rejected
+Unknown user rejected
+```
+
+### PUT /admin/staff/{id}/deactivate
+
+Verify:
+
+```text
+Staff deactivated
+Admin rejected
+WomenCell rejected
+```
+
+### PUT /admin/staff/{id}/reset-password
+
+Verify:
+
+```text
+Password reset succeeds
+Staff can log in with Staff@123
 ```
 
 ---
 
-## Regression Testing
+# Regression Testing
 
-Verify Phase 2 login still works:
+Verify:
 
 ```text
-Student login
-Admin login
-Staff login
-WomenCell login
+Student login works
+Admin login works
+WomenCell login works
+Phase 3 student management works
 ```
 
-No auth behavior should change.
-
----
-
-# Manual QA Checklist
-
-### Import
-
-* Upload valid CSV
-* Upload empty CSV
-* Upload malformed CSV
-* Upload duplicate records
-* Upload wrong extension
-
-### Student List
-
-* Pagination works
-* Correct counts displayed
-* Newly imported students visible
-
-### Password Reset
-
-* Reset password
-* Login with Student@123
-
-### Deactivation
-
-* Deactivate student
-* Verify login denied after deactivation
+No existing authentication behavior should regress.
 
 ---
 
 # Completion Criteria
 
-Phase 3 is complete only when:
+Phase 4 is complete only when:
 
-* CSV import successfully creates student accounts.
-* Duplicate detection works.
-* Validation errors are reported correctly.
-* Student list supports pagination.
-* Admin can deactivate students.
-* Admin can reset passwords.
-* Only Admin users can access all student-management endpoints.
-* Frontend management screen is fully operational.
-* No regression is introduced into Phase 1 or Phase 2 functionality.
-* Backend and frontend builds complete without errors.
+* Admin can create Staff accounts.
+* Admin can edit Staff details.
+* Admin can deactivate Staff accounts.
+* Admin can reset Staff passwords.
+* Staff list supports pagination.
+* Admin and WomenCell accounts cannot be managed through this module.
+* All endpoints are Admin-only.
+* Frontend Staff Management UI is fully operational.
+* No regressions are introduced into Phases 1–3.
+
+**Stop here.**

@@ -43,25 +43,6 @@ namespace backend.Infrastructure.Extensions
                 db.SaveChanges();
             }
 
-            if (!db.Users.Any(u => u.Role == UserRole.Staff))
-            {
-                db.Users.Add(new User
-                {
-                    Name = "Staff1",
-                    Email = "staff1@gmail.com",
-                    PasswordHash = SecurityHelper.HashPassword("staff@123"),
-                    Role = UserRole.Staff
-                });
-
-                db.Users.Add(new User
-                {
-                    Name = "Staff2",
-                    Email = "staff2@gmail.com",
-                    PasswordHash = SecurityHelper.HashPassword("staff@123"),
-                    Role = UserRole.Staff
-                });
-                db.SaveChanges();
-            }
 
             if (!db.Users.Any(u => u.Role == UserRole.WomenCell))
             {
@@ -75,19 +56,7 @@ namespace backend.Infrastructure.Extensions
                 db.SaveChanges();
             }
 
-            if (!db.Students.Any(s => s.StudentId == "2025001"))
-            {
-                db.Students.Add(new Student
-                {
-                    StudentId = "2025001",
-                    Name = "Test Student",
-                    Email = "student@college.edu",
-                    PasswordHash = SecurityHelper.HashPassword("Student@123"),
-                    Gender = Gender.Female,
-                    IsActive = true
-                });
-                db.SaveChanges();
-            }
+
         }
     }
 }
