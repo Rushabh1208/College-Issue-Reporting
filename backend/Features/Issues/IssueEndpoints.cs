@@ -30,6 +30,7 @@ namespace backend.Features.Issues
                     .Where(i => !i.IsDeleted)
                     .Include(i => i.User)
                     .Include(i => i.AssignedTo)
+                    .Include(i => i.Category)
                     .AsQueryable();
 
                 if (status.HasValue)
@@ -55,7 +56,11 @@ namespace backend.Features.Issues
                     ImageObjectKey = i.ImageObjectKey ?? i.ImagePath,
                     ImageStorageProvider = i.ImageStorageProvider ?? "local",
                     ImageMimeType = i.ImageMimeType,
-                    ImageSizeBytes = i.ImageSizeBytes
+                    ImageSizeBytes = i.ImageSizeBytes,
+                    CategoryName = i.Category != null ? i.Category.Name : string.Empty,
+                    Priority = i.Priority,
+                    IsAnonymous = i.IsAnonymous,
+                    UpvoteCount = i.UpvoteCount
                 });
 
                 await cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(result), TimeSpan.FromMinutes(5));
@@ -110,12 +115,19 @@ namespace backend.Features.Issues
                     Title = form["Title"].ToString(),
                     Description = form["Description"].ToString(),
                     Block = form["Block"].ToString(),
-                    RoomNumber = form["RoomNumber"].ToString()
+                    RoomNumber = form["RoomNumber"].ToString(),
+                    CategoryId = int.TryParse(form["CategoryId"], out var catId) ? catId : 0,
+                    Priority = Enum.TryParse<IssuePriority>(form["Priority"], out var p) ? p : IssuePriority.Medium,
+                    IsAnonymous = bool.TryParse(form["IsAnonymous"], out var anon) ? anon : false
                 };
 
                 var validation = await validator.ValidateAsync(dto);
                 if (!validation.IsValid)
                     return Results.BadRequest(validation.Errors.Select(e => e.ErrorMessage));
+
+                var categoryExists = await db.IssueCategories.AnyAsync(c => c.Id == dto.CategoryId && c.IsActive);
+                if (!categoryExists)
+                    return Results.BadRequest(new { message = "Invalid category selected." });
 
                 var issue = new Issue
                 {
@@ -123,6 +135,9 @@ namespace backend.Features.Issues
                     Description = dto.Description,
                     Block = dto.Block,
                     RoomNumber = dto.RoomNumber,
+                    CategoryId = dto.CategoryId,
+                    Priority = dto.Priority,
+                    IsAnonymous = dto.IsAnonymous,
                     UserId = SecurityHelper.GetUserId(ctx),
                     Status = IssueStatus.Open,
                     CreatedAt = DateTime.UtcNow
@@ -174,7 +189,11 @@ namespace backend.Features.Issues
                     ImageObjectKey = issue.ImageObjectKey ?? issue.ImagePath,
                     ImageStorageProvider = issue.ImageStorageProvider ?? "local",
                     ImageMimeType = issue.ImageMimeType,
-                    ImageSizeBytes = issue.ImageSizeBytes
+                    ImageSizeBytes = issue.ImageSizeBytes,
+                    CategoryName = await db.IssueCategories.Where(c => c.Id == issue.CategoryId).Select(c => c.Name).FirstOrDefaultAsync() ?? string.Empty,
+                    Priority = issue.Priority,
+                    IsAnonymous = issue.IsAnonymous,
+                    UpvoteCount = issue.UpvoteCount
                 };
 
                 return Results.Ok(new
@@ -202,6 +221,7 @@ namespace backend.Features.Issues
                 var issues = await db.Issues
                     .Where(i => i.AssignedToId == userId && !i.IsDeleted)
                     .Include(i => i.User)
+                    .Include(i => i.Category)
                     .OrderByDescending(i => i.CreatedAt)
                     .Select(i => new IssueResponseDto
                     {
@@ -217,7 +237,11 @@ namespace backend.Features.Issues
                         ImageObjectKey = i.ImageObjectKey ?? i.ImagePath,
                         ImageStorageProvider = i.ImageStorageProvider ?? "local",
                         ImageMimeType = i.ImageMimeType,
-                        ImageSizeBytes = i.ImageSizeBytes
+                        ImageSizeBytes = i.ImageSizeBytes,
+                        CategoryName = i.Category != null ? i.Category.Name : string.Empty,
+                        Priority = i.Priority,
+                        IsAnonymous = i.IsAnonymous,
+                        UpvoteCount = i.UpvoteCount
                     })
                     .ToListAsync();
 
@@ -251,6 +275,7 @@ namespace backend.Features.Issues
                 var userId = SecurityHelper.GetUserId(ctx);
                 var issues = await db.Issues
                     .Where(i => i.UserId == userId && !i.IsDeleted)
+                    .Include(i => i.Category)
                     .OrderByDescending(i => i.CreatedAt)
                     .Select(i => new IssueResponseDto
                     {
@@ -266,7 +291,11 @@ namespace backend.Features.Issues
                         ImageObjectKey = i.ImageObjectKey ?? i.ImagePath,
                         ImageStorageProvider = i.ImageStorageProvider ?? "local",
                         ImageMimeType = i.ImageMimeType,
-                        ImageSizeBytes = i.ImageSizeBytes
+                        ImageSizeBytes = i.ImageSizeBytes,
+                        CategoryName = i.Category != null ? i.Category.Name : string.Empty,
+                        Priority = i.Priority,
+                        IsAnonymous = i.IsAnonymous,
+                        UpvoteCount = i.UpvoteCount
                     })
                     .ToListAsync();
 

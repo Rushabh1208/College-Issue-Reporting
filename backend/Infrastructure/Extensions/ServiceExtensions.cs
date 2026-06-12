@@ -78,6 +78,8 @@ namespace backend.Infrastructure.Extensions
                 options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
             });
 
+            services.AddMemoryCache();
+
             return services;
         }
     }

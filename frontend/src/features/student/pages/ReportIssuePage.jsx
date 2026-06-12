@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Send } from "lucide-react";
-import { reportIssue } from "../api/studentIssueApi";
+import { reportIssue, getCategories } from "../api/studentIssueApi";
 import { ImageUploadField } from "../components/ImageUploadField";
 import { issueFormRules } from "../../issues/schemas/issueSchemas";
 import { useUiStore } from "../../../app/store/uiStore";
@@ -14,6 +14,12 @@ export default function ReportIssuePage() {
   const navigate = useNavigate();
   const pushToast = useUiStore((state) => state.pushToast);
   const [progress, setProgress] = useState(0);
+  const [categoriesData, setCategoriesData] = useState([]);
+
+  useEffect(() => {
+    getCategories().then(setCategoriesData).catch(console.error);
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -22,8 +28,29 @@ export default function ReportIssuePage() {
     formState: { errors, isSubmitting }
   } = useForm({
     mode: "onBlur",
-    defaultValues: { title: "", description: "", block: "", roomNumber: "", image: null }
+    defaultValues: { 
+      title: "", 
+      description: "", 
+      block: "", 
+      roomNumber: "", 
+      image: null,
+      categoryId: "",
+      priority: "Medium",
+      isAnonymous: false
+    }
   });
+
+  const selectedCategoryId = watch("categoryId");
+  const selectedCategory = useMemo(() => {
+    if (!selectedCategoryId) return null;
+    for (const group of categoriesData) {
+      const cat = group.categories.find(c => c.id.toString() === selectedCategoryId.toString());
+      if (cat) return cat;
+    }
+    return null;
+  }, [selectedCategoryId, categoriesData]);
+
+  const isWomenWelfare = selectedCategory?.isWomenWelfare;
 
   async function onSubmit(values) {
     try {
@@ -57,6 +84,39 @@ export default function ReportIssuePage() {
           <FormField label="Room number" error={errors.roomNumber?.message}>
             <input className={inputClass(errors.roomNumber)} placeholder="302" {...register("roomNumber", issueFormRules.roomNumber)} />
           </FormField>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormField label="Category" error={errors.categoryId?.message}>
+            <select className={inputClass(errors.categoryId)} {...register("categoryId", { required: "Category is required" })}>
+              <option value="">Select a category</option>
+              {categoriesData.map((group) => (
+                <optgroup key={group.parentCategory} label={group.parentCategory}>
+                  {group.categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </FormField>
+          <FormField label="Priority" error={errors.priority?.message}>
+            <select className={inputClass(errors.priority)} {...register("priority")}>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+              <option value="Critical">Critical</option>
+            </select>
+          </FormField>
+        </div>
+        {isWomenWelfare && (
+          <div className="rounded-md bg-blue-50 p-4 border border-blue-200">
+            <p className="text-sm text-blue-800 font-medium">This report will only be visible to WomenCell.</p>
+          </div>
+        )}
+        <div className="mt-2">
+          <label className="flex items-center gap-2 text-sm text-slate-700 font-medium">
+            <input type="checkbox" {...register("isAnonymous")} className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-600" />
+            Report Anonymously
+          </label>
         </div>
         <ImageUploadField register={register("image", issueFormRules.image)} watch={watch} error={errors.image?.message} onClear={() => resetField("image")} />
         {isSubmitting && progress > 0 && (

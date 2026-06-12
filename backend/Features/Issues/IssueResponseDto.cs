@@ -18,5 +18,10 @@ namespace backend.Features.Issues
         public string? ImageMimeType { get; set; }
         public long? ImageSizeBytes { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public string CategoryName { get; set; } = string.Empty;
+        public IssuePriority Priority { get; set; }
+        public bool IsAnonymous { get; set; }
+        public int UpvoteCount { get; set; }
     }
 }

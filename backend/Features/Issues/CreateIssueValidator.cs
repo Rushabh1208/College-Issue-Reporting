@@ -20,5 +20,8 @@ public class CreateIssueDtoValidator : AbstractValidator<CreateIssueDto>
         RuleFor(x => x.RoomNumber)
             .NotEmpty().WithMessage("Room number is required")
             .MaximumLength(10);
+
+        RuleFor(x => x.CategoryId)
+            .GreaterThan(0).WithMessage("Category is required.");
     }
 }
