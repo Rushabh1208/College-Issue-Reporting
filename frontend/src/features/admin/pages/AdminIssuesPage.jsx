@@ -74,7 +74,7 @@ export default function AdminIssuesPage() {
           Status filter
         </div>
         <select
-          className="min-h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700"
+          className="min-h-11 rounded-lg border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700"
           value={status}
           onChange={(event) => changeStatus(event.target.value)}
         >
