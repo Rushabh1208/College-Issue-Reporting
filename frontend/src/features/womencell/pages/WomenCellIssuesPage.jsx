@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
-import { useStaffIssues } from "../hooks/useStaffIssues";
-import { updateIssueStatus } from "../api/staffIssueApi";
+import { useWomenCellIssues } from "../hooks/useWomenCellIssues";
+import { updateWomenCellIssueStatus } from "../api/womencellApi";
 import { ISSUE_STATUSES } from "../../../shared/constants/api";
 import { useUiStore } from "../../../app/store/uiStore";
 import { IssueCard } from "../../issues/components/IssueCard";
@@ -11,19 +11,19 @@ import { EmptyState } from "../../../shared/ui/EmptyState";
 import { ErrorState } from "../../../shared/ui/ErrorState";
 import { SkeletonList } from "../../../shared/ui/Skeleton";
 
-export default function StaffIssuesPage() {
-  const { data: issues = [], error, isLoading, refetch } = useStaffIssues();
+export default function WomenCellIssuesPage() {
+  const { data: issues = [], error, isLoading, refetch } = useWomenCellIssues();
   const [busyId, setBusyId] = useState(null);
   const pushToast = useUiStore((state) => state.pushToast);
 
   async function setStatus(issue, status) {
     if (status === "Resolved") {
-      const isConfirmed = window.confirm("Are you sure you want to mark this issue as resolved?");
+      const isConfirmed = window.confirm("Are you sure you want to mark this sensitive issue as resolved?");
       if (!isConfirmed) return;
     }
     setBusyId(issue.id);
     try {
-      await updateIssueStatus(issue.id, status);
+      await updateWomenCellIssueStatus(issue.id, status);
       pushToast({ type: "success", title: "Status updated", message: `${issue.title} is now ${status}.` });
       await refetch();
     } catch (err) {
@@ -39,12 +39,12 @@ export default function StaffIssuesPage() {
   return (
     <div className="grid gap-4">
       <div>
-        <h2 className="text-xl font-black text-slate-950">Assigned queue</h2>
-        <p className="mt-1 text-sm text-slate-600">Only issues assigned to your account can be updated.</p>
+        <h2 className="text-xl font-black text-slate-950">Women Welfare Queue</h2>
+        <p className="mt-1 text-sm text-slate-600">Secure queue for issues reported under the Women Welfare category.</p>
       </div>
       <IssueStats issues={issues} />
       {issues.length === 0 ? (
-        <EmptyState title="No assigned issues" description="Assigned campus work will appear here." />
+        <EmptyState title="No active issues" description="There are currently no Women Welfare issues reported." />
       ) : (
         <div className="grid gap-3 md:grid-cols-2">
           {issues.map((issue) => (

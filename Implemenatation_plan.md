@@ -1,682 +1,522 @@
-# Implementation Plan — Phase 5: Issue Categories & Priority
+# Implementation Plan — Remove Phase 9 (Resolution Evidence) and Eliminate Related Dependencies
 
 ## Context
 
-.NET 8 Minimal API, EF Core, MySQL (Pomelo), React + Vite frontend. Phase 1 database schema has already introduced the `IssueCategory` entity and the `CategoryId`, `Priority`, `IsAnonymous`, and `UpvoteCount` fields on the `Issue` model. The current issue reporting flow does not expose categories, priorities, anonymous reporting, or category-based privacy messaging to students. Issue cards also do not display category metadata or engagement metrics.
+The original roadmap included a Resolution Evidence feature that required staff members to upload images or documents before an issue could be marked as resolved.
 
-This phase introduces category management, issue prioritization, anonymous reporting support, and category-aware UI behavior.
+The feature introduced:
 
----
+* File upload requirements
+* S3 storage dependencies
+* Evidence data models
+* Multipart request handling
+* Additional frontend workflows
+* Resolution-specific validation rules
 
-## Objective
+The project no longer requires evidence collection and there is no business requirement to store proof-of-resolution artifacts.
 
-Implement issue categorization and prioritization throughout the system.
+This implementation removes all evidence-related functionality while preserving:
 
-Students must be able to:
+* Issue lifecycle management
+* Status transitions
+* Timeline tracking
+* Staff workflows
+* Analytics
+* Resolution tracking
+* Existing APIs
 
-* Select an issue category while reporting
-* Set issue priority
-* Report anonymously
-* Receive privacy messaging when reporting Women Welfare complaints
-
-The issue listing experience must display:
-
-* Category name
-* Priority badge
-* Upvote count
-
-A public categories endpoint must provide structured category data for frontend consumption.
-
----
-
-# Backend Implementation
+The removal must not break any functionality implemented in Phases 1–8.
 
 ---
 
-## 1. Seed Issue Categories
+# Objective
+
+Completely remove Resolution Evidence from the system.
+
+The final platform must:
+
+* Allow staff to resolve issues without uploading files
+* Remove all evidence-specific database entities
+* Remove all evidence upload endpoints
+* Remove S3 upload requirements
+* Remove evidence validation logic
+* Preserve status management and timeline tracking
+
+---
+
+# Architecture Decision
+
+## Resolution Will Become Metadata-Only
+
+Issue resolution will continue to exist.
+
+Resolution evidence will not.
+
+A resolved issue is determined solely by:
+
+```csharp
+Issue.Status == IssueStatus.Resolved
+```
+
+No supporting file uploads are required.
+
+No storage providers are required.
+
+No evidence records are stored.
+
+---
+
+# Backend Changes
+
+---
+
+## 1. Remove IssueEvidence Model
+
+### Delete File
+
+```text
+backend/Models/IssueEvidence.cs
+```
+
+Remove entirely.
+
+### Reason
+
+Evidence records are no longer required.
+
+---
+
+## 2. Remove DbSet
 
 ### File
 
-`backend/Infrastructure/Extensions/DatabaseExtensions.cs`
-
-### Required Changes
-
-Add seed data for all issue categories defined in the project specification.
-
-Each category record must contain:
-
-```csharp
-Name
-ParentCategory
-IsWomenWelfare
+```text
+AppDbContext.cs
 ```
 
-Example structure:
+Remove:
 
 ```csharp
-new IssueCategory
-{
-    Id = 1,
-    Name = "Electrical",
-    ParentCategory = "Infrastructure",
-    IsWomenWelfare = false
-}
-```
-
-Women Welfare subcategories:
-
-```csharp
-new IssueCategory
-{
-    Id = 21,
-    Name = "Harassment",
-    ParentCategory = "Women Welfare",
-    IsWomenWelfare = true
-}
-```
-
-```csharp
-new IssueCategory
-{
-    Id = 22,
-    Name = "Safety Concern",
-    ParentCategory = "Women Welfare",
-    IsWomenWelfare = true
-}
-```
-
-### Constraints
-
-* Seed only if categories do not already exist
-* IDs must remain stable
-* No duplicate category names
-* All Women Welfare subcategories must have:
-
-```csharp
-IsWomenWelfare = true
+public DbSet<IssueEvidence> IssueEvidences { get; set; }
 ```
 
 ---
 
-## 2. Create Categories Endpoint
+## 3. Remove Evidence Configuration
 
-### New File
+### Files
 
-`backend/Features/Categories/CategoryEndpoints.cs`
-
-### Endpoint
-
-```http
-GET /categories
-```
-
-### Authorization
-
-Public endpoint.
-
-No authentication required.
-
-### Response Structure
-
-```json
-[
-  {
-    "parentCategory": "Infrastructure",
-    "categories": [
-      {
-        "id": 1,
-        "name": "Electrical",
-        "isWomenWelfare": false
-      }
-    ]
-  }
-]
-```
-
-### Implementation Logic
-
-Query:
+Any configuration files containing:
 
 ```csharp
-db.IssueCategories
-```
-
-Group by:
-
-```csharp
-ParentCategory
-```
-
-Project:
-
-```csharp
-ParentCategory
-Categories[]
-```
-
-Order alphabetically.
-
-### Registration
-
-Register endpoint inside:
-
-```csharp
-Program.cs
+IssueEvidenceConfiguration
 ```
 
 or
 
 ```csharp
-EndpointExtensions.cs
+builder.Entity<IssueEvidence>()
 ```
 
-depending on current architecture.
+Remove entirely.
 
 ---
 
-## 3. Create Categories DTOs
+## 4. Remove Database Migration Dependencies
 
-### New File
+### If Migration Not Applied
 
-`backend/Features/Categories/CategoryResponseDto.cs`
+Delete:
 
-```csharp
-public class CategoryResponseDto
-{
-    public string ParentCategory { get; set; } = string.Empty;
-
-    public List<CategoryItemDto> Categories { get; set; } = [];
-}
+```text
+AddIssueEvidenceTable
 ```
 
-### New File
-
-`backend/Features/Categories/CategoryItemDto.cs`
-
-```csharp
-public class CategoryItemDto
-{
-    public int Id { get; set; }
-
-    public string Name { get; set; } = string.Empty;
-
-    public bool IsWomenWelfare { get; set; }
-}
-```
+migration.
 
 ---
 
-## 4. Create Priority Enum
+### If Migration Already Applied
 
-### New File
+Create rollback migration:
 
-`backend/Enums/IssuePriority.cs`
-
-```csharp
-namespace backend.Enums
-{
-    public enum IssuePriority
-    {
-        Low,
-        Medium,
-        High,
-        Critical
-    }
-}
+```powershell
+dotnet ef migrations add RemoveIssueEvidence
 ```
 
-### Constraints
+Drop:
 
-* Maintain order exactly as above
-* Do not reorder later
-* Existing API serialization should return enum names
+```sql
+IssueEvidences
+```
+
+table.
+
+### Constraint
+
+Do not modify unrelated tables.
 
 ---
 
-## 5. Update CreateIssueDto
-
-### File
-
-`backend/Features/Issues/CreateIssueDto.cs`
-
-### Add Properties
-
-```csharp
-public int CategoryId { get; set; }
-
-public IssuePriority Priority { get; set; } = IssuePriority.Medium;
-
-public bool IsAnonymous { get; set; } = false;
-```
-
-### Final Behavior
-
-If frontend does not explicitly provide a priority:
-
-```csharp
-Medium
-```
-
-must be used automatically.
-
----
-
-## 6. Update Validation Rules
-
-### File
-
-`backend/Features/Issues/CreateIssueDtoValidator.cs`
-
-### Add Rule
-
-```csharp
-RuleFor(x => x.CategoryId)
-    .GreaterThan(0)
-    .WithMessage("Category is required.");
-```
-
-### Validation Requirements
-
-Reject:
-
-```json
-{
-  "categoryId": 0
-}
-```
-
-Reject:
-
-```json
-{
-  "categoryId": -1
-}
-```
-
-Accept valid category IDs only.
-
----
-
-## 7. Update Issue Creation Endpoint
-
-### File
-
-`backend/Features/Issues/IssueEndpoints.cs`
-
-### Required Changes
-
-Persist:
-
-```csharp
-CategoryId
-Priority
-IsAnonymous
-```
-
-during issue creation.
-
-Example:
-
-```csharp
-var issue = new Issue
-{
-    CategoryId = dto.CategoryId,
-    Priority = dto.Priority,
-    IsAnonymous = dto.IsAnonymous
-};
-```
-
-### Additional Validation
-
-Ensure selected category exists:
-
-```csharp
-db.IssueCategories
-```
-
-If not found:
-
-```http
-400 Bad Request
-```
-
-Response:
-
-```json
-{
-  "message": "Invalid category selected."
-}
-```
-
----
-
-## 8. Update Issue Response DTO
-
-### File
-
-`backend/Features/Issues/IssueResponseDto.cs`
-
-### Add Properties
-
-```csharp
-public string CategoryName { get; set; } = string.Empty;
-
-public IssuePriority Priority { get; set; }
-
-public bool IsAnonymous { get; set; }
-
-public int UpvoteCount { get; set; }
-```
-
----
-
-## 9. Update Issue Mapping Logic
+## 5. Remove S3 Resolution Upload Logic
 
 ### Files
 
-Any location currently projecting Issue entities to DTOs.
+Search for:
 
-Examples:
+```text
+resolution/
+```
+
+and
+
+```text
+IssueEvidence
+```
+
+references.
+
+Remove:
 
 ```csharp
+UploadToS3(...)
+```
+
+calls related to resolution evidence.
+
+---
+
+## 6. Simplify Status Update Endpoint
+
+### File
+
+```text
 IssueEndpoints.cs
-IssueService.cs
-IssueQueries.cs
 ```
 
-### Include Category Data
+### Endpoint
 
-Add join:
+```http
+PUT /staff/issues/{id}/status
+```
+
+### Remove
+
+Multipart request handling:
 
 ```csharp
-.Include(x => x.Category)
+IFormFile
+IFormFileCollection
 ```
 
-Project:
+Remove:
 
 ```csharp
-CategoryName = issue.Category.Name
+Evidence
 ```
 
-Project:
-
-```csharp
-Priority = issue.Priority
-
-IsAnonymous = issue.IsAnonymous
-
-UpvoteCount = issue.UpvoteCount
-```
+parameter.
 
 ---
 
-# Frontend Implementation
+### Replace With
 
----
+Simple DTO-based request:
 
-## 10. Categories API Integration
-
-### File
-
-`frontend/src/features/student/api/issuesApi.js`
-
-### Add Method
-
-```javascript
-export async function getCategories() {
-  const { data } = await apiClient.get("/categories");
-  return data;
+```csharp
+public class UpdateIssueStatusDto
+{
+    public IssueStatus Status { get; set; }
 }
 ```
 
 ---
 
-## 11. Update Report Issue Page
+## 7. Remove Resolution Validation
 
-### File
+### Delete Logic
 
-`frontend/src/features/student/pages/ReportIssuePage.jsx`
-
-### Categories Loading
-
-On component mount:
-
-```javascript
-useEffect(() => {
-  loadCategories();
-}, []);
-```
-
-Fetch:
-
-```javascript
-getCategories()
-```
-
-Store in local state.
-
----
-
-## 12. Category Selection UI
-
-Render grouped categories:
-
-```text
-Infrastructure
-  ○ Electrical
-  ○ Water Supply
-
-Hostel
-  ○ Room Maintenance
-  ○ Cleaning
-
-Women Welfare
-  ○ Harassment
-  ○ Safety Concern
-```
-
-Implementation options:
-
-### Preferred
-
-Grouped radio sections
-
-### Alternative
-
-Grouped select dropdown
-
-```html
-<select>
-  <optgroup label="Infrastructure">
-  </optgroup>
-</select>
+```csharp
+if(status == Resolved && files.Count == 0)
+{
+    return Results.BadRequest(...);
+}
 ```
 
 ---
 
-## 13. Priority Selection
+### New Behavior
 
-Add field:
+Allow:
 
-```jsx
-<select>
-  <option>Low</option>
-  <option>Medium</option>
-  <option>High</option>
-  <option>Critical</option>
-</select>
+```csharp
+Resolved
 ```
 
-Default:
-
-```javascript
-Medium
-```
-
-Bind to:
-
-```javascript
-priority
-```
-
-state.
-
----
-
-## 14. Anonymous Reporting
-
-Add checkbox:
-
-```jsx
-<input type="checkbox" />
-```
-
-Label:
-
-```text
-Report Anonymously
-```
-
-Bind to:
-
-```javascript
-isAnonymous
-```
-
-Default:
-
-```javascript
-false
-```
-
----
-
-## 15. Women Welfare Privacy Notice
-
-When selected category has:
-
-```javascript
-isWomenWelfare === true
-```
-
-display:
-
-```text
-This report will only be visible to WomenCell.
-```
-
-### UI Requirements
-
-* Informational card
-* Always visible while Women Welfare category remains selected
-* Hidden for all other categories
+status transition without file uploads.
 
 Example:
 
-```jsx
-<Alert>
-  This report will only be visible to WomenCell.
-</Alert>
-```
-
----
-
-## 16. Submit Payload Updates
-
-Update report submission payload.
-
-Current payload:
-
-```javascript
+```csharp
 {
-  title,
-  description
+    "status": "Resolved"
 }
 ```
 
-New payload:
-
-```javascript
-{
-  title,
-  description,
-  categoryId,
-  priority,
-  isAnonymous
-}
-```
+must succeed.
 
 ---
 
-## 17. Update Issue Card
+## 8. Preserve Timeline Functionality
+
+### Keep Existing Logic
+
+When status becomes:
+
+```csharp
+IssueStatus.Resolved
+```
+
+continue creating:
+
+```text
+Resolved
+```
+
+timeline entries.
+
+### No Changes Required
+
+Phase 8 timeline functionality remains intact.
+
+---
+
+## 9. Preserve Analytics
+
+### Future Analytics
+
+Resolution metrics should continue using:
+
+```csharp
+Issue.Status
+```
+
+and
+
+```csharp
+IssueTimeline
+```
+
+instead of evidence uploads.
+
+No analytics dependency should rely on evidence records.
+
+---
+
+## 10. Remove Storage Configuration Dependencies
+
+### Files
+
+Search:
+
+```text
+AWS
+S3
+StorageProvider
+IssueEvidence
+```
+
+### Remove
+
+Resolution-specific configuration values:
+
+```json
+"S3ResolutionBucket"
+```
+
+or similar.
+
+---
+
+### Keep
+
+General storage infrastructure if used elsewhere.
+
+Do not remove global storage services unless they are exclusively used for evidence uploads.
+
+---
+
+# Frontend Changes
+
+---
+
+## 11. Remove Evidence Upload Form
 
 ### File
 
-`frontend/src/shared/components/IssueCard.jsx`
-
-### Display Category
-
-Example:
-
 ```text
-Category: Electrical
+StaffIssuesPage.jsx
 ```
 
-Source:
+### Remove
+
+Resolution modal containing:
+
+```text
+Before Image
+After Image
+Document Upload
+```
+
+controls.
+
+---
+
+## 12. Remove File Validation
+
+Delete:
 
 ```javascript
-issue.categoryName
+files.length > 0
+```
+
+requirements.
+
+Delete:
+
+```javascript
+evidenceRequired
+```
+
+logic.
+
+---
+
+## 13. Simplify Resolve Action
+
+### Current Workflow
+
+```text
+Resolve
+→ Upload Evidence
+→ Submit
 ```
 
 ---
 
-## 18. Display Priority Badge
-
-Priority badge examples:
+### New Workflow
 
 ```text
-LOW
-MEDIUM
-HIGH
-CRITICAL
-```
-
-Recommended styling:
-
-```javascript
-Low       → neutral
-Medium    → blue
-High      → amber
-Critical  → red
-```
-
-Display:
-
-```jsx
-<PriorityBadge />
+Resolve
+→ Confirm
+→ Submit
 ```
 
 ---
 
-## 19. Display Upvote Count
+## 14. Replace With Confirmation Dialog
 
-Show:
+Recommended implementation:
 
 ```text
-↑ 12
+Are you sure you want to mark this issue as resolved?
+
+[Cancel]
+[Resolve]
 ```
 
-Source:
+---
+
+### Submit Request
 
 ```javascript
-issue.upvoteCount
+await updateStatus(issueId, {
+  status: "Resolved"
+});
 ```
 
-Position:
+No multipart payload.
 
-* Issue card footer
-* Metadata section
-* Near status badge
+No file uploads.
+
+---
+
+## 15. Remove Upload Components
+
+Delete:
+
+```text
+EvidenceUpload.jsx
+ResolutionEvidenceModal.jsx
+IssueEvidenceForm.jsx
+```
+
+if created previously.
+
+---
+
+## 16. Remove Evidence UI References
+
+Search for:
+
+```text
+evidence
+before image
+after image
+resolution upload
+```
+
+Remove all references.
+
+---
+
+# Phase Dependency Cleanup
+
+---
+
+## Phase 8
+
+No changes required.
+
+Timeline continues working.
+
+---
+
+## Phase 10 Analytics
+
+Update assumptions.
+
+Resolution analytics must use:
+
+```csharp
+Resolved timeline entries
+```
+
+or
+
+```csharp
+Issue.Status
+```
+
+instead of evidence records.
+
+---
+
+## Future WomenCell Workflow
+
+No impact.
+
+---
+
+## Future Duplicate Detection
+
+No impact.
+
+---
+
+## Future Upvotes
+
+No impact.
 
 ---
 
@@ -692,8 +532,14 @@ Expected:
 
 ```text
 Build succeeded.
-0 Errors
 ```
+
+No references remain to:
+
+* IssueEvidence
+* EvidenceType
+* StorageProvider
+* Resolution uploads
 
 ---
 
@@ -709,71 +555,95 @@ Expected:
 built successfully
 ```
 
-No ESLint errors.
+No references remain to:
+
+* Evidence uploads
+* Resolution forms
+* File selectors
 
 ---
 
 # Verification Checklist
 
-## Categories Endpoint
+### Resolve Issue
 
 ```http
-GET /categories
+PUT /staff/issues/{id}/status
 ```
 
-Returns:
+Request:
+
+```json
+{
+  "status": "Resolved"
+}
+```
+
+Response:
 
 ```http
 200 OK
 ```
 
-with grouped categories.
+---
+
+### Timeline
+
+Timeline contains:
+
+```text
+StatusChanged
+Resolved
+```
+
+entries.
 
 ---
 
-## Issue Reporting
+### Issue State
 
-Student can:
+Issue status becomes:
 
-* Select category
-* Select priority
-* Report anonymously
+```text
+Resolved
+```
 
-Issue saves successfully.
-
----
-
-## Women Welfare
-
-Selecting a Women Welfare category:
-
-* Displays privacy notice
-* Submits successfully
+without evidence uploads.
 
 ---
 
-## Issue List
+### Staff Workflow
 
-Issue cards display:
+Staff can resolve issues in a single action.
 
-* Category Name
-* Priority Badge
-* Upvote Count
+No upload UI appears.
 
-without layout regressions.
+---
+
+### Database
+
+No:
+
+```text
+IssueEvidences
+```
+
+table exists.
+
+No evidence records are created.
 
 ---
 
 # Constraints and Rules for the Coding Agent
 
-* Do not hardcode category lists in the frontend
-* Categories must always come from `GET /categories`
-* Women Welfare detection must use `IsWomenWelfare` from API response
-* `Priority` defaults to `Medium`
-* `IsAnonymous` defaults to `false`
-* Category validation must occur on both frontend and backend
-* Category names displayed on cards must come from the backend response DTO
-* Preserve backward compatibility with existing issue listing APIs
-* Do not introduce a separate categories administration page in this phase
-* Do not add category creation/editing functionality in this phase
-* The categories endpoint is read-only and public
+* Do not introduce replacement evidence functionality
+* Do not keep partially implemented evidence models
+* Do not require uploads for issue resolution
+* Preserve all status transition functionality
+* Preserve all timeline functionality
+* Preserve analytics compatibility
+* Preserve API contracts wherever possible
+* Keep issue resolution as a simple status change
+* Remove only evidence-related dependencies
+* Do not modify unrelated issue workflows
+* Existing student, staff, admin, upvote, timeline, and category functionality must continue working unchanged

@@ -17,10 +17,6 @@ namespace backend.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // existing Issue config — do not change
-            modelBuilder.Entity<Issue>()
-                .HasOne(i => i.User)
-                .WithMany()
-                .HasForeignKey(i => i.UserId);
 
             modelBuilder.Entity<Issue>()
                 .HasIndex(i => i.Status);
@@ -136,6 +132,15 @@ namespace backend.Infrastructure
                 .Property(i => i.UpvoteCount)
                 .HasDefaultValue(0);
 
+            modelBuilder.Entity<Issue>()
+                .HasOne(i => i.Student)
+                .WithMany()
+                .HasForeignKey(i => i.StudentId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Issue>()
+                .HasIndex(i => i.StudentId);
+
             // IssueTimeline config
             modelBuilder.Entity<IssueTimeline>()
                 .HasOne(t => t.Issue)
@@ -166,7 +171,7 @@ namespace backend.Infrastructure
             // IssueUpvote config
             modelBuilder.Entity<IssueUpvote>()
                 .HasOne(u => u.Issue)
-                .WithMany()
+                .WithMany(i => i.IssueUpvotes)
                 .HasForeignKey(u => u.IssueId)
                 .OnDelete(DeleteBehavior.Cascade);
 

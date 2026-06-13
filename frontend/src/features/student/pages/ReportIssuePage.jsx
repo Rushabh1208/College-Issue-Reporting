@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Send } from "lucide-react";
-import { reportIssue, getCategories } from "../api/studentIssueApi";
+import { reportIssue, getCategories, upvoteIssue } from "../api/studentIssueApi";
 import { ImageUploadField } from "../components/ImageUploadField";
 import { issueFormRules } from "../../issues/schemas/issueSchemas";
 import { useUiStore } from "../../../app/store/uiStore";
@@ -15,6 +15,7 @@ export default function ReportIssuePage() {
   const pushToast = useUiStore((state) => state.pushToast);
   const [progress, setProgress] = useState(0);
   const [categoriesData, setCategoriesData] = useState([]);
+  const [duplicateIssue, setDuplicateIssue] = useState(null);
 
   useEffect(() => {
     getCategories().then(setCategoriesData).catch(console.error);
@@ -60,9 +61,23 @@ export default function ReportIssuePage() {
       pushToast({ type: "success", title: "Issue reported", message: "Your report is now visible in your tracker." });
       navigate("/student/issues", { replace: true });
     } catch (error) {
-      pushToast({ type: "error", title: "Could not submit issue", message: error.message });
+      if (error.status === 409 && error.details?.duplicateIssueId) {
+        setDuplicateIssue(error.details.duplicateIssueId);
+      } else {
+        pushToast({ type: "error", title: "Could not submit issue", message: error.message });
+      }
     }
   }
+
+  const handleUpvoteDuplicate = async () => {
+    try {
+      await upvoteIssue(duplicateIssue);
+      pushToast({ type: "success", title: "Success", message: "Issue upvoted successfully." });
+      navigate("/student/issues", { replace: true });
+    } catch (error) {
+      pushToast({ type: "error", title: "Error", message: "Failed to upvote issue." });
+    }
+  };
 
   return (
     <Card className="mx-auto max-w-2xl">
@@ -70,67 +85,82 @@ export default function ReportIssuePage() {
         <h2 className="text-xl font-black text-slate-950">Report an issue</h2>
         <p className="mt-1 text-sm leading-6 text-slate-600">Add the location and a short description so staff can act quickly.</p>
       </div>
-      <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-        <FormField label="Title" error={errors.title?.message}>
-          <input className={inputClass(errors.title)} placeholder="Broken fan, water leak, damaged bench" {...register("title", issueFormRules.title)} />
-        </FormField>
-        <FormField label="Description" error={errors.description?.message}>
-          <textarea className={`${inputClass(errors.description)} min-h-32 resize-y`} placeholder="Describe what is wrong and where to find it." {...register("description", issueFormRules.description)} />
-        </FormField>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField label="Block" error={errors.block?.message}>
-            <input className={inputClass(errors.block)} placeholder="A" {...register("block", issueFormRules.block)} />
-          </FormField>
-          <FormField label="Room number" error={errors.roomNumber?.message}>
-            <input className={inputClass(errors.roomNumber)} placeholder="302" {...register("roomNumber", issueFormRules.roomNumber)} />
-          </FormField>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField label="Category" error={errors.categoryId?.message}>
-            <select className={inputClass(errors.categoryId)} {...register("categoryId", { required: "Category is required" })}>
-              <option value="">Select a category</option>
-              {categoriesData.map((group) => (
-                <optgroup key={group.parentCategory} label={group.parentCategory}>
-                  {group.categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-          </FormField>
-          <FormField label="Priority" error={errors.priority?.message}>
-            <select className={inputClass(errors.priority)} {...register("priority")}>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-              <option value="Critical">Critical</option>
-            </select>
-          </FormField>
-        </div>
-        {isWomenWelfare && (
-          <div className="rounded-md bg-blue-50 p-4 border border-blue-200">
-            <p className="text-sm text-blue-800 font-medium">This report will only be visible to WomenCell.</p>
+
+      {duplicateIssue ? (
+        <div className="rounded-md bg-amber-50 p-6 border border-amber-200 flex flex-col gap-4 text-center">
+          <div className="text-amber-800 font-medium">
+            A similar issue already exists.<br/>
+            Would you like to upvote it instead?
           </div>
-        )}
-        <div className="mt-2">
-          <label className="flex items-center gap-2 text-sm text-slate-700 font-medium">
-            <input type="checkbox" {...register("isAnonymous")} className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-600" />
-            Report Anonymously
-          </label>
-        </div>
-        <ImageUploadField register={register("image", issueFormRules.image)} watch={watch} error={errors.image?.message} onClear={() => resetField("image")} />
-        {isSubmitting && progress > 0 && (
-          <div className="h-2 overflow-hidden rounded-full bg-slate-100">
-            <div className="h-full rounded-full bg-brand-600 transition-all" style={{ width: `${progress}%` }} />
+          <div className="flex flex-wrap justify-center gap-3 mt-2">
+            <Button variant="secondary" onClick={() => navigate(`/student/issues/${duplicateIssue}`)}>View Issue</Button>
+            <Button onClick={handleUpvoteDuplicate}>Upvote</Button>
+            <Button variant="ghost" disabled title="Feature coming soon">Submit Anyway</Button>
           </div>
-        )}
-        <div className="sticky bottom-20 -mx-4 bg-white/90 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:bg-transparent sm:px-0 sm:py-0">
-          <Button className="w-full" type="submit" isLoading={isSubmitting}>
-            <Send className="h-4 w-4" aria-hidden="true" />
-            Submit report
-          </Button>
         </div>
-      </form>
+      ) : (
+        <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <FormField label="Title" error={errors.title?.message}>
+            <input className={inputClass(errors.title)} placeholder="Broken fan, water leak, damaged bench" {...register("title", issueFormRules.title)} />
+          </FormField>
+          <FormField label="Description" error={errors.description?.message}>
+            <textarea className={`${inputClass(errors.description)} min-h-32 resize-y`} placeholder="Describe what is wrong and where to find it." {...register("description", issueFormRules.description)} />
+          </FormField>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FormField label="Block" error={errors.block?.message}>
+              <input className={inputClass(errors.block)} placeholder="A" {...register("block", issueFormRules.block)} />
+            </FormField>
+            <FormField label="Room number" error={errors.roomNumber?.message}>
+              <input className={inputClass(errors.roomNumber)} placeholder="302" {...register("roomNumber", issueFormRules.roomNumber)} />
+            </FormField>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FormField label="Category" error={errors.categoryId?.message}>
+              <select className={inputClass(errors.categoryId)} {...register("categoryId", { required: "Category is required" })}>
+                <option value="">Select a category</option>
+                {categoriesData.map((group) => (
+                  <optgroup key={group.parentCategory} label={group.parentCategory}>
+                    {group.categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+            </FormField>
+            <FormField label="Priority" error={errors.priority?.message}>
+              <select className={inputClass(errors.priority)} {...register("priority")}>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </select>
+            </FormField>
+          </div>
+          {isWomenWelfare && (
+            <div className="rounded-md bg-blue-50 p-4 border border-blue-200">
+              <p className="text-sm text-blue-800 font-medium">This report will only be visible to WomenCell.</p>
+            </div>
+          )}
+          <div className="mt-2">
+            <label className="flex items-center gap-2 text-sm text-slate-700 font-medium">
+              <input type="checkbox" {...register("isAnonymous")} className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-600" />
+              Report Anonymously
+            </label>
+          </div>
+          <ImageUploadField register={register("image", issueFormRules.image)} watch={watch} error={errors.image?.message} onClear={() => resetField("image")} />
+          {isSubmitting && progress > 0 && (
+            <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full rounded-full bg-brand-600 transition-all" style={{ width: `${progress}%` }} />
+            </div>
+          )}
+          <div className="sticky bottom-20 -mx-4 bg-white/90 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:bg-transparent sm:px-0 sm:py-0">
+            <Button className="w-full" type="submit" isLoading={isSubmitting}>
+              <Send className="h-4 w-4" aria-hidden="true" />
+              Submit report
+            </Button>
+          </div>
+        </form>
+      )}
     </Card>
   );
 }

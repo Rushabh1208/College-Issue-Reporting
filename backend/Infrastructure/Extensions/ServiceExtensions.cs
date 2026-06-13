@@ -28,6 +28,7 @@ namespace backend.Infrastructure.Extensions
             services.AddSingleton<IImageValidator, ImageValidator>();
             services.AddSingleton<IUploadService, UploadService>();
             services.AddScoped<CsvImportService>();
+            services.AddScoped<IssueTimelineService>();
 
             services.AddSingleton<IAmazonS3>(sp =>
             {

@@ -11,8 +11,7 @@ namespace backend.Models
 
         public IssueStatus? Status { get; set; } = IssueStatus.Open;
 
-        public long UserId { get; set; }
-        public User User { get; set; } = null!;
+
 
         public long? AssignedToId { get; set; }
         public User AssignedTo { get; set; } = null!;
@@ -39,5 +38,10 @@ namespace backend.Models
         public bool IsAnonymous { get; set; } = false;
 
         public int UpvoteCount { get; set; } = 0;
+
+        public long? StudentId { get; set; }
+        public Student? Student { get; set; }
+
+        public ICollection<IssueUpvote> IssueUpvotes { get; set; } = new List<IssueUpvote>();
     }
 }

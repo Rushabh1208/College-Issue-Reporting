@@ -33,3 +33,13 @@ export async function reportIssue(payload, onUploadProgress) {
     image: data.image ?? data.Image ?? null
   };
 }
+
+export async function upvoteIssue(id) {
+  const { data } = await apiClient.post(`/issues/${id}/upvote`);
+  return data;
+}
+
+export async function removeUpvote(id) {
+  const { data } = await apiClient.delete(`/issues/${id}/upvote`);
+  return data;
+}

@@ -6,6 +6,7 @@ import { RequireAuth, PublicOnly, RoleRedirect } from "./guards.jsx";
 import { ROLES } from "../../shared/constants/api";
 import { SkeletonList } from "../../shared/ui/Skeleton.jsx";
 import { ErrorState } from "../../shared/ui/ErrorState.jsx";
+import { EmptyState } from "../../shared/ui/EmptyState.jsx";
 
 const LoginPage = lazy(() => import("../../features/auth/pages/LoginPage.jsx"));
 const StudentIssuesPage = lazy(() => import("../../features/student/pages/StudentIssuesPage.jsx"));
@@ -15,6 +16,7 @@ const AdminIssuesPage = lazy(() => import("../../features/admin/pages/AdminIssue
 const AdminUsersPage = lazy(() => import("../../features/users/pages/AdminUsersPage.jsx"));
 const AdminStudentsPage = lazy(() => import("../../features/admin/pages/AdminStudentsPage.jsx"));
 const AdminStaffPage = lazy(() => import("../../features/admin/pages/AdminStaffPage.jsx"));
+const WomenCellIssuesPage = lazy(() => import("../../features/womencell/pages/WomenCellIssuesPage.jsx"));
 
 function PageLoader() {
   return <div className="py-6"><SkeletonList rows={3} /></div>;
@@ -53,6 +55,12 @@ export const router = createBrowserRouter([
             element: <RequireAuth roles={[ROLES.STAFF, ROLES.ADMIN]} />,
             children: [
               { path: "/staff/issues", element: <Suspense fallback={<PageLoader />}><StaffIssuesPage /></Suspense> }
+            ]
+          },
+          {
+            element: <RequireAuth roles={[ROLES.WOMENCELL]} />,
+            children: [
+              { path: "/womencell/issues", element: <Suspense fallback={<PageLoader />}><WomenCellIssuesPage /></Suspense> }
             ]
           },
           {

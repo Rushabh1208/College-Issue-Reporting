@@ -10,6 +10,7 @@ namespace backend.Enums
         Resolved,
         Closed,
         Reopened,
-        EvidenceUploaded
+        EvidenceUploaded,
+        Upvoted
     }
 }
