@@ -22,7 +22,7 @@ npm run dev
 Create `.env` from `.env.example` when using a custom backend URL.
 
 ```env
-VITE_API_BASE_URL=https://college-issue-reporting.onrender.com
+VITE_API_BASE_URL=YOUR_BACKEND_DEPLOYEMENT_LINK
 ```
 
 ## Implemented Flows
@@ -30,10 +30,12 @@ VITE_API_BASE_URL=https://college-issue-reporting.onrender.com
 - Public login and student registration
 - JWT persistence, role decoding, protected routes, auto logout on `401`
 - Student issue reporting with image upload and client-side validation
-- Student issue tracking
+- Student issue tracking with timelines and upvoting
 - Staff assigned issue queue and status updates
 - Admin issue filtering, assignment, deletion, inferred pagination
+- Admin dashboard with system statistics
 - Admin user list with inferred pagination
+- Dedicated Women's Cell portal for handling sensitive complaints
 
 ## Backend Contract Notes
 

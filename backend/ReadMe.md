@@ -5,8 +5,8 @@ A centralized backend system for managing facility issues and maintenance reques
 ---
 
 ## 🚀 Live Links
-- **API Base URL:** [https://college-issue-reporting.onrender.com](https://college-issue-reporting.onrender.com)
-- **Interactive API Documentation (Swagger):** [https://college-issue-reporting.onrender.com/swagger/index.html](https://college-issue-reporting.onrender.com/swagger/index.html)
+- **API Base URL:** [YOUR_BACKEND_DEPLOYEMENT_LINK]
+- **Interactive API Documentation (Swagger):** [YOUR_BACKEND_DEPLOYEMENT_LINK/swagger/index.html]
 
 ---
 
@@ -41,6 +41,12 @@ The system is implemented as a **.NET 8 Minimal API** that manages the lifecycle
 
 ### 5. Automated System Seeding
 - **Implementation:** Automatically creates an Admin and default Staff users if they do not exist on startup.
+
+### 6. Women's Cell Portal
+- **Implementation:** Dedicated role and workflows for securely handling sensitive complaints.
+
+### 7. Upvotes, Timelines & Categories
+- **Implementation:** Students can upvote issues, issues are categorized, and status changes are tracked via an issue timeline.
 
 ---
 
@@ -129,7 +135,10 @@ docker-compose up --build
 
 ### Entities
 1. **User**: `Id`, `Name`, `Email`, `PasswordHash`, `Role`.
-2. **Issue**: `Id`, `Title`, `Description`, `Status`, `UserId`, `AssignedToId`, `Block`, `RoomNumber`, `ImagePath`.
+2. **Issue**: `Id`, `Title`, `Description`, `Status`, `UserId`, `AssignedToId`, `Block`, `RoomNumber`, `ImagePath`, `CategoryId`.
+3. **IssueCategory**: `Id`, `Name`.
+4. **IssueUpvote**: `Id`, `IssueId`, `StudentId`.
+5. **IssueTimeline**: `Id`, `IssueId`, `Status`, `Description`, `CreatedAt`.
 
 ---
 
