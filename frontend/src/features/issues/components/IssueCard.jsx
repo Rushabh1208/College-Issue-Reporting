@@ -4,7 +4,7 @@ import { Card } from "../../../shared/ui/Card";
 import { StatusBadge } from "../../../shared/ui/StatusBadge";
 import { PriorityBadge } from "../../../shared/ui/PriorityBadge";
 import { compactFileSize, formatDateTime } from "../../../shared/utils/formatters";
-import { upvoteIssue, removeUpvote } from "../../student/api/studentIssueApi";
+import { upvoteIssue } from "../../student/api/studentIssueApi";
 import { useUiStore } from "../../../app/store/uiStore";
 import { IssueTimeline } from "../../../shared/components/IssueTimeline";
 
@@ -12,29 +12,26 @@ export function IssueCard({ issue: initialIssue, actions }) {
   const [issue, setIssue] = useState(initialIssue);
   const [showTimeline, setShowTimeline] = useState(false);
   const pushToast = useUiStore((state) => state.pushToast);
+  const isResolvedOrClosed = issue.status === "Resolved" || issue.status === "Closed";
 
-  const handleUpvoteToggle = async () => {
-    const isUpvoted = issue.hasUpvoted;
-    
+  const handleUpvote = async () => {
+    if (issue.hasUpvoted || issue.isOwnIssue) return;
+
     // Optimistic update
     setIssue((prev) => ({
       ...prev,
-      hasUpvoted: !isUpvoted,
-      upvoteCount: isUpvoted ? Math.max(0, prev.upvoteCount - 1) : prev.upvoteCount + 1,
+      hasUpvoted: true,
+      upvoteCount: prev.upvoteCount + 1,
     }));
 
     try {
-      if (isUpvoted) {
-        await removeUpvote(issue.id);
-      } else {
-        await upvoteIssue(issue.id);
-      }
+      await upvoteIssue(issue.id);
     } catch (error) {
       // Revert on failure
       setIssue((prev) => ({
         ...prev,
-        hasUpvoted: isUpvoted,
-        upvoteCount: isUpvoted ? prev.upvoteCount + 1 : Math.max(0, prev.upvoteCount - 1),
+        hasUpvoted: false,
+        upvoteCount: Math.max(0, prev.upvoteCount - 1),
       }));
       pushToast({ type: "error", title: "Error", message: "Failed to update upvote status." });
     }
@@ -94,26 +91,37 @@ export function IssueCard({ issue: initialIssue, actions }) {
         
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
           <div className="flex items-center gap-2">
-            {issue.hasUpvoted !== undefined ? (
+            {typeof issue.hasUpvoted === 'boolean' ? (
               <button
-                onClick={handleUpvoteToggle}
+                onClick={handleUpvote}
+                disabled={issue.hasUpvoted || issue.isOwnIssue || isResolvedOrClosed}
                 className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                   issue.hasUpvoted
-                    ? "bg-brand-50 text-brand-700 hover:bg-brand-100"
+                    ? "bg-brand-50 text-brand-700 cursor-not-allowed"
+                    : issue.isOwnIssue || isResolvedOrClosed
+                    ? "bg-slate-50 text-slate-400 cursor-not-allowed ring-1 ring-inset ring-slate-200"
                     : "bg-white text-slate-600 ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
                 }`}
               >
                 <ArrowUp className="h-4 w-4" />
                 <span className="font-semibold">{issue.upvoteCount}</span>
-                <span>{issue.hasUpvoted ? "Upvoted" : "Upvote"}</span>
+                <span>
+                  {issue.isOwnIssue
+                    ? "Your issue"
+                    : isResolvedOrClosed
+                    ? "Closed"
+                    : issue.hasUpvoted
+                    ? "Upvoted"
+                    : "Upvote"}
+                </span>
               </button>
             ) : (
-              issue.upvoteCount !== undefined && (
+              issue.upvoteCount !== undefined ? (
                 <span className="inline-flex items-center gap-1 rounded-md bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10">
                   <ArrowUp className="h-3 w-3" />
                   {issue.upvoteCount}
                 </span>
-              )
+              ) : null
             )}
             <button
               onClick={() => setShowTimeline(!showTimeline)}

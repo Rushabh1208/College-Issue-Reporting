@@ -17,7 +17,18 @@ namespace backend.Features.Issues
         {
             var adminGroup = app.MapGroup("/admin").RequireAuthorization("AdminOnly");
             
-            adminGroup.MapGet("/issues", async (AppDbContext db, IConnectionMultiplexer redis, IStorageService storage, HttpContext ctx, IssueStatus? status, int page = 1, int pageSize = 10) =>
+            adminGroup.MapGet("/issues/stats", async (AppDbContext db) =>
+            {
+                var counts = await db.Issues
+                    .Where(i => !i.IsDeleted && (i.Category == null || !i.Category.IsWomenWelfare))
+                    .GroupBy(i => i.Status)
+                    .Select(g => new { Status = g.Key ?? IssueStatus.Open, Count = g.Count() })
+                    .ToListAsync();
+
+                return Results.Ok(BuildStatusCountDict(counts));
+            });
+
+            adminGroup.MapGet("/issues", async (AppDbContext db, IConnectionMultiplexer redis, IStorageService storage, HttpContext ctx, [Microsoft.AspNetCore.Mvc.FromQuery] IssueStatus? status, int page = 1, int pageSize = 10) =>
             {
                 var cache = redis.GetDatabase();
                 var cacheKey = $"admin:issues:{status}:{page}:{pageSize}";
@@ -35,6 +46,8 @@ namespace backend.Features.Issues
 
                 if (status.HasValue)
                     query = query.Where(i => i.Status == status.Value);
+                else
+                    query = query.Where(i => i.Status == IssueStatus.Open || i.Status == IssueStatus.InProgress);
 
                 var data = await query
                     .OrderByDescending(i => i.CreatedAt)
@@ -287,6 +300,16 @@ namespace backend.Features.Issues
                 var issue = await db.Issues.FirstOrDefaultAsync(x => x.Id == id);
                 if (issue == null) return Results.NotFound();
 
+                if (issue.StudentId == studentId)
+                {
+                    return Results.BadRequest(new { message = "You cannot upvote your own issue." });
+                }
+
+                if (issue.Status == IssueStatus.Resolved || issue.Status == IssueStatus.Closed)
+                {
+                    return Results.BadRequest(new { message = "Cannot upvote a resolved or closed issue." });
+                }
+
                 var existingVote = await db.IssueUpvotes.FirstOrDefaultAsync(x => x.IssueId == id && x.StudentId == studentId);
                 if (existingVote != null)
                 {
@@ -338,12 +361,32 @@ namespace backend.Features.Issues
 
             var staffGroup = app.MapGroup("/staff").RequireAuthorization("StaffOrAdmin");
 
-            staffGroup.MapGet("/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage) =>
+            staffGroup.MapGet("/issues/stats", async (HttpContext ctx, AppDbContext db) =>
             {
                 var userId = SecurityHelper.GetUserId(ctx);
-                var issues = await db.Issues
+                var counts = await db.Issues
+                    .Where(i => !i.IsDeleted && i.AssignedToId == userId)
+                    .GroupBy(i => i.Status)
+                    .Select(g => new { Status = g.Key ?? IssueStatus.Open, Count = g.Count() })
+                    .ToListAsync();
+
+                return Results.Ok(BuildStatusCountDict(counts));
+            });
+
+            staffGroup.MapGet("/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage, [Microsoft.AspNetCore.Mvc.FromQuery] IssueStatus? status) =>
+            {
+                var userId = SecurityHelper.GetUserId(ctx);
+                var query = db.Issues
                     .Where(i => i.AssignedToId == userId && !i.IsDeleted)
                     .Include(i => i.Category)
+                    .AsQueryable();
+
+                if (status.HasValue)
+                    query = query.Where(i => i.Status == status.Value);
+                else
+                    query = query.Where(i => i.Status == IssueStatus.Open || i.Status == IssueStatus.InProgress);
+
+                var issues = await query
                     .OrderByDescending(i => i.CreatedAt)
                     .Select(i => new IssueResponseDto
                     {
@@ -400,13 +443,37 @@ namespace backend.Features.Issues
                 return Results.Ok(new { message = "Status updated" });
             });
 
-            app.MapGet("/student/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage) =>
+            app.MapGet("/student/issues/stats", async (HttpContext ctx, AppDbContext db) =>
             {
                 var studentId = SecurityHelper.GetUserId(ctx);
-                var issues = await db.Issues
+                var counts = await db.Issues
+                    .Where(i => i.StudentId == studentId && !i.IsDeleted)
+                    .GroupBy(i => i.Status)
+                    .Select(g => new { Status = g.Key ?? IssueStatus.Open, Count = g.Count() })
+                    .ToListAsync();
+
+                return Results.Ok(BuildStatusCountDict(counts));
+            }).RequireAuthorization("StudentOnly");
+
+            app.MapGet("/student/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage, [Microsoft.AspNetCore.Mvc.FromQuery] IssueStatus? status, bool all = false) =>
+            {
+                var studentId = SecurityHelper.GetUserId(ctx);
+                var query = db.Issues
                     .Where(i => i.StudentId == studentId && !i.IsDeleted)
                     .Include(i => i.Category)
                     .Include(i => i.IssueUpvotes)
+                    .AsQueryable();
+
+                if (status.HasValue)
+                {
+                    query = query.Where(i => i.Status == status.Value);
+                }
+                else if (!all)
+                {
+                    query = query.Where(i => i.Status == IssueStatus.Open || i.Status == IssueStatus.InProgress);
+                }
+
+                var issues = await query
                     .OrderByDescending(i => i.CreatedAt)
                     .Select(i => new IssueResponseDto
                     {
@@ -427,7 +494,76 @@ namespace backend.Features.Issues
                         Priority = i.Priority,
                         IsAnonymous = i.IsAnonymous,
                         UpvoteCount = i.UpvoteCount,
-                        HasUpvoted = i.IssueUpvotes.Any(x => x.StudentId == studentId)
+                        HasUpvoted = i.IssueUpvotes.Any(x => x.StudentId == studentId),
+                        IsOwnIssue = true
+                    })
+                    .ToListAsync();
+
+                return Results.Ok(issues);
+            })
+            .RequireAuthorization("StudentOnly");
+
+            app.MapGet("/community/issues/stats", async (HttpContext ctx, AppDbContext db) =>
+            {
+                var counts = await db.Issues
+                    .Where(i => !i.IsDeleted && !i.IsAnonymous && (i.Category == null || !i.Category.IsWomenWelfare)
+                             && (i.Status == IssueStatus.Open || i.Status == IssueStatus.InProgress))
+                    .GroupBy(i => i.Status)
+                    .Select(g => new { Status = g.Key ?? IssueStatus.Open, Count = g.Count() })
+                    .ToListAsync();
+
+                return Results.Ok(BuildStatusCountDict(counts));
+            })
+            .RequireAuthorization("StudentOnly");
+
+            app.MapGet("/community/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage, string? search) =>
+            {
+                var studentId = SecurityHelper.GetUserId(ctx);
+
+                var query = db.Issues
+                    .Where(i => !i.IsDeleted
+                             && !i.IsAnonymous
+                             && (i.Category == null || !i.Category.IsWomenWelfare)
+                             && (i.Status == IssueStatus.Open || i.Status == IssueStatus.InProgress))
+                    .Include(i => i.AssignedTo)
+                    .Include(i => i.Category)
+                    .Include(i => i.Student)
+                    .Include(i => i.IssueUpvotes)
+                    .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    var term = search.Trim().ToLower();
+                    query = query.Where(i =>
+                        i.Title.ToLower().Contains(term) ||
+                        i.Description.ToLower().Contains(term) ||
+                        i.Block.ToLower().Contains(term) ||
+                        i.RoomNumber.ToLower().Contains(term));
+                }
+
+                var issues = await query
+                    .OrderByDescending(i => i.CreatedAt)
+                    .Select(i => new IssueResponseDto
+                    {
+                        Id = i.Id,
+                        Title = i.Title,
+                        Description = i.Description,
+                        Status = i.Status ?? IssueStatus.Open,
+                        Block = i.Block,
+                        RoomNumber = i.RoomNumber,
+                        CreatedAt = i.CreatedAt,
+                        AssignedStaffName = i.AssignedTo != null ? i.AssignedTo.Name : "Unassigned",
+                        ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, i.ImageStorageProvider, ctx) : null,
+                        ImageObjectKey = i.ImageObjectKey ?? i.ImagePath,
+                        ImageStorageProvider = i.ImageStorageProvider ?? "local",
+                        ImageMimeType = i.ImageMimeType,
+                        ImageSizeBytes = i.ImageSizeBytes,
+                        CategoryName = i.Category != null ? i.Category.Name : string.Empty,
+                        Priority = i.Priority,
+                        IsAnonymous = i.IsAnonymous,
+                        UpvoteCount = i.UpvoteCount,
+                        HasUpvoted = i.IssueUpvotes.Any(x => x.StudentId == studentId),
+                        IsOwnIssue = i.StudentId == studentId
                     })
                     .ToListAsync();
 
@@ -473,35 +609,64 @@ namespace backend.Features.Issues
 
             var womenCellGroup = app.MapGroup("/womencell").RequireAuthorization("WomenCellOnly");
 
-            womenCellGroup.MapGet("/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage) =>
+            womenCellGroup.MapGet("/issues/stats", async (AppDbContext db) =>
             {
-                var issues = await db.Issues
+                var counts = await db.Issues
                     .Where(i => !i.IsDeleted && i.Category != null && i.Category.IsWomenWelfare)
-                    .Include(i => i.Category)
-                    .OrderByDescending(i => i.CreatedAt)
-                    .Select(i => new IssueResponseDto
-                    {
-                        Id = i.Id,
-                        Title = i.Title,
-                        Description = i.Description,
-                        Status = i.Status ?? IssueStatus.Open,
-                        Block = i.Block,
-                        RoomNumber = i.RoomNumber,
-                        CreatedAt = i.CreatedAt,
-                        AssignedStaffName = "Women Cell",
-                        ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, i.ImageStorageProvider, ctx) : null,
-                        ImageObjectKey = i.ImageObjectKey ?? i.ImagePath,
-                        ImageStorageProvider = i.ImageStorageProvider ?? "local",
-                        ImageMimeType = i.ImageMimeType,
-                        ImageSizeBytes = i.ImageSizeBytes,
-                        CategoryName = i.Category != null ? i.Category.Name : string.Empty,
-                        Priority = i.Priority,
-                        IsAnonymous = i.IsAnonymous,
-                        UpvoteCount = i.UpvoteCount
-                    })
+                    .GroupBy(i => i.Status)
+                    .Select(g => new { Status = g.Key ?? IssueStatus.Open, Count = g.Count() })
                     .ToListAsync();
 
-                return Results.Ok(issues);
+                return Results.Ok(BuildStatusCountDict(counts));
+            });
+
+            womenCellGroup.MapGet("/issues", async (
+                HttpContext ctx, AppDbContext db, IStorageService storage,
+                [Microsoft.AspNetCore.Mvc.FromQuery] IssueStatus? status, int? categoryId, IssuePriority? priority,
+                DateTime? fromDate, DateTime? toDate, int page = 1, int pageSize = 10) =>
+            {
+                var query = db.Issues
+                    .Where(i => !i.IsDeleted && i.Category != null && i.Category.IsWomenWelfare)
+                    .Include(i => i.AssignedTo)
+                    .Include(i => i.Category)
+                    .AsQueryable();
+
+                if (status.HasValue) query = query.Where(i => i.Status == status.Value);
+                else query = query.Where(i => i.Status == IssueStatus.Open || i.Status == IssueStatus.InProgress);
+
+                if (categoryId.HasValue) query = query.Where(i => i.CategoryId == categoryId.Value);
+                if (priority.HasValue) query = query.Where(i => i.Priority == priority.Value);
+                if (fromDate.HasValue) query = query.Where(i => i.CreatedAt >= fromDate.Value);
+                if (toDate.HasValue) query = query.Where(i => i.CreatedAt <= toDate.Value);
+
+                var data = await query
+                    .OrderByDescending(i => i.CreatedAt)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                var result = data.Select(i => new IssueResponseDto
+                {
+                    Id = i.Id,
+                    Title = i.Title,
+                    Description = i.Description,
+                    Status = i.Status ?? IssueStatus.Open,
+                    Block = i.Block,
+                    RoomNumber = i.RoomNumber,
+                    CreatedAt = i.CreatedAt,
+                    AssignedStaffName = "Women Cell",
+                    ImageUrl = i.ImagePath != null ? storage.GetUrl(i.ImagePath, i.ImageStorageProvider, ctx) : null,
+                    ImageObjectKey = i.ImageObjectKey ?? i.ImagePath,
+                    ImageStorageProvider = i.ImageStorageProvider ?? "local",
+                    ImageMimeType = i.ImageMimeType,
+                    ImageSizeBytes = i.ImageSizeBytes,
+                    CategoryName = i.Category != null ? i.Category.Name : string.Empty,
+                    Priority = i.Priority,
+                    IsAnonymous = i.IsAnonymous,
+                    UpvoteCount = i.UpvoteCount
+                });
+
+                return Results.Ok(result);
             });
 
             womenCellGroup.MapPut("/issues/{id}/status", async (HttpContext ctx, AppDbContext db, IValidator<UpdateStatusDto> validator, IssueTimelineService timelineService, long id, UpdateStatusDto dto) =>
@@ -543,6 +708,17 @@ namespace backend.Features.Issues
             {
                 await db.KeyDeleteAsync(key);
             }
+        }
+
+        private static Dictionary<string, int> BuildStatusCountDict(IEnumerable<dynamic> counts)
+        {
+            var dict = new Dictionary<string, int> { ["Open"] = 0, ["InProgress"] = 0, ["Resolved"] = 0, ["Closed"] = 0 };
+            foreach (var c in counts)
+            {
+                var status = (IssueStatus?)c.Status ?? IssueStatus.Open;
+                dict[status.ToString()] = c.Count;
+            }
+            return dict;
         }
     }
 }

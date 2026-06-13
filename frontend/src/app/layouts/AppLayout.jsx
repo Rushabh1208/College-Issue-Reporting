@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { ClipboardList, LogOut, PlusCircle, UsersRound, Wrench, LayoutDashboard, ShieldAlert, GraduationCap } from "lucide-react";
+import { ClipboardList, LogOut, PlusCircle, UsersRound, Wrench, LayoutDashboard, ShieldAlert, GraduationCap, Users, KeyRound } from "lucide-react";
 import { Button } from "../../shared/ui/Button";
 import { ROLES } from "../../shared/constants/api";
 import { cn } from "../../shared/utils/cn";
@@ -8,6 +8,7 @@ import { useAuthStore } from "../../features/auth/store/authStore";
 const roleNav = {
   [ROLES.STUDENT]: [
     { to: "/student/issues", label: "Issues", icon: ClipboardList },
+    { to: "/student/community", label: "Community", icon: Users },
     { to: "/student/report", label: "Report", icon: PlusCircle }
   ],
   [ROLES.STAFF]: [
@@ -71,6 +72,10 @@ export function AppLayout() {
         <div className="absolute inset-x-4 bottom-4 rounded-lg border border-slate-200 bg-slate-50 p-3">
           <p className="text-sm font-bold text-slate-950">{user?.email}</p>
           <p className="mt-0.5 text-xs font-semibold text-slate-500">{user?.role}</p>
+          <Link to="/account/change-password" className="mt-3 flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-brand-600">
+            <KeyRound className="h-3.5 w-3.5" />
+            Change password
+          </Link>
           <Button className="mt-3 w-full" variant="secondary" onClick={handleLogout}>
             <LogOut className="h-4 w-4" aria-hidden="true" />
             Logout
@@ -98,8 +103,15 @@ export function AppLayout() {
       </div>
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-2 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] pt-2 shadow-[0_-12px_30px_rgba(15,23,42,0.08)] backdrop-blur lg:hidden">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 overflow-x-auto">
           <NavItems items={navItems} compact />
+          <Link
+            to="/account/change-password"
+            className="flex flex-1 flex-col items-center gap-1 rounded-lg px-2 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100"
+          >
+            <KeyRound className="h-5 w-5" aria-hidden="true" />
+            Password
+          </Link>
           <button
             className="flex flex-1 flex-col items-center gap-1 rounded-lg px-2 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100"
             onClick={handleLogout}

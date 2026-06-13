@@ -1,9 +1,14 @@
 import { apiClient } from "../../../shared/lib/apiClient";
 import { normalizeIssue, normalizeIssues } from "../../issues/api/issueMappers";
 
-export async function getStudentIssues() {
-  const { data } = await apiClient.get("/student/issues");
+export async function getStudentIssues(params = {}) {
+  const { data } = await apiClient.get("/student/issues", { params });
   return normalizeIssues(data);
+}
+
+export async function getStudentIssueStats() {
+  const { data } = await apiClient.get("/student/issues/stats");
+  return data;
 }
 
 export async function getCategories() {
@@ -41,5 +46,15 @@ export async function upvoteIssue(id) {
 
 export async function removeUpvote(id) {
   const { data } = await apiClient.delete(`/issues/${id}/upvote`);
+  return data;
+}
+
+export async function getCommunityIssues(params = {}) {
+  const { data } = await apiClient.get("/community/issues", { params });
+  return normalizeIssues(data);
+}
+
+export async function getCommunityIssueStats() {
+  const { data } = await apiClient.get("/community/issues/stats");
   return data;
 }

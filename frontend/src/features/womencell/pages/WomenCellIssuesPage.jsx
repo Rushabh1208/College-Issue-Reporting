@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { useWomenCellIssues } from "../hooks/useWomenCellIssues";
+import { useWomenCellIssueStats } from "../hooks/useWomenCellIssueStats";
+import { useConfirm } from "../../../shared/hooks/useConfirm";
 import { updateWomenCellIssueStatus } from "../api/womencellApi";
 import { ISSUE_STATUSES } from "../../../shared/constants/api";
 import { useUiStore } from "../../../app/store/uiStore";
@@ -12,14 +14,24 @@ import { ErrorState } from "../../../shared/ui/ErrorState";
 import { SkeletonList } from "../../../shared/ui/Skeleton";
 
 export default function WomenCellIssuesPage() {
-  const { data: issues = [], error, isLoading, refetch } = useWomenCellIssues();
+  const [filterStatus, setFilterStatus] = useState("");
+  const filters = { status: filterStatus || undefined };
+  const { data: issues = [], error, isLoading, refetch } = useWomenCellIssues(filters);
+  const { data: stats = {} } = useWomenCellIssueStats();
   const [busyId, setBusyId] = useState(null);
   const pushToast = useUiStore((state) => state.pushToast);
 
+  const confirm = useConfirm();
+
   async function setStatus(issue, status) {
     if (status === "Resolved") {
-      const isConfirmed = window.confirm("Are you sure you want to mark this sensitive issue as resolved?");
-      if (!isConfirmed) return;
+      const ok = await confirm({
+        title: "Mark as resolved?",
+        description: "Are you sure you want to mark this sensitive issue as resolved?",
+        confirmLabel: "Resolve",
+        variant: "primary"
+      });
+      if (!ok) return;
     }
     setBusyId(issue.id);
     try {
@@ -42,7 +54,7 @@ export default function WomenCellIssuesPage() {
         <h2 className="text-xl font-black text-slate-950">Women Welfare Queue</h2>
         <p className="mt-1 text-sm text-slate-600">Secure queue for issues reported under the Women Welfare category.</p>
       </div>
-      <IssueStats issues={issues} />
+      <IssueStats counts={stats} activeStatus={filterStatus} onStatusClick={setFilterStatus} />
       {issues.length === 0 ? (
         <EmptyState title="No active issues" description="There are currently no Women Welfare issues reported." />
       ) : (

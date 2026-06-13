@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Upload, XCircle, CheckCircle2, AlertCircle, KeyRound, Ban } from "lucide-react";
 import { importStudents, getStudents, deactivateStudent, resetPassword } from "../../students/api/studentApi";
+import { useConfirm } from "../../../shared/hooks/useConfirm";
 import { Button } from "../../../shared/ui/Button";
 import { Card } from "../../../shared/ui/Card";
 import { Pagination } from "../../../shared/ui/Pagination";
@@ -64,8 +65,16 @@ export default function AdminStudentsPage() {
     }
   };
 
+  const confirm = useConfirm();
+
   const handleDeactivate = async (id) => {
-    if (!window.confirm("Are you sure you want to deactivate this student? They will not be able to log in.")) return;
+    const ok = await confirm({
+      title: "Deactivate student?",
+      description: "Are you sure you want to deactivate this student? They will not be able to log in.",
+      confirmLabel: "Deactivate",
+      variant: "danger"
+    });
+    if (!ok) return;
     try {
       await deactivateStudent(id);
       pushToast({ type: "success", title: "Deactivated", message: "Student deactivated successfully." });
@@ -76,7 +85,13 @@ export default function AdminStudentsPage() {
   };
 
   const handleResetPassword = async (id) => {
-    if (!window.confirm("Are you sure you want to reset this student's password to the default?")) return;
+    const ok = await confirm({
+      title: "Reset password?",
+      description: "Are you sure you want to reset this student's password to the default?",
+      confirmLabel: "Reset",
+      variant: "primary"
+    });
+    if (!ok) return;
     try {
       await resetPassword(id);
       pushToast({ type: "success", title: "Password Reset", message: "Password reset to default successfully." });

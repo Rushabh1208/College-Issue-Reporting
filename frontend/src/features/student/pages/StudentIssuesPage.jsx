@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PlusCircle } from "lucide-react";
 import { useStudentIssues } from "../hooks/useStudentIssues";
+import { useStudentIssueStats } from "../hooks/useStudentIssueStats";
 import { IssueCard } from "../../issues/components/IssueCard";
 import { IssueStats } from "../../issues/components/IssueStats";
 import { Button } from "../../../shared/ui/Button";
@@ -9,7 +11,10 @@ import { ErrorState } from "../../../shared/ui/ErrorState";
 import { SkeletonList } from "../../../shared/ui/Skeleton";
 
 export default function StudentIssuesPage() {
-  const { data: issues = [], error, isLoading, refetch } = useStudentIssues();
+  const [status, setStatus] = useState("");
+  const filters = { status: status || undefined };
+  const { data: issues = [], error, isLoading, refetch } = useStudentIssues(filters);
+  const { data: stats = {} } = useStudentIssueStats();
 
   if (isLoading) return <SkeletonList />;
   if (error) return <ErrorState message={error.message} onRetry={refetch} />;
@@ -26,7 +31,7 @@ export default function StudentIssuesPage() {
           Report issue
         </Link>
       </div>
-      <IssueStats issues={issues} />
+      <IssueStats counts={stats} activeStatus={status} onStatusClick={setStatus} />
       {issues.length === 0 ? (
         <EmptyState
           title="No issues reported"

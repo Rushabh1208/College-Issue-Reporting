@@ -1,9 +1,14 @@
 import { apiClient } from "../../../shared/lib/apiClient";
 import { normalizeIssues } from "../../issues/api/issueMappers";
 
-export async function getStaffIssues() {
-  const { data } = await apiClient.get("/staff/issues");
+export async function getStaffIssues(params = {}) {
+  const { data } = await apiClient.get("/staff/issues", { params });
   return normalizeIssues(data);
+}
+
+export async function getStaffIssueStats() {
+  const { data } = await apiClient.get("/staff/issues/stats");
+  return data;
 }
 
 export async function updateIssueStatus(issueId, status) {

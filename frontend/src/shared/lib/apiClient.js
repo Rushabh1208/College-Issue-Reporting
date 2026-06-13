@@ -38,6 +38,7 @@ apiClient.interceptors.response.use(
     let message = "Something went wrong. Please try again.";
     if (Array.isArray(data)) message = data.join(", ");
     else if (typeof data === "string" && data.trim()) message = data;
+    else if (data?.message) message = data.message;
     else if (data?.title) message = data.title;
     else if (status === 403) message = "You do not have permission to perform this action.";
     else if (status === 429) message = "Too many requests. Please wait a minute and try again.";

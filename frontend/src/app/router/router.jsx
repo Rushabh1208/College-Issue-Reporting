@@ -11,12 +11,14 @@ import { EmptyState } from "../../shared/ui/EmptyState.jsx";
 const LoginPage = lazy(() => import("../../features/auth/pages/LoginPage.jsx"));
 const StudentIssuesPage = lazy(() => import("../../features/student/pages/StudentIssuesPage.jsx"));
 const ReportIssuePage = lazy(() => import("../../features/student/pages/ReportIssuePage.jsx"));
+const CommunityIssuesPage = lazy(() => import("../../features/student/pages/CommunityIssuesPage.jsx"));
 const StaffIssuesPage = lazy(() => import("../../features/staff/pages/StaffIssuesPage.jsx"));
 const AdminIssuesPage = lazy(() => import("../../features/admin/pages/AdminIssuesPage.jsx"));
 const AdminUsersPage = lazy(() => import("../../features/users/pages/AdminUsersPage.jsx"));
 const AdminStudentsPage = lazy(() => import("../../features/admin/pages/AdminStudentsPage.jsx"));
 const AdminStaffPage = lazy(() => import("../../features/admin/pages/AdminStaffPage.jsx"));
 const WomenCellIssuesPage = lazy(() => import("../../features/womencell/pages/WomenCellIssuesPage.jsx"));
+const ChangePasswordPage = lazy(() => import("../../features/account/pages/ChangePasswordPage.jsx"));
 
 function PageLoader() {
   return <div className="py-6"><SkeletonList rows={3} /></div>;
@@ -44,10 +46,12 @@ export const router = createBrowserRouter([
       {
         element: <AppLayout />,
         children: [
+          { path: "/account/change-password", element: <Suspense fallback={<PageLoader />}><ChangePasswordPage /></Suspense> },
           {
             element: <RequireAuth roles={[ROLES.STUDENT]} />,
             children: [
               { path: "/student/issues", element: <Suspense fallback={<PageLoader />}><StudentIssuesPage /></Suspense> },
+              { path: "/student/community", element: <Suspense fallback={<PageLoader />}><CommunityIssuesPage /></Suspense> },
               { path: "/student/report", element: <Suspense fallback={<PageLoader />}><ReportIssuePage /></Suspense> }
             ]
           },

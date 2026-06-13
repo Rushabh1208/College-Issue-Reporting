@@ -51,6 +51,42 @@ namespace backend.Features.Auth
                 });
             })
             .RequireRateLimiting("login");
+
+            app.MapPut("/account/change-password", async (HttpContext ctx, AppDbContext db, ChangePasswordDto dto, FluentValidation.IValidator<ChangePasswordDto> validator) =>
+            {
+                var validation = await validator.ValidateAsync(dto);
+                if (!validation.IsValid)
+                    return Results.BadRequest(new { message = string.Join(" ", validation.Errors.Select(e => e.ErrorMessage)) });
+
+                var userId = SecurityHelper.GetUserId(ctx);
+                var userType = SecurityHelper.GetUserType(ctx);
+
+                if (userType == "student")
+                {
+                    var student = await db.Students.FindAsync(userId);
+                    if (student == null) return Results.NotFound();
+
+                    if (!SecurityHelper.VerifyPassword(dto.CurrentPassword, student.PasswordHash))
+                        return Results.BadRequest(new { message = "Current password is incorrect." });
+
+                    student.PasswordHash = SecurityHelper.HashPassword(dto.NewPassword);
+                    await db.SaveChangesAsync();
+                }
+                else
+                {
+                    var user = await db.Users.FindAsync(userId);
+                    if (user == null) return Results.NotFound();
+
+                    if (!SecurityHelper.VerifyPassword(dto.CurrentPassword, user.PasswordHash))
+                        return Results.BadRequest(new { message = "Current password is incorrect." });
+
+                    user.PasswordHash = SecurityHelper.HashPassword(dto.NewPassword);
+                    await db.SaveChangesAsync();
+                }
+
+                return Results.Ok(new { message = "Password updated successfully." });
+            })
+            .RequireAuthorization();
         }
     }
 }

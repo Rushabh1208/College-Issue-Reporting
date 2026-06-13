@@ -1,20 +1,34 @@
 import { Card } from "../../../shared/ui/Card";
 
-export function IssueStats({ issues }) {
-  const counts = {
-    Open: issues.filter((issue) => issue.status === "Open").length,
-    InProgress: issues.filter((issue) => issue.status === "InProgress").length,
-    Resolved: issues.filter((issue) => issue.status === "Resolved").length
-  };
+import { cn } from "../../../shared/utils/cn";
 
+const STATUS_ORDER = ["Open", "InProgress", "Resolved"];
+const LABELS = { Open: "Open", InProgress: "In progress", Resolved: "Resolved" };
+const GRID_COLS = { 2: "grid-cols-2", 3: "grid-cols-3" };
+
+export function IssueStats({ counts = {}, activeStatus, onStatusClick, statuses = STATUS_ORDER }) {
   return (
-    <div className="grid grid-cols-3 gap-2">
-      {Object.entries(counts).map(([label, value]) => (
-        <Card key={label} className="p-3">
-          <p className="text-xl font-black text-slate-950">{value}</p>
-          <p className="mt-0.5 text-xs font-semibold text-slate-500">{label === "InProgress" ? "In progress" : label}</p>
-        </Card>
-      ))}
+    <div className={`grid ${GRID_COLS[statuses.length] || "grid-cols-3"} gap-2`}>
+      {statuses.map((status) => {
+        const isActive = activeStatus === status;
+        return (
+          <button
+            key={status}
+            type="button"
+            onClick={() => onStatusClick?.(isActive ? "" : status)}
+            className="text-left"
+          >
+            <Card className={cn("p-3 transition-colors hover:bg-slate-50", isActive && "bg-brand-50 ring-brand-600 hover:bg-brand-100")}>
+              <p className={cn("text-xl font-black", isActive ? "text-brand-900" : "text-slate-950")}>
+                {counts[status] ?? 0}
+              </p>
+              <p className={cn("mt-0.5 text-xs font-semibold", isActive ? "text-brand-700" : "text-slate-500")}>
+                {LABELS[status]}
+              </p>
+            </Card>
+          </button>
+        );
+      })}
     </div>
   );
 }

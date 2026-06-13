@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { PlusCircle, Edit2, Ban, KeyRound, CheckCircle2, XCircle } from "lucide-react";
 import { getStaff, createStaff, updateStaff, deactivateStaff, resetStaffPassword } from "../../users/api/staffApi";
+import { useConfirm } from "../../../shared/hooks/useConfirm";
 import { Button } from "../../../shared/ui/Button";
 import { Card } from "../../../shared/ui/Card";
 import { Pagination } from "../../../shared/ui/Pagination";
@@ -77,8 +78,16 @@ export default function AdminStaffPage() {
     }
   };
 
+  const confirm = useConfirm();
+
   const handleDeactivate = async (id) => {
-    if (!window.confirm("Are you sure you want to deactivate this staff account? They will not be able to log in.")) return;
+    const ok = await confirm({
+      title: "Deactivate staff?",
+      description: "Are you sure you want to deactivate this staff account? They will not be able to log in.",
+      confirmLabel: "Deactivate",
+      variant: "danger"
+    });
+    if (!ok) return;
     try {
       await deactivateStaff(id);
       pushToast({ type: "success", title: "Deactivated", message: "Staff deactivated successfully." });
@@ -89,7 +98,13 @@ export default function AdminStaffPage() {
   };
 
   const handleResetPassword = async (id) => {
-    if (!window.confirm("Are you sure you want to reset this staff's password to the default (Staff@123)?")) return;
+    const ok = await confirm({
+      title: "Reset password?",
+      description: "Are you sure you want to reset this staff's password to the default (Staff@123)?",
+      confirmLabel: "Reset",
+      variant: "primary"
+    });
+    if (!ok) return;
     try {
       await resetStaffPassword(id);
       pushToast({ type: "success", title: "Password Reset", message: "Password reset to default successfully." });

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { useStaffIssues } from "../hooks/useStaffIssues";
+import { useStaffIssueStats } from "../hooks/useStaffIssueStats";
+import { useConfirm } from "../../../shared/hooks/useConfirm";
 import { updateIssueStatus } from "../api/staffIssueApi";
 import { ISSUE_STATUSES } from "../../../shared/constants/api";
 import { useUiStore } from "../../../app/store/uiStore";
@@ -12,14 +14,23 @@ import { ErrorState } from "../../../shared/ui/ErrorState";
 import { SkeletonList } from "../../../shared/ui/Skeleton";
 
 export default function StaffIssuesPage() {
-  const { data: issues = [], error, isLoading, refetch } = useStaffIssues();
+  const [activeStatus, setActiveStatus] = useState("");
+  const { data: issues = [], error, isLoading, refetch } = useStaffIssues({ status: activeStatus || undefined });
+  const { data: counts = {} } = useStaffIssueStats();
   const [busyId, setBusyId] = useState(null);
   const pushToast = useUiStore((state) => state.pushToast);
 
+  const confirm = useConfirm();
+
   async function setStatus(issue, status) {
     if (status === "Resolved") {
-      const isConfirmed = window.confirm("Are you sure you want to mark this issue as resolved?");
-      if (!isConfirmed) return;
+      const ok = await confirm({
+        title: "Mark as resolved?",
+        description: "Are you sure you want to mark this issue as resolved?",
+        confirmLabel: "Resolve",
+        variant: "primary"
+      });
+      if (!ok) return;
     }
     setBusyId(issue.id);
     try {
@@ -42,7 +53,7 @@ export default function StaffIssuesPage() {
         <h2 className="text-xl font-black text-slate-950">Assigned queue</h2>
         <p className="mt-1 text-sm text-slate-600">Only issues assigned to your account can be updated.</p>
       </div>
-      <IssueStats issues={issues} />
+      <IssueStats counts={counts} activeStatus={activeStatus} onStatusClick={setActiveStatus} />
       {issues.length === 0 ? (
         <EmptyState title="No assigned issues" description="Assigned campus work will appear here." />
       ) : (

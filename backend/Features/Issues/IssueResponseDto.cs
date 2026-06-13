@@ -23,6 +23,7 @@ namespace backend.Features.Issues
         public IssuePriority Priority { get; set; }
         public bool IsAnonymous { get; set; }
         public int UpvoteCount { get; set; }
-        public bool HasUpvoted { get; set; }
+        public bool? HasUpvoted { get; set; }
+        public bool IsOwnIssue { get; set; }
     }
 }
