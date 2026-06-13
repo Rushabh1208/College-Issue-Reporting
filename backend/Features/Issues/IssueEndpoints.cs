@@ -516,20 +516,28 @@ namespace backend.Features.Issues
             })
             .RequireAuthorization("StudentOnly");
 
-            app.MapGet("/community/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage, string? search) =>
+            app.MapGet("/community/issues", async (HttpContext ctx, AppDbContext db, IStorageService storage, [Microsoft.AspNetCore.Mvc.FromQuery] IssueStatus? status, string? search) =>
             {
                 var studentId = SecurityHelper.GetUserId(ctx);
 
                 var query = db.Issues
                     .Where(i => !i.IsDeleted
                              && !i.IsAnonymous
-                             && (i.Category == null || !i.Category.IsWomenWelfare)
-                             && (i.Status == IssueStatus.Open || i.Status == IssueStatus.InProgress))
+                             && (i.Category == null || !i.Category.IsWomenWelfare))
                     .Include(i => i.AssignedTo)
                     .Include(i => i.Category)
                     .Include(i => i.Student)
                     .Include(i => i.IssueUpvotes)
                     .AsQueryable();
+
+                if (status.HasValue)
+                {
+                    query = query.Where(i => i.Status == status.Value);
+                }
+                else
+                {
+                    query = query.Where(i => i.Status == IssueStatus.Open || i.Status == IssueStatus.InProgress);
+                }
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {
