@@ -29,12 +29,14 @@ VITE_API_BASE_URL=YOUR_BACKEND_DEPLOYEMENT_LINK
 
 - Public login and student registration
 - JWT persistence, role decoding, protected routes, auto logout on `401`
-- Student issue reporting with image upload and client-side validation
+- Student issue reporting with image upload, category selection, and client-side validation
 - Student issue tracking with timelines and upvoting
 - Staff assigned issue queue and status updates
 - Admin issue filtering, assignment, deletion, inferred pagination
 - Admin dashboard with system statistics
 - Admin user list with inferred pagination
+- Admin staff management (create, edit, deactivate, password reset)
+- Admin student roster management with bulk CSV import
 - Dedicated Women's Cell portal for handling sensitive complaints
 
 ## Backend Contract Notes

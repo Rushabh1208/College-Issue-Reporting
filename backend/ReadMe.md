@@ -48,6 +48,9 @@ The system is implemented as a **.NET 8 Minimal API** that manages the lifecycle
 ### 7. Upvotes, Timelines & Categories
 - **Implementation:** Students can upvote issues, issues are categorized, and status changes are tracked via an issue timeline.
 
+### 8. Staff & Student Management
+- **Implementation:** Admins can manage staff accounts (CRUD, password resets) and manage the student roster (bulk CSV import, deactivation, password resets).
+
 ---
 
 ## Tech Stack & Infrastructure
